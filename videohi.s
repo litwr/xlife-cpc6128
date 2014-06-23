@@ -807,7 +807,7 @@ cont7    cp 9        ;TAB
          jr nz,cont8
 
          call TXT_REMOVE_CURSOR     ;cursor off
-         ;call ramdisk
+         call ramdisk
          jr nc,exit
          jp loadmenu
 
@@ -2355,8 +2355,7 @@ lx       ld (de),a
          ld (x8pos),a
          ret
 
-clrect2pc
-         rrca
+clrect2pc rrca
          or (hl)
          ld (mask),a
          and c
@@ -2414,8 +2413,7 @@ clrect3  ld a,b
          ret
          endp
 
-vnextcell
-         push iy
+vnextcell push iy
          pop bc
          ld hl,nextcell
          call calllo
@@ -2423,7 +2421,96 @@ vnextcell
          pop iy
          ret
 
-showtent proc
+;*showtent .block
+showtent proc        ;used: a,bc,de,hl
+         local loop,l1,l3,exit
+         ret
+;*         lda x0
+;*         pha
+;*         lda y0
+;*         pha
+;*         lda #0
+;*         sta $14
+;*         sta $15
+;*         sta ppmode
+         ld a,(x0)
+         ld b,a
+         ld a,(y0)
+         ld c,a
+         push bc
+         xor a
+         ld h,a       ;$15
+         ld l,a       ;$14
+         ld (ppmode),a
+
+;*loop     lda $15
+;*         cmp $b9
+;*         bne l1
+loop     ld a,(memb9)
+         cp h
+         jr nz,l1
+
+;*         ldx $14
+;*         cpx $b8
+;*         beq exit
+         ld a,(memb8)
+         cp l
+         jr z,exit
+
+;*l1       eor #8
+;*         sta $15
+;*         ldx #0
+;*         lda ($14,x)
+;*         sta x0
+;*         lda $15
+;*         eor #4
+;*         sta $15
+;*         lda ($14,x)
+;*         sta y0
+;*         ora x0
+;*         beq l3
+l1       ld de,EOP
+         push hl
+         add hl,de
+         ld a,(hl)
+         ld (x0),a
+         ld b,a
+         ld a,4    ;+4*256
+         add a,h
+         ld h,a
+         ld a,(hl)
+         ld (y0),a
+         or b
+         jr z,l3
+
+;*         jsr putpixel
+;*l3       lda $15
+;*         eor #$c
+;*         sta $15
+;*         inc $14
+;*         bne loop
+         call putpixel
+l3       pop hl
+         inc hl
+
+;*         inc $15
+;*         bne loop
+         jr loop
+
+;*exit     pla
+;*         sta y0
+;*         pla
+;*         sta x0
+;*         inc ppmode
+exit     pop bc
+         ld a,c
+         ld (y0),a
+         ld a,b
+         ld (x0),a
+         ld a,1
+         ld (ppmode),a
+;*         rts
+;*         .bend
          ret
          endp
 

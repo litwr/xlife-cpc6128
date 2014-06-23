@@ -167,19 +167,6 @@ loop     ld (hl),a
          djnz loop
          endm
 
-;*iniram   .macro
-;*         ldy #0
-;*loop1    lda $1800,y
-;*         sta $332,y
-;*         iny
-;*         bne loop1
-;*loop2    lda $1900,y
-;*         sta $432,y
-;*         iny
-;*         cpy #$0a
-;*         bne loop2
-;*         .endm
-
 ;*genmac   .macro
 genmac   macro cnt,n
          local cont2

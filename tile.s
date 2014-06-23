@@ -361,7 +361,7 @@ loop     dec (hl)
          endp
 
 putpixel proc
-         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cup,cdown,cleft,cright,m1
+         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cup,cdown,cleft,cright,m1
 ;x8pos  - ixl; x8bit - ixh; y8pos - d; y8byte - e; adjcell - bc
 ;*         jsr xchgxy
          call xchgxy
@@ -533,6 +533,9 @@ loop2    jp m,cup
 loop3    jp m,cleft
          jp nz,cright
 
+;*+         ldy ppmode
+;*+         bne putpixel3
+;*+         jmp putpixel2
 ;*         jsr chkadd	;uses adjcell!
 ;*         lda #7
 ;*         sec
@@ -545,23 +548,58 @@ loop3    jp m,cleft
 ;*         sta $ff3e
 ;*         cli
 ;*         rts
-         push de
-         call chkadd
-         pop de
-         ld a,7
-         sub ixh
-         ld iy,bittab
-         ld (m1+2),a
          ld a,e
          add a,c
          ld l,a
          ld a,b
          adc a,0
          ld h,a
+         ld a,7
+         sub ixh
+         ld iy,bittab
+         ld (m1+2),a
 m1       ld a,(iy)
-         or (hl)
-         ld (hl),a
+         ld d,a
+         ld a,(ppmode)
+         or a
+         ld a,d
+         jr nz,cont5
+
+;*putpixel2 .block
+;*         tax
+;*         jsr seti1
+;*         txa
+;*         and #$f
+;*         beq l1
+
+;*         tax
+;*         lda i1
+;*         eor #8
+;*         sta i1
+;*         bne l2
+
+;*l1       txa
+;*         lsr
+;*         lsr
+;*         lsr
+;*         lsr
+;*         tax
+;*l2       lda vistab,x
+;*         sta t2
+;*         asl
+;*         sta t3
+;*         ora t2
+;*         eor #$ff
+;*         and (i1),y
+;*         ora t3
+;*         sta (i1),y
+;*         rts
+;*         .bend
          ret
+
+cont5    or (hl)
+         ld (hl),a
+         jp chkadd
 
 ;*cright   ldy #right     ;y=0, x=/=0
 ;*         jsr nextcell

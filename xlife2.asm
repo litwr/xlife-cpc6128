@@ -8,12 +8,11 @@
 
          org $4000
          include "cpchi.asm"
+EOP      dw $
 
          org $49
 start    ld hl,initprg
          call callhi
-;*         #iniram
-
 mainloop proc
          local cont4,cont5
          call dispatcher
@@ -106,6 +105,9 @@ cursorc  db 0   ;0 - free, 1 - over cell
 errst    db 0   ;0 - do not print i/o-errors message, 1 - print
 crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
 splitst  db 1   ;1..255 - split on, 0 - off
+ppmode   db 1   ;putpixel mode: 0 - tentative, 1 - active
+memb8    db 0
+memb9    db 0
 
          include "gentab.s"
 tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4

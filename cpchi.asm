@@ -4,6 +4,8 @@
            include "videohi.s"
            include "rules.s"
            include "iohi.s"
+           include "ramdisk.s"
+           include "ramdata.s"
 
 stringbuf  db 0,0,0,0,0,0,0,0,0
 
