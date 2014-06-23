@@ -1691,7 +1691,6 @@ loop1    dec b
 ;*         ldx xdir
 ;*         beq cont4
          ld a,(crsrx)
-         srl a
          rlca
          rlca
          rlca
