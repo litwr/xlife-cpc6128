@@ -1506,6 +1506,7 @@ showrect proc
 ;*loop0    jsr drawrect
 ;*         jsr crsrset0
 loop0    call drawrect
+         call showtent
          ;call crsrset0
 ;*loop1    jsr getkey
 loop1    call KM_WAIT_CHAR
@@ -1629,30 +1630,20 @@ drawrect proc
          local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,rectulx,rectuly,xcut,ycut,localbase
          local cont1,cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont10,cont11,cont12
          local loop1,loop10,loop11,xmove,ymove,loopdn,loopup,looprt,looplt,nextrt,nextlt,drrect1
-;**uses: adjcell:2, adjcell2:2, currp:2, t1, t2, t3, i1:2, i2
 ;adjcell - iy
 ;**calls: pixel11
-localbase equ $fff0
-;*x8pos    = currp
+localbase equ $fff0        ;link to clrrect!
 x8pos    equ localbase
-;*x8poscp  = $ff5
-x8poscp  equ localbase+1
-;*x8bit    = currp+1
+x8poscp  equ localbase+1   ;link to clrrect!
 x8bit    equ localbase+2
-;*y8pos    = t1
 y8pos    equ t1
-;*y8poscp  = $ff7
-y8poscp  equ localbase+3
-;*y8byte   = i2
+y8poscp  equ localbase+3   ;link to clrrect!
 y8byte   equ localbase+4
-;*rectulx  = adjcell2
 rectulx  equ localbase+5
-;*rectuly  = adjcell2+1
 rectuly  equ localbase+6
-;*xcut     = t3
 xcut     equ localbase+7
-;*ycut     = t2
 ycut     equ localbase+8
+
 ;*         jsr xchgxy
          call xchgxy
 ;*         lda crsrbyte
@@ -1909,12 +1900,7 @@ loop10   ;call setcrsrc
 ;*         sta y8byte
 ;*         bpl loopdn
          ld a,down
-         push iy
-         pop bc
-         ld hl,nextcell
-         call calllo
-         push bc
-         pop iy
+         call vnextcell
          xor a
          ld (y8byte),a
          jr loopdn
@@ -1946,12 +1932,7 @@ loop11   ;call setcrsrc
 ;*         sta y8byte
 ;*         bpl loopup
          ld a,up
-         push iy
-         pop bc
-         ld hl,nextcell
-         call calllo
-         push bc
-         pop iy
+         call vnextcell
          ld a,7
          ld (y8byte),a
          jr loopup
@@ -2005,12 +1986,7 @@ looprt   call drrect1
 ;*         sta x8bit
 ;*         bne looprt
 nextrt   ld a,right
-         push iy
-         pop bc
-         ld hl,nextcell
-         call calllo
-         push bc
-         pop iy
+         call vnextcell
          ld a,$80
          ld (x8bit),a
          jr looprt
@@ -2055,12 +2031,7 @@ looplt   call drrect1
 ;*         sta x8bit
 ;*         bne looplt
 nextlt   ld a,left
-         push iy
-         pop bc
-         ld hl,nextcell
-         call calllo
-         push bc
-         pop iy
+         call vnextcell
          ld a,1
          ld (x8bit),a
          jr looplt
@@ -2106,29 +2077,19 @@ drrect1  ld hl,readde
          jp xcont1
          endp
 
-clrrect  proc
-         local cl3
-         local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,rectulx,rectuly,localbase
-         local loop10,loop11,xmove,ymove,loopdn,loopup,looprt,looplt,nextrt,nextlt
-         local clrect1,clrect2,clrect3,clrect4
-;**uses: adjcell:2, adjcell2:2, currp:2, i1:2, i2, t1, t2, t3
-localbase equ $fff0
-;*x8pos    = currp
+clrrect  proc       ;in: x8poscp, y8poscp
+         local cl3,lltpc,lrtpc,lx,lxpc11,lxpc01
+         local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,localbase
+         local looplt,looprt,loopdn,loopup,looprt1,looplt1,looprtpc,loopltpc
+         local xmove,nextrt,nextlt
+         local clrect1,clrect2,clrect2pc,clrect3,xclrect
+localbase equ $fff0         ;link to drawrect!
 x8pos    equ localbase
-;*x8poscp  = $ff5
-x8poscp  equ localbase+1
-;*x8bit    = currp+1
+x8poscp  equ localbase+1    ;link to drawrect!
 x8bit    equ localbase+2
-;*y8pos    = t1
 y8pos    equ t1
-;*y8poscp  = $ff7
-y8poscp  equ localbase+3
-;*y8byte   = i2
+y8poscp  equ localbase+3    ;link to drawrect!
 y8byte   equ localbase+4
-;*rectulx  = adjcell2
-rectulx  equ localbase+5
-;*rectuly  = adjcell2+1
-rectuly  equ localbase+6
 
 ;*         jsr xchgxy
 ;*         lda y8poscp
@@ -2147,12 +2108,11 @@ rectuly  equ localbase+6
          ld a,(crsrbyte)
          ld (y8byte),a
          ld a,(crsrbit)
-         ld (x8bit),a
          call calcx
-         and 3
          ld b,a
          ld a,(xdir)
          or a
+         ld a,b
          jr z,cl3
 
 ;*         sbc #4
@@ -2161,197 +2121,298 @@ rectuly  equ localbase+6
 ;*         adc x8poscp
 ;*         sta x8pos
 ;*         sta x8poscp
-         sub 4
-         xor $ff
-cl3      ld a,(x8poscp)
+         sub 8
+         cpl
+cl3      ld b,a
+         ld a,(x8poscp)
          add a,b
          ld (x8pos),a
          ld (x8poscp),a
 
 ;*         #assign16 adjcell,crsrtile
-;*         jsr ymove
-;*         jsr xmove
-;*         lda x8poscp
-;*         sta x8pos
-;*         lda y8poscp
-;*         sta y8pos
-;*         lda crsrbyte
-;*         sta y8byte
-;*         lda crsrbit
-;*         sta x8bit
-;*         #assign16 adjcell,crsrtile
-;*         jsr xmove
-;*ymove    lda ydir
+;*         lda ydir
 ;*         bne loopup
          ld iy,(crsrtile)
-         call ymove
-         call xmove
-         ld a,(x8poscp)
-         ld (x8pos),a
-         ld a,(y8poscp)
-         ld (y8pos),a
-         ld a,(crsrbyte)
-         ld (y8byte),a
-         ld a,(crsrbit)
-         ld (x8bit),a
-         ld iy,(crsrtile)
-         call xmove
-ymove    ld a,(ydir)
+         ld a,(ydir)
          or a
-    ;     jr nz,loopup
+         jr nz,loopup
 
-;*loopdn   jsr clrect1
-;*         jsr clrect3
-;*loop10   jsr clrect2
-;*         dec y8pos
+;*loopdn   jsr xclrect
 ;*         beq exit
+loopdn   call xclrect
+         ret z
 
 ;*         inc y8byte
 ;*         lda y8byte
 ;*         cmp #8
-;*         bne loop10
-;* 
+;*         bne loopdn
+         ld hl,y8byte
+         inc (hl)
+         ld a,(hl)
+         cp 8
+         jr nz,loopdn
+
 ;*         ldy #down
 ;*         jsr nextcell
 ;*         lda #0
 ;*         sta y8byte
 ;*         bpl loopdn
+         ld a,down
+         call vnextcell
+         xor a
+         ld (y8byte),a
+         jr loopdn
 
-;*loopup   jsr clrect1
-;*         jsr clrect3
-;*loop11   jsr clrect2
-;*         dec y8pos
+;*loopup   jsr xclrect
 ;*         beq exit
+loopup   call xclrect
+         ret z
 
 ;*         dec y8byte
-;*         bpl loop11
-;* 
+;*         bpl loopup
+         ld a,(y8byte)
+         dec a
+         ld (y8byte),a
+         jp p,loopup
+
 ;*         ldy #up
 ;*         jsr nextcell
 ;*         lda #7
 ;*         sta y8byte
 ;*         bpl loopup
+         ld a,up
+         call vnextcell
+         ld a,7
+         ld (y8byte),a
+         jr loopup
 
+;*xclrect  lda adjcell
+;*         pha
+;*         lda adjcell+1
+;*         pha
+;*         jsr xmove
+;*         pla
+;*         sta adjcell+1
+;*         pla
+;*         sta adjcell
+xclrect  push iy
+         call xmove
+         pop iy
+
+;*         lda x8poscp
+;*         sta x8pos
+;*         lda crsrbit
+;*         sta x8bit
+;*         dec y8pos      ;sets ZF
 ;*exit     rts
+         ld a,(x8poscp)
+         ld (x8pos),a
+         ld a,(crsrbit)
+         ld (x8bit),a
+         ld hl,y8pos
+         dec (hl)       ;sets ZF
+         ret
 
 ;*xmove    lda xdir
 ;*         bne looplt
-xmove
+xmove    ld a,(xdir)
+         or a
+         jr nz,looplt
 
-;*looprt   jsr clrect1
-;*loop12   jsr clrect3
-;*         jsr clrect2
-;*         sec
-;*         lda x8pos
-;*         sbc #4
-;*         sta x8pos
-;*         beq exit
-;*         bcc exit
+looprt   ld a,$80
+         ld (x8bit),a
+         call clrect1
+         ld a,(pseudoc)
+         or a
+         jr nz,lrtpc
 
-;*         lda x8bit
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         beq nextrt
+         ld a,(hl)
+looprt1  rrca
+         call clrect2
+         ret c
+         ret z
 
-;*         sta x8bit
-;*         bne loop12
+         ld a,(hl)
+         srl a
+         srl a
+         jr z,nextrt
+
+         ld (hl),a
+         inc e
+         jr looprt1
+
+lrtpc    call clrect3
+looprtpc rrca
+         call clrect2pc
+         ret c
+         ret z
+
+         ld a,(hl)
+         srl a
+         srl a
+         jr z,nextrt
+
+         ld (hl),a
+         inc e
+         jr looprtpc
 
 ;*nextrt   ldy #right
 ;*         jsr nextcell
 ;*         lda #$80
 ;*         sta x8bit
 ;*         bne looprt
+nextrt   ld a,right
+         call vnextcell
+         jr looprt
 
-;*looplt   jsr clrect1
-;*loop15   jsr clrect3
-;*         jsr clrect2
-;*         lda x8pos
-;*         sec
-;*         sbc #4
-;*         sta x8pos
-;*         bcc exit
-;*         beq exit
+looplt   ld a,1
+         ld (x8bit),a
+         call clrect1
+         ld a,(pseudoc)
+         or a
+         jr nz,lltpc
 
-;*         lda x8bit
-;*         asl
-;*         asl
-;*         asl
-;*         asl
-;*         beq nextlt
+         ld a,(hl)
+looplt1  rlca
+         call clrect2
+         ret c
+         ret z
 
-;*         sta x8bit
-;*         jsr clrect4
-;*         jmp loop15
-;* 
+         ld a,(hl)
+         srl a
+         srl a
+         jr z,nextlt
+
+         ld (hl),a
+         inc e
+         jr looplt1
+
+lltpc    call clrect3
+loopltpc rlca
+         call clrect2pc
+         ret c
+         ret z
+
+         ld a,(hl)
+         sla a
+         sla a
+         jr z,nextlt
+
+         ld (hl),a
+         inc e
+         jr loopltpc
+
 ;*nextlt   ldy #left
 ;*         jsr nextcell
 ;*         lda #1
 ;*         sta x8bit
 ;*         bne looplt
+nextlt   ld a,left
+         call vnextcell
+         jr looplt
 
-;*clrect3  lda x8bit
-;*         and #$f0
-;*         bne cont1a
+clrect1  ld hl,readde
+         call calllo
+         ld a,(y8byte)
+         ld b,a
+         rlca
+         rlca
+         rlca
+         add a,d
+         ld d,a
+         ld a,b
+         ld hl,readc
+         call calllo
+         ld hl,x8bit
+         ret
 
-;*clrect4  lda #8
-;*         eor i1
-;*         sta i1
-;*cont1a   rts
+clrect2  or (hl)
+         and c
+         ;ld a,0     ;00
+         jr z,lx
 
-;*clrect1  #assign16 currp,adjcell
-;*         ldy #video
-;*         lda (currp),y
-;*         sta i1
-;*         iny
-;*         lda (currp),y
-;*         sta i1+1
-;*         rts
+         ld a,$c0   ;11
+         jp pe,lx
+         
+         ld a,(hl)
+         and c
+         ld a,$40   ;01
+         jr z,lx
 
-;*clrect2  ldy y8byte
-;*         lda x8bit
-;*         and #$f0
-;*         beq cont1
+         rlca       ;10
+lx       ld (de),a
+         ld a,(x8pos)
+         sub 2
+         ld (x8pos),a
+         ret
 
-;*         lda pseudoc
-;*         bne cont2
+clrect2pc
+         or (hl)
+         ld (temp),a
+         and c
+         ;ld a,0
+         jr z,lx
+         jp pe,lxpc11
+         
+         ld a,(hl)
+         and c
+         jr z,lxpc01
 
-;*         #vidmac1
-;*         rts
+         ld a,(hl)     ;lxpc10
+         and b
+         ld a,8
+         jr z,lx       ;1000
 
-;*cont2    lda #pc
-;*         clc
-;*         adc y8byte
-;*         sta t1
-;*         #vidmac1p
-;*         rts
+         ld a,$20      ;1010
+         jr lx
 
-;*cont1    lda pseudoc
-;*         bne cont3
+lxpc11   ld a,(temp)
+         and b
+         ld a,$30
+         jr z,lx       ;1100
 
-;*         #vidmac2
-;*         rts
+         ld a,$c
+         jp pe,lx      ;1111
 
-;*cont3    lda #pc
-;*         clc
-;*         adc y8byte
-;*         sta t1
-;*         lda (currp),y
-;*         sty t2
-;*         sta i2
-;*         ldy t1
-;*         lda (currp),y
-;*         tay
-;*         and i2
-;*         ldx t2
-;*         sta pctemp1,x   ;old
-;*         tya
-;*         eor #$ff
-;*         and i2
-;*         sta pctemp2,x   ;new
-;*         ldy y8byte
-;*         #vidmac2p
-;*         rts
+         ld a,(hl)
+         and b
+         ld a,$24      ;1101
+         jr z,lx
+
+         ld a,$14      ;1110
+         jr lx
+
+lxpc01   ld a,(hl)
+         rrca
+         and b
+         ld a,$10
+         jr z,lx       ;0100
+
+         ld a,4
+         jr lx         ;0101
+
+clrect3  ld a,b
+         ld b,c
+         add a,pc
+         ld hl,readc
+         call calllo
+         ld a,c
+         ld c,b
+         ld b,a
+         ld a,(hl)
+         ret
+         endp
+
+vnextcell
+         push iy
+         pop bc
+         ld hl,nextcell
+         call calllo
+         push bc
+         pop iy
+         ret
+
+showtent proc
+         ret
          endp
 

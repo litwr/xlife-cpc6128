@@ -1,2 +1,2 @@
-gedit cpc*.asm io*.s tile.s xlife?.asm utils.s rules.s video*.s interface.s *.mac excl.grep&
+gedit cpchi.asm cpc.s io*.s tile.s xlife?.asm utils.s rules.s video*.s interface.s *.mac excl.grep&
 exit

@@ -1,6 +1,6 @@
 ;**this program doesn't contain code of the original Xlife
 ;**it is the conversion from 6502 port for Commodore +4 v3
-;**written by litwr, 2013
+;**written by litwr, 2013-14
 ;**it is under GNU GPL
 
          include "cpc.mac"

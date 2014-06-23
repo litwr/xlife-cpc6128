@@ -70,86 +70,92 @@ loop     ld a,(hl)
          ret
          endp
 
-callhi     proc           ;in: hl; changed: a
-           local jsrfar
+callhi   proc           ;in: hl; changed: a
+         local jsrfar
 
-           ld (jsrfar+1),hl
-           push af
-           ld a,4
-           call KL_BANK_SWITCH
-           pop af
-jsrfar     call $a000
-           xor a
-           jp KL_BANK_SWITCH
-           endp
+         ld (jsrfar+1),hl
+         push af
+         ld a,4
+         call KL_BANK_SWITCH
+         pop af
+jsrfar   call $a000
+         xor a
+         jp KL_BANK_SWITCH
+         endp
 
-calllo     ld (jsrfar+1),hl   ;in: hl
-calllo1    push af
-           xor a
-           call KL_BANK_SWITCH
-           pop af
-jsrfar     call 0
-           push af
-           ld a,4
-           call KL_BANK_SWITCH
-           pop af
-           ret
+calllo   ld (jsrfar+1),hl   ;in: hl
+calllo1  push af
+         xor a
+         call KL_BANK_SWITCH
+         pop af
+jsrfar   call 0
+         push af
+         ld a,4
+         call KL_BANK_SWITCH
+         pop af
+         ret
 
-readhl     ld l,(iy)
-           ld h,(iy+1)
-           ret
+readhl   ld l,(iy)
+         ld h,(iy+1)
+         ret
 
-inciy      inc (iy+sum)
-           ret
+inciy    inc (iy+sum)
+         ret
 
-deciy      dec (iy+sum)
-           ret
+deciy    dec (iy+sum)
+         ret
 
-xoriy      ld a,(iy)
-           xor d
-           ld (iy),a
-           ret
+xoriy    ld a,(iy)
+         xor d
+         ld (iy),a
+         ret
 
-readde     ld e,(iy+video)
-           ld d,(iy+video+1)
-           ret
+readde   ld e,(iy+video)
+         ld d,(iy+video+1)
+         ret
 
-fixvp      ld l,(iy+ul)
-           ld h,(iy+ul+1)
-           push hl
-           pop iy
-           ld l,(iy+left)
-           ld h,(iy+left+1)
-           ret
+readc    proc
+         ld (m1+2),a
+m1       ld c,(iy)
+         ret
+         endp
 
-decint     proc
-           local l1,l2,l3,l4
-           ld hl,(realnum2)
-           xor a
-           or l
-           jp nz,l1
+fixvp    ld l,(iy+ul)
+         ld h,(iy+ul+1)
+         push hl
+         pop iy
+         ld l,(iy+left)
+         ld h,(iy+left+1)
+         ret
 
-           or h
-           jp nz,l2
+decint   proc
+         local l1,l2,l3,l4
+         ld hl,(realnum2)
+         xor a
+         or l
+         jp nz,l1
 
-           ld de,(realnum2+2)
-           or e
-           jp nz,l3
+         or h
+         jp nz,l2
 
-           or d
-           jp nz,l4
+         ld de,(realnum2+2)
+         or e
+         jp nz,l3
 
-           scf
-           ret
+         or d
+         jp nz,l4
 
-l4         dec d
-l3         dec e
-           ld (realnum2+2),de
-l2         dec h
-l1         dec l
-           ld (realnum2),hl
-           ret
-           endp
+         scf
+         ret
+
+l4       dec d
+l3       dec e
+         ld (realnum2+2),de
+l2       dec h
+l1       dec l
+         ld (realnum2),hl
+         ret
+         endp
 
 bloop    proc
          local bl7,bl8
