@@ -369,7 +369,7 @@ loadpat  proc
          push iy
          call showrect
          pop iy
-         jr c,eof
+         jr nc,eof
 
          call readchar
          ld l,a

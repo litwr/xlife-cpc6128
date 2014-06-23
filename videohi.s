@@ -1516,9 +1516,15 @@ loop1    call KM_WAIT_CHAR
          cp $f2
          jr z,lselect
 
+         cp $f6       ;shifted cursor left
+         jr z,lselect
+
 ;*         cmp #$1d   ;cursor right
 ;*         beq lselect
          cp $f3
+         jr z,lselect
+
+         cp $f7       ;shifted cursor right
          jr z,lselect
 
 ;*         cmp #$91   ;cursor up
@@ -1526,9 +1532,15 @@ loop1    call KM_WAIT_CHAR
          cp $f0
          jr z,lselect
 
+         cp $f4       ;shifted cursor up
+         jr z,lselect
+
 ;*         cmp #$11   ;cursor down
 ;*         beq lselect
          cp $f1
+         jr z,lselect
+
+         cp $f5       ;shifted cursor down
          jr z,lselect
 
 ;*         cmp #"."   ;to center
@@ -1609,7 +1621,7 @@ lselect  push af
          jr loop0
 
 ;*finish   clc
-finish   xor a
+finish   scf
 
 ;*finish0  php
 ;*         jsr clrrect
@@ -2072,7 +2084,6 @@ drrect1  ld hl,readde
          rlca
          add a,d
          ld d,a
-
          ld a,(x8bit)   ;copy
          jp xcont1
          endp
