@@ -1,0 +1,15 @@
+#tr '\n' '\r' < xlife.man.txt | awk -f xlife.man.awk | sed 's/,$//' >txtl.inc
+#sed 's/,$//' < attr.inc >attl.inc
+#tmpx -i manpage.asm -l manpage.lst
+#p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
+#rm attr.inc attl.inc txtl.inc
+
+rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
+echo >xlife2.sym
+pasmo6 --amsdos --listing xlife2.lst xlife2.asm xlife2.bin xlife2.sym && \
+grep -vEf excl.grep xlife2.sym >tmpzz && mv tmpzz xlife2.sym &&
+pasmo6 --listing cpchi.lst cpchi.asm cpchi.bin&& \
+pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin&& \
+iDSK xlife.dsk -i xlife1.bin -t 1 && \
+iDSK xlife.dsk -i xlife2.bin -t 1
+# -c 170 -e 210

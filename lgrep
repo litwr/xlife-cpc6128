@@ -1,0 +1,1 @@
+grep -i $1 *.s *.asm *.mac -n
