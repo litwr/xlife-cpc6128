@@ -1,0 +1,20 @@
+A=${1%%.u00}
+B=$A
+C=
+if ! [ -f $B#.s00 ]; then
+   C=$(echo $A|grep -o .$)
+   B=${A%%?}
+fi
+dd if=$1 of=$1.t2 bs=1 skip=26
+echo -en $(ls -l $1.t2|awk '{printf "\\x%02x\\x%02x", (($5-6)/2)%256, int(($5-6)/512)}') >$1.t1
+cat $1.t1 $1.t2 >${1%%u00}8l
+if ! [ -f $B#.s00 ]; then
+   echo $1 no comments
+else
+   D=$B${C}
+   dd if=$B#.s00 of=$D.t1 bs=1 skip=28
+   tr [:lower:][:upper:] [:upper:][:lower:] <$D.t1 >$D.t2
+   sed 's/\r\+$/\r/' <$D.t2 >$D.t3
+   sed 's/\r/&\n/g' <$D.t3 >$D.txt
+fi
+rm *.t[123]
