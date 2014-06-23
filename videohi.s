@@ -2238,8 +2238,7 @@ looprt   call clrect1
          ld (hl),a
          jr nz,lrtpc
 
-looprt1  rrca
-         call clrect2
+looprt1  call clrect2
          ret c
          ret z
 
@@ -2253,8 +2252,7 @@ looprt1  rrca
          jr looprt1
 
 lrtpc    call clrect3
-looprtpc rrca
-         call clrect2pc
+looprtpc call clrect2pc
          ret c
          ret z
 
@@ -2282,13 +2280,11 @@ looplt   call clrect1
          inc e
          ld a,(pseudoc)
          or a
-         ld a,1
+         ld a,2
          ld (hl),a
          jr nz,lltpc
 
-         ld a,(hl)
-looplt1  rlca
-         call clrect2
+looplt1  call clrect2
          ret c
          ret z
 
@@ -2302,8 +2298,7 @@ looplt1  rlca
          jr looplt1
 
 lltpc    call clrect3
-loopltpc rlca
-         call clrect2pc
+loopltpc call clrect2pc
          ret c
          ret z
 
@@ -2340,7 +2335,8 @@ clrect1  ld hl,readde
          ld hl,x8bit
          ret
 
-clrect2  or (hl)
+clrect2  rrca
+         or (hl)
          and c
          ;ld a,0     ;00
          jr z,lx
@@ -2361,6 +2357,7 @@ lx       ld (de),a
          ret
 
 clrect2pc
+         rrca
          or (hl)
          ld (mask),a
          and c
