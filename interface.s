@@ -29,7 +29,7 @@ dispat2  proc
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,lsp3,l2,l4,l5,l8,l11,cm4v,cm5v,finish,zoomin,zoomout
-         local nozoom,exitload
+         local nozoom,exitload,nozoom3
 
          cp "g"
          jr nz,cont3 
@@ -532,18 +532,28 @@ cont17b  cp "L"
 
 ;*         lda fnlen
 ;*         bne cont17v
+         ld a,(fnlen)
+         or a
+         ret z
 
 ;*exit     rts
 
 ;*cont17v  lda zoom
 ;*         pha
 ;*         beq nozoom3
+         ld a,(zoom)
+         or a
+         push af
+         jr z,nozoom3
 
 ;*         jsr zoomout
 ;*nozoom3  jsr totext
 ;*         lda #147
 ;*         jsr $ffd2
 ;*         jmp cont17w
+         call zoomout
+nozoom3  call totext
+         jr cont17w
 
 cont17d  cp "+"
          jr nz,cont17e

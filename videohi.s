@@ -2090,7 +2090,7 @@ drrect1  ld hl,readde
 
 clrrect  proc       ;in: x8poscp, y8poscp
          local cl3,lltpc,lrtpc,lx,lxpc11,lxpc01
-         local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,localbase
+         local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,mask,localbase
          local looplt,looprt,loopdn,loopup,looprt1,looplt1,looprtpc,loopltpc
          local xmove,nextrt,nextlt
          local clrect1,clrect2,clrect2pc,clrect3,xclrect
@@ -2101,6 +2101,7 @@ x8bit    equ localbase+2
 y8pos    equ t1
 y8poscp  equ localbase+3    ;link to drawrect!
 y8byte   equ localbase+4
+mask     equ localbase+5
 
 ;*         jsr xchgxy
 ;*         lda y8poscp
@@ -2230,14 +2231,13 @@ xmove    ld a,(xdir)
          or a
          jr nz,looplt
 
-looprt   ld a,$80
-         ld (x8bit),a
-         call clrect1
+looprt   call clrect1
          ld a,(pseudoc)
          or a
+         ld a,$80
+         ld (hl),a
          jr nz,lrtpc
 
-         ld a,(hl)
 looprt1  rrca
          call clrect2
          ret c
@@ -2276,11 +2276,14 @@ nextrt   ld a,right
          call vnextcell
          jr looprt
 
-looplt   ld a,1
-         ld (x8bit),a
-         call clrect1
+looplt   call clrect1
+         inc e
+         inc e
+         inc e
          ld a,(pseudoc)
          or a
+         ld a,1
+         ld (hl),a
          jr nz,lltpc
 
          ld a,(hl)
@@ -2290,12 +2293,12 @@ looplt1  rlca
          ret z
 
          ld a,(hl)
-         srl a
-         srl a
+         sla a
+         sla a
          jr z,nextlt
 
          ld (hl),a
-         inc e
+         dec e
          jr looplt1
 
 lltpc    call clrect3
@@ -2310,7 +2313,7 @@ loopltpc rlca
          jr z,nextlt
 
          ld (hl),a
-         inc e
+         dec e
          jr loopltpc
 
 ;*nextlt   ldy #left
@@ -2359,7 +2362,7 @@ lx       ld (de),a
 
 clrect2pc
          or (hl)
-         ld (temp),a
+         ld (mask),a
          and c
          ;ld a,0
          jr z,lx
@@ -2374,32 +2377,32 @@ clrect2pc
          ld a,8
          jr z,lx       ;1000
 
-         ld a,$20      ;1010
+         ld a,$80      ;1010
          jr lx
 
-lxpc11   ld a,(temp)
+lxpc11   ld a,(mask)
          and b
-         ld a,$30
+         ld a,$c
          jr z,lx       ;1100
 
-         ld a,$c
+         ld a,$c0
          jp pe,lx      ;1111
 
          ld a,(hl)
          and b
-         ld a,$24      ;1101
+         ld a,$48      ;1101
          jr z,lx
 
-         ld a,$14      ;1110
+         ld a,$84      ;1110
          jr lx
 
 lxpc01   ld a,(hl)
          rrca
          and b
-         ld a,$10
+         ld a,4
          jr z,lx       ;0100
 
-         ld a,4
+         ld a,$40
          jr lx         ;0101
 
 clrect3  ld a,b
@@ -2410,6 +2413,7 @@ clrect3  ld a,b
          ld a,c
          ld c,b
          ld b,a
+         ld hl,x8bit
          ld a,(hl)
          ret
          endp
