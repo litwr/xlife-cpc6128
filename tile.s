@@ -360,8 +360,9 @@ loop     dec (hl)
          ret
          endp
 
-putpixel proc
-         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cup,cdown,cleft,cright,m1
+putpixel proc   ;in: x0,y0,xdir,ydir,xchgdir
+         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8
+         local cup,cdown,cleft,cright,m1
 ;x8pos  - ixl; x8bit - ixh; y8pos - d; y8byte - e; adjcell - bc
 ;*         jsr xchgxy
          call xchgxy
@@ -548,12 +549,6 @@ loop3    jp m,cleft
 ;*         sta $ff3e
 ;*         cli
 ;*         rts
-         ld a,e
-         add a,c
-         ld l,a
-         ld a,b
-         adc a,0
-         ld h,a
          ld a,7
          sub ixh
          ld iy,bittab
@@ -562,7 +557,6 @@ m1       ld a,(iy)
          ld d,a
          ld a,(ppmode)
          or a
-         ld a,d
          jr nz,cont5
 
 ;*putpixel2 .block
@@ -595,10 +589,53 @@ m1       ld a,(iy)
 ;*         sta (i1),y
 ;*         rts
 ;*         .bend
+         ld ixh,d
+         push bc
+         pop iy
+         ld a,e      ;y8byte
+         ld hl,readde
+         call calllo
+         rlca
+         rlca
+         rlca
+         add a,d
+         ld d,a
+         ld a,ixh   ;x8bit count?
+         ld c,a
+         and $c0
+         jr z,cont7
+
+cont8    ld b,$88
+         and $aa
+         ret nz
+
+         ld b,$44
+         ld a,b
+         ld (de),a
          ret
 
-cont5    or (hl)
-         ld (hl),a
+cont7    inc de
+         ld a,c
+         and $30
+         jr nz,cont8
+
+         inc de
+         ld a,c
+         and $c
+         jr nz,cont8
+
+         inc de
+         ld a,c
+         jr cont8
+
+cont5    ld a,e      ;y8byte
+         add a,c
+         ld l,a
+         ld a,b
+         adc a,0
+         ld h,a
+         or (hl)
+         ld (hl),d
          jp chkadd
 
 ;*cright   ldy #right     ;y=0, x=/=0

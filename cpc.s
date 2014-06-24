@@ -110,8 +110,8 @@ xoriy    ld a,(iy)
          ld (iy),a
          ret
 
-readde   ld e,(iy+video)
-         ld d,(iy+video+1)
+readde   ld e,(iy+video)      ;in: iy
+         ld d,(iy+video+1)    ;out: de
          ret
 
 readc    proc

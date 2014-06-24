@@ -2422,9 +2422,8 @@ vnextcell push iy
          ret
 
 ;*showtent .block
-showtent proc        ;used: a,bc,de,hl
+showtent proc        ;used: a,bc,de,hl,iy*,ix*
          local loop,l1,l3,exit
-         ret
 ;*         lda x0
 ;*         pha
 ;*         lda y0
@@ -2489,7 +2488,8 @@ l1       ld de,EOP
 ;*         sta $15
 ;*         inc $14
 ;*         bne loop
-         call putpixel
+         ld hl,putpixel
+         call calllo
 l3       pop hl
          inc hl
 
