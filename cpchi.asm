@@ -47,6 +47,11 @@ l3         call setbg
            ld b,a
            ld a,2
            call SCR_SET_INK
+           ld a,(borderpc)
+           ld c,a
+           ld b,a
+           ld a,4
+           call SCR_SET_INK
            ld a,(topology)
            or a
            ld a,(bordertc)

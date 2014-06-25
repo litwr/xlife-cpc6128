@@ -2084,6 +2084,7 @@ drrect1  ld hl,readde
          add a,d
          ld d,a
          ld a,(x8bit)   ;copy
+         ld hl,$2010
          jp xcont1
          endp
 

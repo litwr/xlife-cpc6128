@@ -1,49 +1,10 @@
-;**calcspd
 ;**zerocc
+;**boxsz
+;**adddensity
+;**rndbyte
 
 zerocc   inibcd cellcnt,4
          ret
-
-;*calcspd .block
-;*        lda #<eval1
-;*        sta $3b
-;*        lda #>eval1
-;*        sta $3c
-;*        jsr $932c	;eval expression
-;*        ldy #0
-;*loop1   lda irqcnt,y
-;*        cmp #$30
-;*        bne cont1
-
-;*        iny
-;*        bne loop1
-
-;*cont1   ldx #0
-;*loop2   lda irqcnt,y
-;*        sta $c06,x
-;*        inx
-;*        iny
-;*        cpy #9
-;*        bne loop2
-
-;*        lda #"S"-"A"+$81
-;*        sta $c06,x
-;*        ldy #0
-;*loop3   lda $100,y
-;*        beq exit
-
-;*        sta $c2f,y
-;*        iny
-;*        bne loop3
-
-;*exit    lda $37
-;*        sta $33
-;*        lda $38
-;*        sta $34
-;*        lda #$19
-;*        sta $16
-;*        jmp getkey
-;*        .bend
 
 ;*boxsz    .block
 ;*xmin     = i1

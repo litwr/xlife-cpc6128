@@ -655,15 +655,16 @@ crsrset1 proc   ;out: b - bitmask, de - curpos
 ;*         rts
 ;*         .bend
          ld a,(crsrbit)
+         ld hl,$8844
 xcont1   ld c,a
          and $c0
          jr z,cont2
 
-cont3    ld b,$88
+cont3    ld b,h
          and $aa
          ret nz
 
-         ld b,$44
+         ld b,l
          ret
 
 cont2    inc de
