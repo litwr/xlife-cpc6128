@@ -86,8 +86,8 @@ loadram  proc       ;use: a,hl,ix*,iy*,b*
          endp
 
 ;*puttent  .block
-puttent  proc       ;use: a, bc, hl,ix*, iy*,de*
-         local loop
+puttent  proc         ;in: memb8 - cells count
+         local loop   ;use: a, bc, hl,ix*, iy*,de*
 ;*         lda #0
 ;*         sta currp
 ;*         lda #8

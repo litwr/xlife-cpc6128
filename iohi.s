@@ -338,7 +338,7 @@ ok       ret
          endp
 
 loadpat  proc
-         local eof,cont1,loop5
+         local eof,cont1,cont7,loop5
          ld a,(fnlen)
          ld b,a
          ld hl,fn
@@ -354,7 +354,7 @@ loadpat  proc
          jp nc,eof
 
          or iyl
-         jr z,eof
+         jp z,eof
 
          call readchar
          cp 193
@@ -366,11 +366,6 @@ loadpat  proc
          jr nc,eof
 
          ld (y0),a
-         push iy
-         call showrect
-         pop iy
-         jr nc,eof
-
          call readchar
          ld l,a
          call readchar
@@ -387,6 +382,17 @@ loadpat  proc
          and ixl
          jr nz,eof
 
+         push hl
+         push ix
+         call readtent
+         push iy
+         call showrect
+         pop de
+         pop bc
+         pop hl
+         jr nc,eof
+
+         push de
          ld a,(live)
          cp l
          jr nz,cont1
@@ -396,27 +402,31 @@ loadpat  proc
          jr nz,cont1
 
          ld a,(born)
-         cp ixl
+         cp c
          jr nz,cont1
 
          ld a,(born+1)
-         cp ixh
-         jr z,loop5
+         cp b
+         jr z,cont7
 
 cont1    ld (live),hl
-         ld (born),ix
+         ld (born),bc
          call fillrt
+cont7    call puttent
+         pop de
+         jr nc,eof
+
 loop5    call readchar
          ld (x0),a
          call readchar
          ld (y0),a
-         push iy
+         push de
          ld hl,putpixel
          call calllo
-         pop iy
-         dec iy
-         ld a,iyl
-         or iyh
+         pop de
+         dec de
+         ld a,e
+         or d
          jr nz,loop5
 
 eof      jp CAS_IN_CLOSE
@@ -460,8 +470,38 @@ eof      jp CAS_IN_CLOSE
 ;*         sta $b9
 ;*         rts
 ;*         .bend
-readtent proc ;in: iy - total cells
+readtent proc                    ;in: iy - total cells to read
+         local loop,exit         ;out: iy
          ld hl,EOP
+         ld de,0
+loop     call readchar
+         ld (hl),a
+         call readchar
+         inc h
+         inc h
+         inc h
+         inc h
+         ld (hl),a
+         dec h
+         dec h
+         dec h
+         dec h
+         inc hl
+         inc de
+         dec iy
+         ld a,iyl
+         or iyh
+         jr z,exit
+
+         xor a
+         or e
+         jr nz,loop
+
+         ld a,3
+         cp d
+         jr nc,loop
+
+exit     ld (memb8),de
          ret
          endp
 
