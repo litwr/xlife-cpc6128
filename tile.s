@@ -388,7 +388,6 @@ loop1    dec b
 ;*         ldx xdir
 ;*         beq cont4
          ld a,(crsrx)
-         srl a
          rlca
          rlca
          rlca
@@ -505,7 +504,6 @@ cont1    ld d,a
          and 7
          ld ixh,a
          ld a,(crsrx)
-         srl a
          ld b,a
          ld a,ixl
          and $f8

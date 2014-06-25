@@ -6,7 +6,7 @@ maketent proc          ;in: hl
          inc hl
          ld a,(hl)
 ;*         lsr     ;CY=1
-         rra
+         srl a
 ;*         sbc #1
          dec a
 ;*         sta $b8
