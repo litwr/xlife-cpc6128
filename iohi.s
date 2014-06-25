@@ -422,3 +422,46 @@ loop5    call readchar
 eof      jp CAS_IN_CLOSE
          endp
 
+;*readtent .block
+;*         ldy #0
+;*         sty $b8
+;*         lda #8
+;*         sta $b9
+;*loop     jsr READSS
+;*         bne checkst
+;*
+;*         jsr BASIN
+;*         sta ($b8),y
+;*         
+;*         jsr READSS
+;*         bne checkst
+;*
+;*         lda $b9
+;*         pha
+;*         eor #4
+;*         sta $b9
+;*         jsr BASIN
+;*         sta ($b8),y
+;*         pla
+;*         sta $b9
+;*         inc $b8
+;*         bne l1
+;*
+;*         inc $b9
+;*l1       cmp #>(960;*(8*256))
+;*         bne loop
+;*
+;*         lda $b8
+;*         cmp #<960
+;*         bne loop
+;*
+;*checkst  lda $b9
+;*         eor #8
+;*         sta $b9
+;*         rts
+;*         .bend
+readtent proc ;in: iy - total cells
+         ld hl,EOP
+         ret
+         endp
+

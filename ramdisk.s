@@ -6,7 +6,7 @@ maketent proc          ;in: hl
          inc hl
          ld a,(hl)
 ;*         lsr     ;CY=1
-         srl a
+         rra
 ;*         sbc #1
          dec a
 ;*         sta $b8
@@ -110,17 +110,13 @@ puttent  proc       ;use: a, bc, hl,ix*, iy*,de*
 ;*         bne l1
 loop     ld a,(hl)
          ld (x0),a
+         push hl
          inc h
          inc h
          inc h
          inc h
          ld a,(hl)
-         dec h
-         dec h
-         dec h
-         dec h
          ld (y0),a
-         push hl
          push bc
          ld hl,putpixel
          call calllo

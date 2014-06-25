@@ -593,7 +593,8 @@ m1       ld a,(iy)
          pop iy
          ld l,d
          ld a,e      ;y8byte
-         call readde
+         ld e,(iy+video)      ;call readde
+         ld d,(iy+video+1)
          rlca
          rlca
          rlca
