@@ -361,7 +361,7 @@ loop     dec (hl)
          endp
 
 putpixel proc   ;in: x0,y0,xdir,ydir,xchgdir
-         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8
+         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8,cont9
          local cup,cdown,cleft,cright,m1
 ;x8pos  - ixl; x8bit - ixh; y8pos - d; y8byte - e; adjcell - bc
 ;*         jsr xchgxy
@@ -589,28 +589,31 @@ m1       ld a,(iy)
 ;*         sta (i1),y
 ;*         rts
 ;*         .bend
-         ld ixh,d
          push bc
          pop iy
+         ld l,d
          ld a,e      ;y8byte
-         ld hl,readde
-         call calllo
+         call readde
          rlca
          rlca
          rlca
          add a,d
          ld d,a
-         ld a,ixh   ;x8bit count?
+         ld a,l
          ld c,a
          and $c0
          jr z,cont7
 
-cont8    ld b,$88
-         and $aa
-         ret nz
+cont8    ld b,$14
+         ld c,$aa
+         and c
+         jr z,cont9
 
-         ld b,$44
-         ld a,b
+         ld b,$28
+         ld c,$55
+cont9    ld a,(de)
+         and c
+         or b
          ld (de),a
          ret
 
@@ -634,8 +637,9 @@ cont5    ld a,e      ;y8byte
          ld a,b
          adc a,0
          ld h,a
+         ld a,d
          or (hl)
-         ld (hl),d
+         ld (hl),a
          jp chkadd
 
 ;*cright   ldy #right     ;y=0, x=/=0
