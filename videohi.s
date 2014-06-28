@@ -512,13 +512,7 @@ tograph  proc
          ld a,(zoom)
 tograph0 or a
          call z,split_on
-         call setcolor
-         ld a,(cursorc)
-         xor 1
-         ld (cursorc),a
-         ld ix,(crsrtile)
-         ld hl,setcrsrc
-         jp calllo
+         jp setcolor
          endp
 
 crsrclr  proc
@@ -1020,7 +1014,7 @@ cont2    dec de
          endp
 
 chgcolors proc
-         local loop,cont1,cont2,cont3,cont4,cont5,cont6,cont7,cont8
+         local loop,cont1,cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont9,cont10,cont11,cont12,cont14
          ld ix,borderpc
          call printn
          db 12,15,2,"PRESS ",15,3,"ENTER",15,2," TO USE DEFAULT COLOR OR INPUT "
@@ -1042,8 +1036,8 @@ cont1    inc ix
          call chgclrs2
 cont2    inc ix
          call printn
-         db $d,$a,"THE CURSOR OVER LIVE CELL ($"
-         ld hl,$2106
+         db $d,$a,"THE CURSOR OVER EMPTY CELL ($"
+         ld hl,$2206
          call chgclrs1
          call inputdec
          jr z,cont3
@@ -1051,8 +1045,17 @@ cont2    inc ix
          call chgclrs2
 cont3    inc ix
          call printn
-         db $d,$a,"THE CURSOR OVER EMPTY CELL ($"
-         ld hl,$2207
+         db $d,$a,"THE CURSOR OVER LIVE CELL ($"
+         ld hl,$2107
+         call chgclrs1
+         call inputdec
+         jr z,cont9
+
+         call chgclrs2
+cont9    inc ix
+         call printn
+         db $d,$a,"THE CURSOR OVER NEW CELL ($"
+         ld hl,$2008
          call chgclrs1
          call inputdec
          jr z,cont4
@@ -1061,7 +1064,7 @@ cont3    inc ix
 cont4    inc ix
          call printn
          db $d,$a,"THE LIVE CELL ($"
-         ld hl,$1508
+         ld hl,$1509
          call chgclrs1
          call inputdec
          jr z,cont5
@@ -1070,7 +1073,7 @@ cont4    inc ix
 cont5    inc ix
          call printn
          db $d,$a,"THE NEW CELL ($"
-         ld hl,$1409
+         ld hl,$140a
          call chgclrs1
          call inputdec
          jr z,cont6
@@ -1079,7 +1082,7 @@ cont5    inc ix
 cont6    inc ix
          call printn
          db $d,$a,"THE EDIT BACKGROUND ($"
-         ld hl,$1b0a
+         ld hl,$1b0b
          call chgclrs1
          call inputdec
          jr z,cont7
@@ -1088,13 +1091,49 @@ cont6    inc ix
 cont7    inc ix
          call printn
          db $d,$a,"THE GO BACKGROUND ($"
-         ld hl,$190b
+         ld hl,$190c
          call chgclrs1
          call inputdec
          jr z,cont8
 
          call chgclrs2
-cont8    call printn
+cont8    inc ix
+         call printn
+         db $d,$a,"THE TENTATIVE FRAME ($"
+         ld hl,$1b0d
+         call chgclrs1
+         call inputdec
+         jr z,cont12
+
+         call chgclrs2
+cont12   inc ix
+         call printn
+         db $d,$a,"THE FRAME OVER LIVE CELL ($"
+         ld hl,$200e
+         call chgclrs1
+         call inputdec
+         jr z,cont14
+
+         call chgclrs2
+cont14   inc ix
+         call printn
+         db $d,$a,"THE FRAME OVER NEW CELL ($"
+         ld hl,$1f0f
+         call chgclrs1
+         call inputdec
+         jr z,cont10
+
+         call chgclrs2
+cont10   inc ix
+         call printn
+         db $d,$a,"THE TENTATIVE CELLS ($"
+         ld hl,$1b10
+         call chgclrs1
+         call inputdec
+         jr z,cont11
+
+         call chgclrs2
+cont11   call printn
          db $d,$a,"TO SAVE THIS CONFIG?$"
 loop     call KM_WAIT_CHAR
          or $20
@@ -1489,7 +1528,7 @@ showrect proc
 ;*         .byte 144,0
          call printn
          db 15,2,"MOVE, ",15,3,"R",15,2,"OTATE, ",15,3,"F",15,2,"LIP, ",15,3
-         db "ENTER",15,2,", ",15,3,"ESC",15,1,"$"
+         db "ENTER",15,2,", ",15,3,"ESC",15,1,"  X   Y$"
 ;*         lda #0
 ;*         sta xdir
 ;*         sta ydir
@@ -1887,8 +1926,7 @@ ymove    ld a,(ydir)
 ;*         dec y8pos
 ;*         beq exit
 loopdn   call drrect1
-loop10   ;call setcrsrc
-         call pixel11      ;used: de,b
+loop10   call pixel11      ;used: de,b
          ld hl,y8pos
          dec (hl)
          ret z
@@ -1921,8 +1959,7 @@ loopup   call drrect1
 ;*loop11   jsr pixel11
 ;*         dec y8pos
 ;*         beq exit
-loop11   ;call setcrsrc
-         call pixel11
+loop11   call pixel11
          ld hl,y8pos
          dec (hl)
          ret z
@@ -1958,11 +1995,9 @@ xmove    ld a,(xdir)
 
 ;*looprt   jsr drrect1
 looprt   call drrect1
-
 ;*loop12   jsr pixel11
 ;*         dec x8pos
 ;*         beq exit
-         ;call setcrsrc
          call pixel11
          ld hl,x8pos
          dec (hl)

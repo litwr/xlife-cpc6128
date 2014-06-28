@@ -47,10 +47,43 @@ l3         call setbg
            ld b,a
            ld a,2
            call SCR_SET_INK
-           ld a,(borderpc)
+           ld a,(framec)
            ld c,a
            ld b,a
            ld a,4
+           call SCR_SET_INK
+           ld a,(framecellc)
+           ld c,a
+           ld b,a
+           ld a,5
+           call SCR_SET_INK
+           ld a,(frameocellc)
+           ld c,a
+           ld b,a
+           ld a,6
+           call SCR_SET_INK
+           ld a,(tentc)
+           ld c,a
+           ld b,a
+           ld a,7
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
+           ld a,(crsrc)
+           ld b,a
+           ld a,8
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
+           ld a,(crsrocc)
+           ld b,a
+           ld a,9
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
+           ld a,(crsroncc)
+           ld b,a
+           ld a,10
            call SCR_SET_INK
            ld a,(topology)
            or a

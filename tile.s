@@ -603,12 +603,12 @@ m1       ld a,(iy)
          and $c0
          jr z,cont7
 
-cont8    ld b,$14
+cont8    ld b,$54
          ld c,$aa
          and c
          jr z,cont9
 
-         ld b,$28
+         ld b,$a8
          ld c,$55
 cont9    ld a,(de)
          and c

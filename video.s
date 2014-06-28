@@ -655,7 +655,7 @@ crsrset1 proc   ;out: b - bitmask, de - curpos
 ;*         rts
 ;*         .bend
          ld a,(crsrbit)
-         ld hl,$8844
+         ld hl,$201
 xcont1   ld c,a
          and $c0
          jr z,cont2
@@ -692,6 +692,21 @@ pixel11  ld a,(de)
          or b
          ld (de),a
          ret
+;pixel11  proc
+;         local l1,l2
+;         ld a,$aa
+;         and b
+;         ld a,(de)
+;         jr z,l1
+;
+;         and $55
+;l2       or b
+;         ld (de),a
+;         ret
+;
+;l1       and $aa
+;         jr l2
+;         endp
 
 ;*crsrset0 jsr crsrset1
 ;*         lda vistab,x
@@ -699,50 +714,11 @@ pixel11  ld a,(de)
 ;*         eor (i1),y
 ;*         sta (i1),y
 ;*         rts
-
-setcrsrc proc             ;in: ix - crsrtile
-         local m1,l1,l2
-         ld a,(crsrbyte)
-         ld (m1+2),a
-m1       ld c,(ix)
-         ld a,(crsrbit)
-         and c
-         ld a,(cursorc)
-         jr nz,l1
-
-         or a
-         ret z
-
-         ld a,(crsrc)
-         ld c,a
-         xor a
-l2       push bc
-         push de
-         ld (cursorc),a
-         ld b,c
-         ld a,(bgedit)
-         ld c,a
-         ld a,3
-         call SCR_SET_INK
-         pop de
-         pop bc
-         ret
-
-l1       or a
-         ret nz
-
-         ld a,(crsrocc)
-         ld c,a
-         ld a,1
-         jr l2
-         endp
-
 crsrset  call crsrset1
          ld a,(zoom)
          or a
          ret nz
 
-         call setcrsrc
          jp pixel11
 
 ;*infov    .block

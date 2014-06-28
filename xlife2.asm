@@ -96,12 +96,17 @@ borderpc db 6    ;plain
 bordertc db 19   ;torus
 crsrc    db 20
 crsrocc  db 16   ;over cell
+crsroncc db 16   ;over new cell
 livcellc db 9
 newcellc db 18
 bgedit   db 26
 bggo     db 23
+framec   db 17
+framecellc db 24
+frameocellc db 24
+tentc    db 2
+
 copyleft db "cr.txt"
-cursorc  db 0   ;0 - free, 1 - over cell
 errst    db 0   ;0 - do not print i/o-errors message, 1 - print
 crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
 splitst  db 1   ;1..255 - split on, 0 - off
