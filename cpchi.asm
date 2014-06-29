@@ -75,15 +75,33 @@ l3         call setbg
            call SCR_SET_INK
            ld a,(bgedit)
            ld c,a
+           ld a,(crsrc)
+           ld b,a
+           ld a,8+4
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
            ld a,(crsrocc)
            ld b,a
            ld a,9
            call SCR_SET_INK
            ld a,(bgedit)
            ld c,a
+           ld a,(crsrc)
+           ld b,a
+           ld a,9+4
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
            ld a,(crsroncc)
            ld b,a
            ld a,10
+           call SCR_SET_INK
+           ld a,(bgedit)
+           ld c,a
+           ld a,(crsroncc)
+           ld b,a
+           ld a,10+4
            call SCR_SET_INK
            ld a,(topology)
            or a

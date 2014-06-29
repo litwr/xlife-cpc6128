@@ -102,8 +102,8 @@ newcellc db 18
 bgedit   db 26
 bggo     db 23
 framec   db 17
-framecellc db 24
-frameocellc db 24
+framecellc db 17
+frameocellc db 17
 tentc    db 2
 
 copyleft db "cr.txt"
