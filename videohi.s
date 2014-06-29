@@ -802,8 +802,7 @@ cont7    cp 9        ;TAB
 
          call TXT_REMOVE_CURSOR     ;cursor off
          call ramdisk
-         jr nc,exit
-         jp loadmenu
+         jr exit
 
 cont8    and $7f
          cp 33
