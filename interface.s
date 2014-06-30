@@ -592,6 +592,9 @@ cont17h  cp "v"
 ;*         jsr curoff
 ;*         jsr infov
 ;*         jmp finish
+         call totext
+         call infov
+         jp finish
 
 cont17i  cp "Z"
          jr nz,cont17j

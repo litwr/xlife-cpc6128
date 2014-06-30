@@ -1,3 +1,6 @@
+zerocc   inibcd cellcnt,4
+         ret
+
 ;*clear    .block
 ;*         jsr zerocc
 ;*         #inibcd gencnt,6

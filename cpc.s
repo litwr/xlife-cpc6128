@@ -110,6 +110,9 @@ xoriy    ld a,(iy)
          ld (iy),a
          ret
 
+oriy     or (iy)
+         ret
+
 readde   ld e,(iy+video)      ;in: iy
          ld d,(iy+video+1)    ;out: de
          ret

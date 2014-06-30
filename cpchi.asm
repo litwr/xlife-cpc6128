@@ -5,6 +5,7 @@
            include "rules.s"
            include "iohi.s"
            include "ramdisk.s"
+           include "utils.s"
            include "ramdata.s"
 
 stringbuf  db 0,0,0,0,0,0,0,0,0

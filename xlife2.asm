@@ -84,7 +84,7 @@ ttab     db 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
 bittab   db 1,2,4,8,16,32,64,128
 ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
          db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
-dirname  db "????????"      ;filename used to access directory
+dirname  db "????????"      ;filename mask used to access directory
 cfn      db "colors.cfg"
 live     db 12,0
 born     db 8,0
@@ -133,11 +133,8 @@ tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          db 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
          include "tile.s"
-         include "utils.s"
          include "io.s"
          include "cpc.s"
-;*         .include "ramdisk.s"
-;*         .include "ramdata.s"
 
 generate proc
          local cont2,cont4,ll1,ll2,ll3,ll4,ll5,ll7

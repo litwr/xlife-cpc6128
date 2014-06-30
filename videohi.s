@@ -2549,3 +2549,167 @@ exit     pop bc
          ret
          endp
 
+printdec1 proc   ;in:a   ;use: l
+         local cont1,cont2,cont3,loop1,loop2
+         cp 100
+         jr c,cont1
+
+         ld l,$ff
+loop1    inc l
+         sub 100
+         jr nc,loop1
+         
+         add a,100
+         push af
+         ld a,l
+         add a,"0"
+         call TXT_OUTPUT
+         pop af
+cont3    ld l,$ff
+loop2    inc l
+         sub 10
+         jr nc,loop2
+         
+         add a,10
+         push af
+         ld a,l
+         add a,"0"
+         call TXT_OUTPUT
+         pop af
+cont2    add a,"0"
+         call TXT_OUTPUT
+         ret
+
+cont1    cp 10
+         jr c,cont2
+         jr cont3
+         endp
+
+;*infov    .block
+infov    proc
+         local cont1,cont2,loop1
+         local sizex
+
+;*         jsr $ff4f
+;*         .byte 147,144,0
+         call SCR_CLEAR
+
+;*         lda fnlen
+;*         beq cont1
+         ld a,(fnlen)
+         or a
+         jr z,cont1
+         
+;*         jsr $ff4f
+;*         .null "last loaded filename: "
+         call printn
+         db  "Last loaded filename: $"
+;*         ldy #0
+;*loop1    lda fn,y
+;*         jsr $ffd2
+;*         iny
+;*         cpy fnlen
+;*         bne loop1
+         ld hl,fn
+loop1    ld a,(hl)
+         call TXT_OUTPUT
+         inc hl
+         ld a,"."
+         cp (hl)
+         jr nz,loop1
+
+;*cont1    sei
+;*         sta $ff3f
+;*         jsr boxsz
+;*         sta $ff3e
+;*         cli
+;*         beq cont2
+cont1    call boxsz
+         jr z,cont2
+
+;*xmin     = i1
+;*ymin     = i1+1
+;*xmax     = adjcell
+;*ymax     = adjcell+1
+;*sizex    = adjcell2
+;*sizey    = adjcell2+1
+         ;xmin - d, ymin - e
+         ;xmax - b, ymax - c
+sizex     equ $fffc     ;connected to curx at boxsz
+         ;cury - sizey - h
+
+;*         jsr $ff4f
+;*         .byte $d
+;*         .null "active pattern size: "
+         call printn
+         db $d,$a,"Active pattern size: $"
+
+;*         lda #0
+;*         ldx sizex
+;*         jsr $a45f      ;int -> str
+;*         lda #"x"
+;*         jsr $ffd2
+;*         lda #0
+         ld a,(sizex)
+         call printdec1
+         ld a,"x"
+         call TXT_OUTPUT
+
+;*         ldx sizey
+;*         jsr $a45f      ;int -> str
+         ld a,h
+         call printdec1
+;*         jsr $ff4f
+;*         .byte $d
+;*         .null "box life bounds: "
+         call printn
+         db $d,$a,"Box life bounds: $"
+
+;*         lda #0
+;*         ldx xmin
+;*         jsr $a45f      ;int -> str
+;*         jsr $ff4f
+;*         .null "<=x<="
+         ld a,d
+         call printdec1
+         call printn
+         db "<=X<=$"
+
+;*         lda #0
+;*         ldx xmax
+;*         jsr $a45f      ;int -> str
+;*         lda #" "
+;*         jsr $ffd2
+         ld a,b
+         call printdec1
+         ld a," "
+         call TXT_OUTPUT
+
+;*         lda #0
+;*         ldx ymin
+;*         jsr $a45f      ;int -> str
+;*         jsr $ff4f
+;*         .null "<=y<="
+         ld a,e
+         call printdec1
+         call printn
+         db "<=X<=$"
+
+;*         lda #0
+;*         ldx ymax
+;*         jsr $a45f      ;int -> str
+         ld a,c
+         call printdec1
+
+;*cont2    jsr $ff4f
+;*         .byte $d
+;*         .null "rules: "
+cont2    call printn
+         db $d,$a,"Rules: $"
+;*         jsr showrules2
+         call showrules2
+;*         jmp getkey
+;*         .bend
+         jp KM_WAIT_CHAR
+         endp
+

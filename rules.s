@@ -341,34 +341,59 @@ cont2   call TXT_OUTPUT
         ret
         endp
 
-;*showrules2
-;*        .block
+;*showrules2 .block
+showrules2 proc
+        local loop1,loop2,loop3,loop4,loop5,cont4,showr0
 ;*        lda #1
 ;*loop1   bit live
 ;*        bne cont1
+        ld c,1
+loop1   ld a,(live)
+        and c
+        call nz,showr0
 
 ;*loop2   asl
 ;*        bne loop1
+loop2   sla c
+        jr nz,loop1
 
 ;*        lda live+1
 ;*        beq cont4
+        ld a,(live+1)
+        or a
+        jr z,cont4
 
 ;*        lda #"8"
 ;*        jsr $ffd2
+        ld a,"8"
+        call TXT_OUTPUT
 ;*cont4   lda #"/"
 ;*        jsr $ffd2
 ;*        lda #1
+cont4   ld a,"/"
+        call TXT_OUTPUT
+        ld c,1
 ;*loop4   bit born
 ;*        bne cont5
+loop4   ld a,(born)
+        and c
+        call nz,showr0
 
 ;*loop5   asl
 ;*        bne loop4
+loop5   sla c
+        jr nz,loop4
 
 ;*        lda born+1
 ;*        beq cont3
+        ld a,(born+1)
+        or a
+        ret z
 
 ;*        lda #"8"
 ;*        jmp $ffd2
+        ld a,"8"
+        jp TXT_OUTPUT
 
 ;*cont5   jsr showr0
 ;*        jmp loop5
@@ -381,13 +406,21 @@ cont2   call TXT_OUTPUT
 ;*loop3   inx
 ;*        lsr
 ;*        bcc loop3
+showr0  ld b,$ff
+loop3   inc b
+        rrca
+        jr nc,loop3
 
 ;*        txa
 ;*        eor #$30
 ;*        jsr $ffd2
 ;*        pla
 ;*cont3   rts
+        ld a,b
+        xor "0"
+        jp TXT_OUTPUT
 ;*        .bend
+        endp
 
 inborn   proc
          local loop1,loop3,loop4,cont1,cont2,cont3,cont4
