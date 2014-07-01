@@ -542,58 +542,6 @@ cont2      ld b,3
            jp digiout
            endp
 
-;*getsvfn  .block
-;*scrfn    = $c00+40
-;*         jsr $ff4f
-;*         .byte 147,30
-;*         .text "enter filename or press "
-;*         .byte 28
-;*         .text "esc"
-;*         .byte 30
-;*         .text " to exit"
-;*         .byte 144,$d,0
-;*loop3    ldy #0
-;*         sty $ff0c
-;*loop1    tya
-;*         clc
-;*         adc #<scrfn
-;*         sta $ff0d
-;*         jsr getkey
-;*         cmp #27
-;*         bne cont7
-;*         
-;*         jsr curoff
-;*         ldy #0
-;*         sta svfnlen
-;*         rts
-
-;*cont7    cmp #$d
-;*         beq cont1
-
-;*         cmp #$14   ;backspace
-;*         beq cont2
-
-;*         cmp #32
-;*         bcc loop1
-
-;*         cpy #15    ;fn length limit
-;*         beq loop1
-
-;*         sta svfn,y
-;*loop8    jsr $ffd2
-;*         iny
-;*         bpl loop1
-
-;*cont1    sty svfnlen    
-;*         jmp curoff
-
-;*cont2    dey
-;*         bmi loop3
-
-;*         dey
-;*         jmp loop8
-;*         .bend
-
 xchgxy   proc
          ld a,(xchgdir)
          or a

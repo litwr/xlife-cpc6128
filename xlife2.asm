@@ -63,8 +63,8 @@ xcrsr    db 0,0,0
 ycrsr    db 0,0,0
 fnlen    db 0
 fn       db 0,0,0,0,0,0,0,0,0,0,0,0
-;*svfnlen  = $1bd2
-;*svfn     = $1bd3  ; .. $1be6
+svfnlen  db 0
+svfn     db 0,0,0,0,0,0,0,0,0,0,0,0
 temp     db 0,0
 crsrtile db low(tiles),high(tiles)
 crsrbit  db $80    ;x bit position

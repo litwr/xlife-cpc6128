@@ -618,13 +618,19 @@ cont18   cp "S"
 
 ;*         jsr boxsz
 ;*         beq cont20
+         call boxsz
+         ret z
 
 ;*         jsr totext
+         call totext
 ;*         jsr getsvfn
+         call getsvfn
 ;*         beq exitsave
+         jp z,finish
 
 ;*         jsr savepat
 ;*exitsave jmp finish
+         jp finish
 
 ;*cont20   clc
 ;*         rts

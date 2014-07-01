@@ -739,6 +739,7 @@ nofnchar db 42,63,37,40,41,44,46,47,59,60,61,62,91,92,93,95,124,126,127
 loadmenu proc
          local loop1,loop1a,loop3,loop3a,exit,menu2,repeat
          local cont1,cont1a,cont2,cont2a,cont4,cont4a,cont7,cont7a,cont8
+
          call printn
          db 12,15,2,"INPUT FILENAME, AN EMPTY STRING MEANS TOSHOW DIRECTORY, PRESS "
          db 15,3,"TAB",15,2," TO USE RAMDISKOR ",15,3,"ESC",15,2," TO EXIT",15,1,$d,$a,"$"
@@ -903,6 +904,7 @@ cont2a   dec de
          jr cont4a
          endp
 
+
 inputdec proc
 ;gets up to 2 digits and prints them
 ;out: ZF=1 - empty input 
@@ -963,6 +965,83 @@ cont5    call TXT_REMOVE_CURSOR
          ld a,c
          or a
          ret
+
+cont2    dec de
+         dec c
+         jp m,loop3
+
+         call TXT_REMOVE_CURSOR
+         call printn
+         db 8,32,8,"$"
+         jr cont4
+         endp
+
+getsvfn  proc
+         local loop1,loop3
+         local cont1,cont2,cont4,cont7
+
+         call printn
+         db 12,15,2,"Enter filename or press ",15,3,"Esc",15,2," to exit",15,1,$d,$a,"$"
+         call TXT_PLACE_CURSOR   ;cursor on
+loop3    ld de,svfn
+         ld c,0
+loop1    call KM_WAIT_CHAR
+         cp $d
+         jr z,cont1
+
+         cp $7f      ;backspace
+         jr z,cont2
+
+         cp $fc      ;esc
+         jr nz,cont7
+
+         call TXT_REMOVE_CURSOR   ;cursor off
+         xor a
+         ret
+
+cont7    and $7f
+         cp 33
+         jr c,loop1
+
+         ld hl,nofnchar
+         push bc
+         ld bc,19
+         cpir
+         pop bc
+         jr z,loop1
+
+         ld b,a
+         ld a,c
+         cp 8           ;fn length limit
+         ld a,b
+         jr nc,loop1
+
+         ld (de),a
+         inc de
+         inc c
+         ld b,a
+         call TXT_REMOVE_CURSOR
+         ld a,b
+         call TXT_OUTPUT
+cont4    call TXT_PLACE_CURSOR
+         jp loop1
+
+cont1    call TXT_REMOVE_CURSOR     ;cursor off
+         ld a,c
+         or a
+         ret z
+
+         add a,3
+         ld (svfnlen),a
+         ld a,"."
+         ld (de),a
+         inc de
+         ld a,"8"
+         ld (de),a
+         inc de
+         ld a,"L"
+         ld (de),a
+         ret    ;nz
 
 cont2    dec de
          dec c
