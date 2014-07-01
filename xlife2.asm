@@ -133,7 +133,6 @@ tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          db 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
          include "tile.s"
-         include "io.s"
          include "cpc.s"
 
 generate proc
