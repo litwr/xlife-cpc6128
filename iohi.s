@@ -112,12 +112,12 @@ showdir  proc
          call printn
          db 12,$d,$a,"$"
          vector1
-         ld de,$6800
+         ld de,$7780
          xor a
          ld (de),a
          call CAS_CATALOG
          vector2
-         ld iy,$6800
+         ld iy,$7780
          ld c,0
 fnloop   ld a,(iy)
          cp $ff
@@ -262,7 +262,7 @@ nextfn   ld a,l
 
 findfn   proc   ;in: c - length
          local loop,nextfn,cont,ext,cploop,addloop,noadd
-         ld iy,$6800
+         ld iy,$7780
          ld hl,stringbuf
          ld a,(hl)
          xor $30

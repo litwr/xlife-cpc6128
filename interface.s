@@ -436,6 +436,7 @@ lsp2     ld a,(zoom)
 ;*         jmp crsrset
 lsp3     ld hl,infoout
          call calllo
+         call crsrclr
          ld hl,crsrset
          jp calllo
 
