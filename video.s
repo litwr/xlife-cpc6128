@@ -655,7 +655,7 @@ crsrset1 proc   ;out: b - bitmask, de - curpos
 ;*         rts
 ;*         .bend
          ld a,(crsrbit)
-         ld hl,$201
+         ld hl,$201          ;it is the b-input for crsrcalc
 xcont1   ld c,a
          and $c0
          jr z,cont2

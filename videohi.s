@@ -119,8 +119,8 @@ cont6    rlca
          ld a,e
          and 7
          add a,h
-         srl b
-         srl b
+         ;srl b
+         ;srl b
          srl b
          rla
          ld (crsrx),a
@@ -2693,7 +2693,7 @@ sizex     equ $fffc     ;connected to curx at boxsz
          ld a,e
          call printdec1
          call printn
-         db "<=X<=$"
+         db "<=Y<=$"
 
 ;*         lda #0
 ;*         ldx ymax

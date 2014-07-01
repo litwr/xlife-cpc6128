@@ -203,13 +203,14 @@ cont4    pop iy
 ;*loop5    lda (currp),y
 ;*         bne cont6
          ld e,a
-         push iy
+cont5    push iy
          push de
          ld de,7
          ld l,e
          add iy,de
          pop de
-cont5    call calllo1
+         xor a
+         call calllo1
          jr nz,cont6
 
          dec l
