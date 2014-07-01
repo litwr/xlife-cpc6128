@@ -28,7 +28,7 @@ dispat2  proc
          local cont17b,cont17c,cont17d,cont17e,cont17f,cont17g,cont17h,cont17i
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
-         local lsp1,lsp2,lsp3,l2,l4,l5,l8,l11,cm4v,cm5v,finish,zoomin,zoomout
+         local lsp1,lsp2,l2,l4,l5,l8,l11,cm4v,cm5v,finish,zoomin,zoomout
          local nozoom,exitload,nozoom3
 
          cp "g"
@@ -426,17 +426,18 @@ cont17   cp 32          ;space
          call calllo
 lsp2     ld a,(zoom)
          or a
-         jr z,lsp3
+         push af
+         call z,crsrclr
+         pop af
 
 ;*         jsr showscnpg
-       ld hl,showscnpg
-       call calllo
+         ld hl,showscnpg
+         call nz,calllo
 
 ;*lsp3     jsr infoout
 ;*         jmp crsrset
-lsp3     ld hl,infoout
+         ld hl,infoout
          call calllo
-         call crsrclr
          ld hl,crsrset
          jp calllo
 

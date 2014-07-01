@@ -1,41 +1,3 @@
-printdec macro             ;print number (<104) in AC as decimal
-         local l1,l2,m1    ;changes: iy
-         push bc           ;return ZF if only one digit
-         ld iy,ctab
-         ld b,a
-         and 7
-         ld c,a
-         ld a,b
-         and $f8
-         rrca
-         rrca
-         rrca
-         ld (m1+2),a
-m1       ld a,(iy)
-         add a,c
-         daa
-         ld b,a
-         and $f0
-         jr z,l2
-         rrca
-         rrca
-         rrca
-         rrca
-         xor $30
-         call TXT_OUTPUT
-l2       ld a,b
-         and $f
-         xor $30
-         cp $3a
-         jr c,l1
-
-         add a,6
-l1       call TXT_OUTPUT
-         ld a,b
-         and $f0
-         pop bc
-         endm
-
 printhex macro       ;print hex (<$A0) number in AC
          local l1
          ld b,a
@@ -740,7 +702,7 @@ cont2    dec de
 chgclrs1 proc
          local l1
          ld a,(ix)
-         printdec
+         call printdec
          jr nz,l1
 
          dec h
@@ -2549,35 +2511,38 @@ exit     pop bc
          ret
          endp
 
-printdec1 proc   ;in:a   ;use: l
+printdec proc   ;in:a   out: zf set if one digit
          local cont1,cont2,cont3,loop1,loop2
+         push hl
+         ld l,$ff
          cp 100
          jr c,cont1
 
-         ld l,$ff
 loop1    inc l
          sub 100
          jr nc,loop1
          
          add a,100
-         push af
+         ld h,a
          ld a,l
          add a,"0"
          call TXT_OUTPUT
-         pop af
+         ld a,h
 cont3    ld l,$ff
 loop2    inc l
          sub 10
          jr nc,loop2
          
          add a,10
-         push af
+         ld h,a
          ld a,l
          add a,"0"
          call TXT_OUTPUT
-         pop af
+         ld a,h
 cont2    add a,"0"
          call TXT_OUTPUT
+         inc l
+         pop hl
          ret
 
 cont1    cp 10
@@ -2651,14 +2616,14 @@ sizex     equ $fffc     ;connected to curx at boxsz
 ;*         jsr $ffd2
 ;*         lda #0
          ld a,(sizex)
-         call printdec1
+         call printdec
          ld a,"x"
          call TXT_OUTPUT
 
 ;*         ldx sizey
 ;*         jsr $a45f      ;int -> str
          ld a,h
-         call printdec1
+         call printdec
 ;*         jsr $ff4f
 ;*         .byte $d
 ;*         .null "box life bounds: "
@@ -2671,7 +2636,7 @@ sizex     equ $fffc     ;connected to curx at boxsz
 ;*         jsr $ff4f
 ;*         .null "<=x<="
          ld a,d
-         call printdec1
+         call printdec
          call printn
          db "<=X<=$"
 
@@ -2681,7 +2646,7 @@ sizex     equ $fffc     ;connected to curx at boxsz
 ;*         lda #" "
 ;*         jsr $ffd2
          ld a,b
-         call printdec1
+         call printdec
          ld a," "
          call TXT_OUTPUT
 
@@ -2691,7 +2656,7 @@ sizex     equ $fffc     ;connected to curx at boxsz
 ;*         jsr $ff4f
 ;*         .null "<=y<="
          ld a,e
-         call printdec1
+         call printdec
          call printn
          db "<=Y<=$"
 
@@ -2699,7 +2664,7 @@ sizex     equ $fffc     ;connected to curx at boxsz
 ;*         ldx ymax
 ;*         jsr $a45f      ;int -> str
          ld a,c
-         call printdec1
+         call printdec
 
 ;*cont2    jsr $ff4f
 ;*         .byte $d
