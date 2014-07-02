@@ -1444,7 +1444,7 @@ setdirmsk proc
          add a,"A"
          ld (devtxt+1),a
          call printn
-devtxt   db 12,"A",15,2,": SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *)",$d,$a,15,1,"$"
+devtxt   db 12,"A",15,2,": SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *, ",15,3,"@",15,2,")",$d,$a,15,1,"$"
          call TXT_PLACE_CURSOR   ;cursor on
 loop3    ld de,stringbuf
          ld c,0
