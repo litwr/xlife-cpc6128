@@ -621,14 +621,21 @@ cont18   cp "S"
          call boxsz
          ret z
 
+         push bc
+         push de
+         push hl
 ;*         jsr totext
          call totext
 ;*         jsr getsvfn
          call getsvfn
 ;*         beq exitsave
+         pop hl
+         pop de
+         pop bc
          jp z,finish
 
 ;*         jsr savepat
+         call savepat
 ;*exitsave jmp finish
          jp finish
 

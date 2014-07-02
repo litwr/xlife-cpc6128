@@ -319,7 +319,7 @@ loop4    ld a,(iy)
          ld l,(ix+next)
          ld h,(ix+next+1)
          ld a,h
-         or a
+         or a      ;l?
          jr nz,cont1
 
          ld a,l

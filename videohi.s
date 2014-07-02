@@ -2679,7 +2679,7 @@ cont1    call boxsz
 ;*sizey    = adjcell2+1
          ;xmin - d, ymin - e
          ;xmax - b, ymax - c
-sizex     equ $fffc     ;connected to curx at boxsz
+sizex     equ t1     ;connected to curx at boxsz and savepat
          ;cury - sizey - h
 
 ;*         jsr $ff4f

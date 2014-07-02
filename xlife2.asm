@@ -51,13 +51,10 @@ cont5    call zerocc
 viewport db 0,0
 startp   db 1,0
 i1       db 0,0
-;i2       db 0
 adjcell  db 0,0
 adjcell2 db 0,0
 tilecnt  db 0,0
 cellcnt  db 0,0,0,0,0
-;t2       db 0
-;t3       db 0
 gencnt   db 0,0,0,0,0,0,0
 xcrsr    db 0,0,0
 ycrsr    db 0,0,0
@@ -87,7 +84,7 @@ ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
 dirname  db "????????"      ;filename mask used to access directory
 cfn      db "colors.cfg"
 live     db 12,0
-born     db 8,0
+born     db 8,0  ;must be after born
 vptilecx db 0
 vptilecy db 0    ;must be after vptilex!
 density  db 3

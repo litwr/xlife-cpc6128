@@ -2,7 +2,7 @@
 ;**adddensity
 ;**rndbyte
 
-inccurp  ld a,tilesize
+inccurrp  ld a,tilesize
          add a,iyl
          ld iyl,a
          ret nc
@@ -23,7 +23,7 @@ boxsz    proc
          ;xmax - b, ymax - c
 ;*curx     = adjcell2
 ;*cury     = adjcell2+1
-curx     equ $fffc     ;connected to infov
+curx     equ t1     ;connected to infov
          ;cury - h
 
 ;*         lda #192
@@ -269,7 +269,7 @@ cont6    pop iy
 ;*         cpx #20
 ;*         beq cont8
          ld c,a
-cont7    call inccurp
+cont7    call inccurrp
          ld a,(curx)
          inc a
          cp 20
@@ -324,6 +324,42 @@ cont8    xor a
          or c
          or b
          ret
+         endp
+
+calccells1 proc         ;out: hl;   use: a,bc,hl,iy
+         local cont1,loop2
+         ld hl,(tilecnt)
+         ld a,l
+         or h
+         ret z
+
+         ld hl,readlow
+         ld (jsrfar+1),hl
+         ld hl,0
+         ld iy,(startp)
+loop2    ld a,sum
+         call calllo1
+         add a,l
+         ld l,a
+         ld a,0
+         adc a,h
+         ld h,a
+         ld a,next
+         call calllo1
+         ld c,a
+         ld a,next+1
+         call calllo1
+         ld b,a
+         or a     ;c?
+         jr nz,cont1
+
+         ld a,c
+         dec a
+         ret z
+
+cont1    push bc
+         pop iy
+         jr loop2
          endp
 
 ;*adddensity

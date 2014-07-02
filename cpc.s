@@ -95,6 +95,13 @@ jsrfar   call 0
          pop af
          ret
 
+readlow  proc
+         local m1
+         ld (m1+2),a
+m1       ld a,(iy)
+         ret
+         endp
+
 readhl   ld l,(iy)
          ld h,(iy+1)
          ret
