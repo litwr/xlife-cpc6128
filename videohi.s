@@ -737,7 +737,7 @@ l1       ld (ix),l
 nofnchar db 42,63,37,40,41,44,46,47,59,60,61,62,91,92,93,95,124,126,127
 
 loadmenu proc
-         local loop1,loop1a,loop3,loop3a,exit,menu2,repeat
+         local loop1,loop1a,loop3,loop3a,loopx,exit,menu2,repeat
          local cont1,cont1a,cont2,cont2a,cont4,cont4a,cont7,cont7a,cont8
 
          call printn
@@ -839,7 +839,7 @@ menu2    call setdirmsk
          call showdir
          call printn
          db 30,18,"ENTER FILE# OR ",15,3,"ESC",15,2,": ",15,1,"$"
-         call TXT_PLACE_CURSOR   ;cursor on
+loopx    call TXT_PLACE_CURSOR   ;cursor on
 loop3a   ld de,stringbuf
          ld c,0
 loop1a   call KM_WAIT_CHAR
@@ -880,7 +880,7 @@ cont4a   call TXT_PLACE_CURSOR
 cont1a   call TXT_REMOVE_CURSOR
          ld a,c
          or a
-         jr z,menu2
+         jr z,loopx
 
          push bc
          push de
