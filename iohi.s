@@ -62,6 +62,7 @@ showtxt  proc
 
 loop     call CAS_IN_CHAR
          jr c,next
+
          call CAS_IN_CLOSE
          jp KM_WAIT_CHAR
          
@@ -731,10 +732,14 @@ cont4    ld (sizex),a
          endp
 
 ;*showcomm .block
+showcomm proc
 ;*         ldx fnlen
 ;*         bne cont2
 
 ;*exit1    rts
+         ld a,(fnlen)
+         or a
+         ret z
 
 ;*cont2    lda fn-1,x
 ;*         cmp #"*"
@@ -746,14 +751,31 @@ cont4    ld (sizex),a
 
 ;*         inx
 ;*cont1    sta fn-1,x
-;*         ;lda #","     ;check file type
-;*         ;inx
-;*         ;sta fn-1,x
-;*         ;lda #"s"
-;*         ;inx
-;*         ;sta fn-1,x
 ;*         txa
 ;*         ldx #<fn
 ;*         ldy #>fn
+         ld b,a
+         inc b
+         ld hl,fn
+         sub 2
+         add a,l
+         ld l,a
+         ld a,0
+         adc a,h
+         ld h,a
+         push hl
+         ld (hl),"T"
+         inc hl
+         ld (hl),"X"
+         inc hl
+         ld (hl),"T"
+         ld hl,fn
+         call showtxt
+         pop hl
+         ld (hl),"8"
+         inc hl
+         ld (hl),"L"
+         ret
 ;*         .bend
+         endp
 

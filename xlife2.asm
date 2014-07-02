@@ -51,8 +51,6 @@ cont5    call zerocc
 viewport db 0,0
 startp   db 1,0
 i1       db 0,0
-adjcell  db 0,0
-adjcell2 db 0,0
 tilecnt  db 0,0
 cellcnt  db 0,0,0,0,0
 gencnt   db 0,0,0,0,0,0,0

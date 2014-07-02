@@ -582,10 +582,14 @@ cont17g  cp "V"
 ;*         jsr totext
 ;*         jsr $ff4f
 ;*         .byte 144,147,0
+         call totext
+         call SCR_CLEAR
 
 ;*         jsr curoff
 ;*         jsr showcomm
+         call showcomm
 ;*         jmp finish
+         jp finish
 
 cont17h  cp "v"
          jr nz,cont17i
