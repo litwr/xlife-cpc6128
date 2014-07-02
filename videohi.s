@@ -1586,7 +1586,8 @@ showrect proc
 ;*         jsr crsrset0
 loop0    call drawrect
          call showtent
-         ;call crsrset0
+         ld hl,crsrset
+         call calllo
 ;*loop1    jsr getkey
 loop1    call KM_WAIT_CHAR
 
