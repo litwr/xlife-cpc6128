@@ -421,15 +421,17 @@ indens   proc
          local loop1
 
          call printn
-         db 12,"SELECT DENSITY OR PRESS ",15,3,"ESC",15,1," TO EXIT",$d,$a
-         db 15,3,"0",15,2," - 94%",$d,$a
-         db 15,3,"1",15,2," - 82%",$d,$a
-         db 15,3,"2",15,2," - 70%",$d,$a
-         db 15,3,"3",15,2," - 59%",$d,$a
-         db 15,3,"4",15,2," - 47%",$d,$a
-         db 15,3,"5",15,2," - 35%",$d,$a
-         db 15,3,"6",15,2," - 23%",$d,$a
-         db 15,3,"7",15,2," - 12%$"
+         db 12,"SELECT DENSITY OR PRESS ",15,3,"ESC",15,2," TO EXIT",$d,$a
+         db 15,3,"0",15,2," - 12.5%",$d,$a
+         db 15,3,"1",15,2," - 28%",$d,$a
+         db 15,3,"2",15,2," - 42%",$d,$a
+         db 15,3,"3",15,2," - 54%",$d,$a
+         db 15,3,"4",15,2," - 64%",$d,$a
+         db 15,3,"5",15,2," - 73%",$d,$a
+         db 15,3,"6",15,2," - 81%",$d,$a
+         db 15,3,"7",15,2," - 88.5%",$d,$a
+         db 15,3,"8",15,2," - 95%",$d,$a
+         db 15,3,"9",15,2," - 100%$"
 
 loop1    call KM_WAIT_CHAR
          cp $fc       ;esc
@@ -438,10 +440,11 @@ loop1    call KM_WAIT_CHAR
          cp "0"
          jr c,loop1
 
-         cp "8"
+         cp "0"+10
          jr nc,loop1
 
-         xor #$30
+         xor $30
+         inc a
          ld (density),a
          ret
          endp

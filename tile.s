@@ -232,7 +232,7 @@ inctiles ld de,tilesize
 
 ;*rndbyte  .block    ;in:t2
 rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
-
+         local loop1
 ;*         ldy #4
 ;*         ldx #0
 ;*         stx adjcell2
@@ -274,13 +274,14 @@ rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
          ld a,0
          adc a,h
          ld h,a
+         ld a,(density)
+         ld ixl,a
 ;*         ora (adjcell),y
 ;*         sta (adjcell),y
-         ld a,(i1)
-         inc a
+loop1    ld a,(i1)
+         rrca
          ld c,a
          ld a,r
-         ;rrca
          xor c
          ld (i1),a
          and 7
@@ -295,6 +296,7 @@ rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
          ld (hl),a
 ;*         tax
 ;*         lda tab3,x
+         push hl
          ld hl,tab3
          add a,l
          ld l,a
@@ -302,12 +304,16 @@ rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
          adc a,h
          ld h,a
          ld a,(hl)
+         pop hl
 ;*         ldy #sum
 ;*         adc (adjcell),y
 ;*         sta (adjcell),y
          add a,(iy+sum)
          ld (iy+sum),a
 ;*         rts
+         dec ixl
+         jr nz,loop1
+
          ret
 ;*         .bend
          endp
@@ -315,8 +321,7 @@ rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
 ;*random   .block
 ;**uses: adjcell:2, adjcell2:2, i1:2, i2, t1, t2, t3, x0
 random   proc
-         local cont1,cont2,cont3,cont4,cont5,loop1,dir
-dir      equ $fffc
+         local cont1,cont2,cont3,cont4,cont5,loop1
 
 ;*         lda #<tiles+((hormax*4+3)*tilesize)  ;start random area
 ;*         sta adjcell
@@ -330,7 +335,7 @@ dir      equ $fffc
 ;*         lda #right
 ;*         sta i1+1
          ld a,right
-         ld (dir),a
+         ld ixh,a
 ;*         lda #16    ;ver rnd max
 ;*         sta i1
 ;*         lda #14    ;hor rnd max
@@ -349,7 +354,7 @@ cont3    xor a
          ld (iy+sum),a
          ld b,8
 loop1    push bc
-         call rndbyte
+         call rndbyte    ;use ixl
          pop bc
          djnz loop1
 
@@ -372,7 +377,7 @@ loop1    push bc
 ;*         stx adjcell
 ;*         sta adjcell+1
 ;*         bne cont3
-         ld a,(dir)
+         ld a,ixh
 cont4    push iy
          pop hl
          add a,l
@@ -411,7 +416,7 @@ cont2    dec d
 ;*         ldy #down
 ;*         bne cont4
          ld a,right
-cont1    ld (dir),a
+cont1    ld ixh,a
          ld a,down
          jr cont4
 
