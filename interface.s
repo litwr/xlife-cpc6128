@@ -28,7 +28,7 @@ dispat2  proc
          local cont17b,cont17c,cont17d,cont17e,cont17f,cont17g,cont17h,cont17i
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
-         local lsp1,lsp2,l2,l4,l5,l8,l11,cm4v,cm5v,finish,zoomin,zoomout
+         local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,finish,zoomin,zoomout
          local nozoom,exitload,nozoom3
 
          cp "g"
@@ -134,14 +134,17 @@ cont10   cp "E"
 
          ld a,1
 l11      ld (pseudoc),a
-         ld hl,showscn
+l77      ld hl,showscn
          jp calllo
 
 cont11   cp "!"
          jr nz,cont12
 
 ;*         jsr random
+         ld hl,random
+         call calllo
 ;*         jmp showscn
+         jr l77
 
 cont12   cp "%"
          jr nz,cont14

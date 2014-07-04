@@ -1,6 +1,5 @@
 ;**boxsz
 ;**adddensity
-;**rndbyte
 
 inccurrp  ld a,tilesize
          add a,iyl
@@ -388,49 +387,6 @@ cont1    push bc
 
 ;*exit     lda adjcell2
 ;*         and adjcell2+1
-;*         rts
-;*         .bend
-
-;*rndbyte  .block
-;*         ldy #4
-;*         ldx #0
-;*         stx adjcell2
-;*loop1    stx x0
-;*         ldx #4
-;*loop2    lda $ff1e
-;*         lsr
-;*         sta adjcell2+1
-;*loop3    lsr adjcell2+1
-;*         bne loop3
-
-;*         lsr
-;*         lsr
-;*         rol x0
-;*         lda $ff1e
-;*         lsr
-;*         lsr
-;*         eor $ff02
-;*         lsr
-;*         rol x0
-;*         dex
-;*         bne loop2
-
-;*         lda x0
-;*         ora adjcell2
-;*         sta adjcell2
-;*         dey
-;*         bne loop1
-
-;*         jsr adddensity
-;*         ldy t2
-;*         inc t2
-;*         ora (adjcell),y
-;*         sta (adjcell),y
-;*         tax
-;*         lda tab3,x
-;*         ldy #sum
-;*         adc (adjcell),y
-;*         sta (adjcell),y
 ;*         rts
 ;*         .bend
 

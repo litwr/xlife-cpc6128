@@ -230,20 +230,112 @@ inctiles ld de,tilesize
          add iy,de
          ret
 
+;*rndbyte  .block    ;in:t2
+rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
+
+;*         ldy #4
+;*         ldx #0
+;*         stx adjcell2
+;*loop1    stx x0
+;*         ldx #4
+;*loop2    lda $ff1e
+;*         lsr
+;*         sta adjcell2+1
+;*loop3    lsr adjcell2+1
+;*         bne loop3
+
+;*         lsr
+;*         lsr
+;*         rol x0
+;*         lda $ff1e
+;*         lsr
+;*         lsr
+;*         eor $ff02
+;*         lsr
+;*         rol x0
+;*         dex
+;*         bne loop2
+
+;*         lda x0
+;*         ora adjcell2
+;*         sta adjcell2
+;*         dey
+;*         bne loop1
+
+;*         jsr adddensity
+;*         ldy t2
+;*         inc t2
+         ld a,8
+         sub b
+         push iy
+         pop hl
+         add a,l
+         ld l,a
+         ld a,0
+         adc a,h
+         ld h,a
+;*         ora (adjcell),y
+;*         sta (adjcell),y
+         ld a,(i1)
+         inc a
+         ld c,a
+         ld a,r
+         ;rrca
+         xor c
+         ld (i1),a
+         and 7
+         ld bc,bittab
+         add a,c
+         ld c,a
+         ld a,0
+         adc a,b
+         ld b,a
+         ld a,(bc)
+         or (hl)
+         ld (hl),a
+;*         tax
+;*         lda tab3,x
+         ld hl,tab3
+         add a,l
+         ld l,a
+         ld a,0
+         adc a,h
+         ld h,a
+         ld a,(hl)
+;*         ldy #sum
+;*         adc (adjcell),y
+;*         sta (adjcell),y
+         add a,(iy+sum)
+         ld (iy+sum),a
+;*         rts
+         ret
+;*         .bend
+         endp
+
 ;*random   .block
 ;**uses: adjcell:2, adjcell2:2, i1:2, i2, t1, t2, t3, x0
+random   proc
+         local cont1,cont2,cont3,cont4,cont5,loop1,dir
+dir      equ $fffc
+
 ;*         lda #<tiles+((hormax*4+3)*tilesize)  ;start random area
 ;*         sta adjcell
 ;*         lda #>tiles+((hormax*4+3)*tilesize)
 ;*         sta adjcell+1
+         ld iy,tiles+((hormax*4+3)*tilesize)
 ;*         lda #0     ;dir: 0 - left, 1 - right
 ;*         sta t1
+         xor a     ;dir: 0 - left, 1 - right
+         ld (t1),a
 ;*         lda #right
 ;*         sta i1+1
+         ld a,right
+         ld (dir),a
 ;*         lda #16    ;ver rnd max
 ;*         sta i1
 ;*         lda #14    ;hor rnd max
 ;*         sta i2
+         ld de,$100e  ;d - vermax - i1, e - hormax - i2
 ;*cont3    ldy #sum
 ;*         lda #0
 ;*         sta t2
@@ -253,10 +345,24 @@ inctiles ld de,tilesize
 ;*loop1    jsr rndbyte
 ;*         dec t3
 ;*         bne loop1
+cont3    xor a
+         ld (iy+sum),a
+         ld b,8
+loop1    push bc
+         call rndbyte
+         pop bc
+         djnz loop1
 
 ;*         jsr chkadd
 ;*         dec i2
 ;*         beq cont2
+         push de
+         push iy
+         pop bc
+         call chkadd
+         pop de
+         dec e
+         jr z,cont2
 
 ;*         ldy i1+1
 ;*cont4    lda (adjcell),y
@@ -266,9 +372,25 @@ inctiles ld de,tilesize
 ;*         stx adjcell
 ;*         sta adjcell+1
 ;*         bne cont3
+         ld a,(dir)
+cont4    push iy
+         pop hl
+         add a,l
+         ld l,a
+         ld a,0
+         adc a,h
+         ld h,a
+         ld c,(hl)
+         inc hl
+         ld b,(hl)
+         push bc
+         pop iy
+         jr cont3
 
 ;*cont2    dec i1
 ;*         beq cont5
+cont2    dec d
+         jr z,cont5
 
 ;*         lda #14    ;hor rnd max
 ;*         sta i2
@@ -277,14 +399,26 @@ inctiles ld de,tilesize
 ;*         eor #1
 ;*         sta t1
 ;*         bne cont1
+         ld e,14
+         ld a,(t1)
+         xor 1
+         ld (t1),a
+         ld a,left
+         jr nz,cont1
 
 ;*         ldy #right
 ;*cont1    sty i1+1
 ;*         ldy #down
 ;*         bne cont4
+         ld a,right
+cont1    ld (dir),a
+         ld a,down
+         jr cont4
 
 ;*cont5
+cont5
 ;*         .bend
+         endp
 
 calccells proc
          local cont1,loop2,loop4
