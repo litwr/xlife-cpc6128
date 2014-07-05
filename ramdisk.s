@@ -165,7 +165,7 @@ ramdisk  proc
          db 12,"ENTER FILE# OR HIT ",15,3,"ESC",$d,$a,"0",15,1
 ;*         .text " glider"
 ;*         .byte $d,28,"1",144
-         db " GLIDER",$d,$a,15,3,"1",15,1
+         db " GLIDER GUN",$d,$a,15,3,"1",15,1
 ;*         .text " small fish"
 ;*         .byte $d,28,"2",144
          db " SMALL FISH",$d,$a,15,3,"2",15,1
@@ -183,7 +183,7 @@ ramdisk  proc
          db " LIDKA",$d,$a,15,3,"6",15,1
 ;*         .text " toad"
 ;*         .byte $d,28,"7",144
-         db " TOAD",$d,$a,15,3,"7",15,1
+         db " BIG GLIDER",$d,$a,15,3,"7",15,1
 ;*         .text " bi-gun"
 ;*         .byte $d,28,"8",144
          db " BI-GUN",$d,$a,15,3,"8",15,1
