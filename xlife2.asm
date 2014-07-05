@@ -1295,7 +1295,7 @@ ticker_event_block
 
 ;; this is the function called each 1/300th of a second
 ticker_function proc
-         local cont1,cont2,wait
+         local cont1,wait
          push af
          push bc
 ;; The 1/300th of a second interrupt effectively splits
@@ -1305,12 +1305,14 @@ ticker_function proc
 ;; We want to ensure that the effect is stationary so we reset
 ;; every 6 calls of this function. We need to ensure we are synced with vsync in
 ;; order that this works correctly.
+         ld b,0
          ld a,(ticker_counter)
          dec a
          jr nz,cont1
 
-         ld b,$66
+         ld b,$65
 wait     djnz wait
+         ld b,1
          ld a,6
 cont1    ld (ticker_counter),a
 
@@ -1322,21 +1324,16 @@ cont1    ld (ticker_counter),a
          ex af,af'
          ld c,a
          ex af,af'
-         cp 6
-         ld a,1
-         jr z,cont2
-
-         dec a
 ;; clear off mode bits
-cont2    res 1,c
+         res 1,c
          res 0,c
+         ld a,b
 ;; combine with our wanted mode
          or c
 ;; write to hardware
          ld c,a
-         ;res 2,a			;; ensure lower rom is active, but we don't want to modify C register ;)
-         and $fb
-         ld b,&7f
+         and $fb    ;; ensure lower rom is active, but we don't want to modify C register ;)
+         ld b,$7f
          out (c),a
 
 ;; now store back to A'
