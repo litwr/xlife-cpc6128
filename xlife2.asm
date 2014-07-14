@@ -93,7 +93,7 @@ crsrc    db 20
 crsrocc  db 16   ;over cell
 crsroncc db 16   ;over new cell
 livcellc db 9
-newcellc db 18
+newcellc db 15
 bgedit   db 26
 bggo     db 23
 framec   db 17

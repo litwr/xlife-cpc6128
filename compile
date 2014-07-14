@@ -1,8 +1,5 @@
-#tr '\n' '\r' < xlife.man.txt | awk -f xlife.man.awk | sed 's/,$//' >txtl.inc
-#sed 's/,$//' < attr.inc >attl.inc
-#tmpx -i manpage.asm -l manpage.lst
+#cr.txt
 #p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
-#rm attr.inc attl.inc txtl.inc
 
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym

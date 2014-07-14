@@ -413,7 +413,8 @@ loadpat  proc
 cont1    ld (live),hl
          ld (born),bc
          call fillrt
-cont7    call puttent
+cont7    call totext     ;it's inserted due to problems with interrupts during long io
+         call puttent
          pop de
          jr nc,eof
 
