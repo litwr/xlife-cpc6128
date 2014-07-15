@@ -411,7 +411,7 @@ help     call printn
          db 15,3,"v",15,2," show some info",$d,$a
          db 15,3,"V",15,2," show comments to the pattern",$d,$a
          db 15,3,"X",15,2,"/",15,3,"Z",15,2," reload/set&save palette",$d,$a
-         db 15,3,"@",15,2," toggle drive",$d,$a
+         db $d,$a
          db 15,1,"Use ",15,3,"cursor keys",15,1," to set the position and "
          db 15,3,"space key",15,1," to toggle the current cell.",$d,$a
          db "Use ",15,3,"shift",15,1," to speed up the movement$"
@@ -737,16 +737,19 @@ l1       ld (ix),l
          ret
          endp
 
-nofnchar db 42,63,37,40,41,44,46,47,59,60,61,62,91,92,93,95,124,126,127
+nofnchar db 63,37,40,41,44,46,47,59,60,61,62,91,92,93,95,124,126,127
 
 loadmenu proc
          local loop1,loop1a,loop3,loop3a,loopx,exit,menu2,repeat
-         local cont1,cont1a,cont2,cont2a,cont4,cont4a,cont7,cont7a,cont8
+         local cont1,cont1a,cont2,cont2a,cont4,cont4a,cont7,cont7a,cont8,cont11
 
          call printn
-         db 12,15,2,"INPUT FILENAME, AN EMPTY STRING MEANS TOSHOW DIRECTORY, PRESS "
-         db 15,3,"TAB",15,2," TO USE RAMDISKOR ",15,3,"ESC",15,2," TO EXIT",15,1,$d,$a,"$"
-         call TXT_PLACE_CURSOR   ;cursor on
+         db 12,15,2,"INPUT FILENAME, AN EMPTY STRING MEANS TOSHOW DIRECTORY. PRESS "
+         db 15,3,"TAB",15,2," TO USE RAMDISK, ",15,3,"*",15,2," TO CHANGE DRIVE, ",15,3,"ESC",15,2," TO EXIT"
+         db 15,1,$a,"$"
+         ld c,0
+         call showdrv
+         ;call TXT_PLACE_CURSOR   ;cursor on
 loop3    ld de,fn
          ld c,0
 loop1    call KM_WAIT_CHAR
@@ -762,8 +765,14 @@ loop1    call KM_WAIT_CHAR
 exit     call TXT_REMOVE_CURSOR   ;cursor off
          xor a
          ret
+         
+cont7    cp "*"
+         jr nz,cont11
 
-cont7    cp 9        ;TAB
+         call chgdrv
+         jr loop1
+
+cont11   cp 9        ;TAB
          jr nz,cont8
 
          call TXT_REMOVE_CURSOR     ;cursor off
@@ -776,7 +785,7 @@ cont8    and $7f
 
          ld hl,nofnchar
          push bc
-         ld bc,19
+         ld bc,18
          cpir
          pop bc
          jr z,loop1
@@ -979,20 +988,43 @@ cont2    dec de
          jr cont4
          endp
 
+chgdrv   ld a,(curdev)
+         xor 1
+         ld (curdev),a
+         add a,"A"
+         ld (drvlett),a
+         call TXT_REMOVE_CURSOR
+showdrv  call printn
+         db $d
+drvlett  db "A:$"
+         ld a,c
+         add a,3
+         call TXT_SET_COLUMN
+         jp TXT_PLACE_CURSOR
+
 getsvfn  proc
          local loop1,loop3
-         local cont1,cont2,cont4,cont7
+         local cont1,cont2,cont4,cont7,cont11
 
          call printn
-         db 12,15,2,"Enter filename or press ",15,3,"Esc",15,2," to exit",15,1,$d,$a,"$"
-         call TXT_PLACE_CURSOR   ;cursor on
+         db 12,15,2,"Enter filename (",15,3,"Esc",15,2," - exit, "
+         db 15,3,"*",15,2," - drive)",15,1,$a,"$"
+         ld c,0
+         call showdrv
+         ;call TXT_PLACE_CURSOR   ;cursor on
 loop3    ld de,svfn
          ld c,0
 loop1    call KM_WAIT_CHAR
          cp $d
          jr z,cont1
 
-         cp $7f      ;backspace
+         cp "*"
+         jr nz,cont11
+
+         call chgdrv
+         jr loop1
+
+cont11   cp $7f      ;backspace
          jr z,cont2
 
          cp $fc      ;esc
@@ -1008,7 +1040,7 @@ cont7    and $7f
 
          ld hl,nofnchar
          push bc
-         ld bc,19
+         ld bc,18
          cpir
          pop bc
          jr z,loop1
@@ -1442,12 +1474,9 @@ loop12   sla (ix)
          endp
 
 setdirmsk proc
-         local devtxt,loop1,loop2,loop3,loop5,cont1,cont2,cont3,cont4,cont6,cont7,cont8
-         ld a,(curdev)
-         add a,"A"
-         ld (devtxt+1),a
+         local devtxt,loop1,loop2,loop3,loop5,cont1,cont2,cont3,cont4,cont6,cont8
          call printn
-devtxt   db 12,"A",15,2,": SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *, ",15,3,"@",15,2,")",$d,$a,15,1,"$"
+devtxt   db 12,15,2,"SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *)",$d,$a,15,1,"$"
          call TXT_PLACE_CURSOR   ;cursor on
 loop3    ld de,stringbuf
          ld c,0
@@ -1455,15 +1484,7 @@ loop1    call KM_WAIT_CHAR
          cp $d
          jp z,cont1
 
-         cp "@"
-         jr nz,cont7
-
-         ld a,(curdev)
-         xor 1
-         ld (curdev),a
-         jr setdirmsk
-
-cont7    cp $7f       ;backspace
+         cp $7f       ;backspace
          jr z,cont2
 
          cp $fc       ;esc
