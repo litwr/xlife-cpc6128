@@ -1606,6 +1606,7 @@ showrect proc
          xor a
          call tograph0
          call showscn0
+         call xyout
 ;*loop0    jsr drawrect
 ;*         jsr crsrset0
 loop0    call drawrect

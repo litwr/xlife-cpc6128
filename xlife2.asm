@@ -1298,6 +1298,7 @@ ticker_function proc
          local cont1,wait
          push af
          push bc
+         ;push hl
 ;; The 1/300th of a second interrupt effectively splits
 ;; the screen into 6 sections of equal height. Each section
 ;; spans the entire width of the screen.
@@ -1347,6 +1348,7 @@ cont1    ld (ticker_counter),a
 ;; see SOFT968
          xor a
          LD (ticker_event_block+2),a
+         ;pop hl
          pop bc
          pop af
          ret
