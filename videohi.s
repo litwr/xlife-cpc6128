@@ -400,7 +400,7 @@ help     call printn
          db 15,3,"C",15,2," clear screen",$d,$a
          db 15,3,"E",15,2," toggle pseudocolor mode",$d,$a
          db 15,3,"g",15,2," toggle run/stop mode",$d,$a
-         db 15,3,"h",15,2," toggle hide mode - about 20% faster",$d,$a
+         db 15,3,"h",15,2," toggle hide mode - to 40% faster",$d,$a
          db 15,3,"l",15,2," load and transform file",$d,$a
          db 15,3,"L",15,2," reload pattern",$d,$a
          db 15,3,"o",15,2," one step",$d,$a

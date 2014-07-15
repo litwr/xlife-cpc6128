@@ -109,7 +109,7 @@ vector2  macro
          endm
 
 showdir  proc
-         local loop,fnloop,prloop,subloop,nextfn,l1,l2,l3,l4,l5,l6,l7,l8,l9,l10
+         local loop,fnloop,prloop,subloop,nextfn,l1,l2,l3,l4,l5,l5a,l6,l7,l8,l9,l10
          call printn
          db 12,$d,$a,"$"
          vector1
@@ -182,20 +182,25 @@ l3       call printn
          sub b
          ld b,a
          ld a,c
-         and $f0
-         jr nz,l5
+         ld ixh,c
+         cp 10
+         jr nc,l5
 
          ld a," "
          jr l6
 
-l5       rrca
-         rrca
-         rrca
-         rrca
+l5       ld ixl,$ff
+         ld a,c
+l5a      inc ixl
+         sub 10
+         jr nc,l5a
+
+         add a,10
+         ld ixh,a
+         ld a,ixl
          xor $30
 l6       call TXT_OUTPUT
-         ld a,c
-         and $f
+         ld a,ixh
          xor $30
          call TXT_OUTPUT
          call printn

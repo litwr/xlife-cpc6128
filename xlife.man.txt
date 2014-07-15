@@ -61,8 +61,8 @@
 
 \bLIMITS
 
-\g  It is possible to see only up to 256 files from the disk directory.  Use  mask
-  to show only matched files.
+\g  It is possible to see only up to 99 files from the disk directory. Use mask to
+  show only matched files.
 
  The tentative pattern may show only up to 1024 cells.  The other cells are  not
  shown but loaded later.  This quantity is enough to show the every cell from  a

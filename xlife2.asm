@@ -1298,7 +1298,7 @@ ticker_function proc
          local cont1,wait
          push af
          push bc
-         ;push hl
+         push hl
 ;; The 1/300th of a second interrupt effectively splits
 ;; the screen into 6 sections of equal height. Each section
 ;; spans the entire width of the screen.
@@ -1306,14 +1306,14 @@ ticker_function proc
 ;; We want to ensure that the effect is stationary so we reset
 ;; every 6 calls of this function. We need to ensure we are synced with vsync in
 ;; order that this works correctly.
-         ld b,0
+         ld h,0
          ld a,(ticker_counter)
          dec a
          jr nz,cont1
 
-         ld b,$65
+         ld b,$64
 wait     djnz wait
-         ld b,1
+         inc h
          ld a,6
 cont1    ld (ticker_counter),a
 
@@ -1328,7 +1328,7 @@ cont1    ld (ticker_counter),a
 ;; clear off mode bits
          res 1,c
          res 0,c
-         ld a,b
+         ld a,h
 ;; combine with our wanted mode
          or c
 ;; write to hardware
@@ -1348,7 +1348,7 @@ cont1    ld (ticker_counter),a
 ;; see SOFT968
          xor a
          LD (ticker_event_block+2),a
-         ;pop hl
+         pop hl
          pop bc
          pop af
          ret
