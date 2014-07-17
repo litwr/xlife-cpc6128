@@ -473,12 +473,16 @@ cont17c  cp "."
          ld a,1
          ld (crsrbyte),a
 cont17t  ld (crsrbit),a
+         call crsrupd
          ld a,(zoom)
          or a
          jr z,crsrupd
 
 ;*         jsr setviewport
 ;*         jsr showscnpg
+         call setviewport
+         ld hl,showscnpg
+         call calllo
 ;*cont17u  jmp crsrset
 crsrupd  ld hl,crsrset
          call calllo
