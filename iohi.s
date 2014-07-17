@@ -65,7 +65,7 @@ loop     call CAS_IN_CHAR
 
          call CAS_IN_CLOSE
          jp KM_WAIT_CHAR
-         
+
 next     call TXT_OUTPUT
          jr loop
          endp

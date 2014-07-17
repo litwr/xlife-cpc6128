@@ -586,11 +586,15 @@ cont17g  cp "V"
 ;*         jsr $ff4f
 ;*         .byte 144,147,0
          call totext
-         call SCR_CLEAR
+         call printn
+         db 4,2,15,1,"$"   ;80 columns
 
 ;*         jsr curoff
 ;*         jsr showcomm
          call showcomm
+       
+         ld a,1
+         call SCR_SET_MODE
 ;*         jmp finish
          jp finish
 

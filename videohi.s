@@ -392,7 +392,7 @@ cont0    ld hl,showscnpg
 help     call printn
          db 12,"        *** XLIFE COMMANDS ***",$d,$a
          db 15,3,"!",15,2," randomize screen",$d,$a
-         db 15,3,"%",15,2," set random density - default 59%",$d,$a
+         db 15,3,"%",15,2," set random density - default 42%",$d,$a
          db 15,3,"+",15,2,"/",15,3,"-",15,2," zoom in/out",$d,$a
          db 15,3,".",15,2,"/",15,3,"H",15,2," center/home cursor",$d,$a
          db 15,3,"?",15,2," show this help",$d,$a

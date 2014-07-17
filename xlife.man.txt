@@ -6,7 +6,7 @@
 
 \bDESCRIPTION
 
-\g The program helps the user play with John Horton Conway's 'Life' game.
+\g The program helps the user play with John Horton Conway's "Life" game.
 
 \bCOMMANDS
 
@@ -86,7 +86,7 @@
   filename.  The comments' file is a common plain text file.  It maybe edited by
   any editor.
 
-\bUsing the 'lifeconv' utility
+\bUsing the "lifeconv" utility
 
 \g  This utility  from Xlife  main  sources may convert CELLS, LIF,  L,  RLE,  and
   MCL formats.  It may be used from any relative to Unix OS  or  from  Microsoft
@@ -96,18 +96,18 @@
 
 \p   lifeconv pattern -4 >destination
 
-\g  where destination is any valid file name.  The '-4' option sets the format for
+\g  where destination is any valid file name.  The "-4" option sets the format for
   8-bit Xlife for the destination file is written.  At Microsoft  Windows  envi-
   ronment (Mingw Xlife port) the sign \p>\g must be omitted.
 
-\g  is produces a file suitable to use at the Commodore  platform.  The  'cpcconv'
+\g  is produces a file suitable to use at the Commodore  platform.  The  "cpcconv"
   utility may convert the mentioned file to CPC format.  Use it by the next  ex-
   ample
 
 \p   cpcconv CBMfile CPCfile
 
 \g  This utility is the script depended  on a lot of Unix utilities.  It  requires
-  the presence of 'bash', 'sed', 'awk', 'tr', 'dd', and 'cat'  programs  at  the
+  the presence of "bash", "sed", "awk", "tr", "dd", and "cat"  programs  at  the
   system.
 
 
