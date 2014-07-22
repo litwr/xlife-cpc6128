@@ -1311,7 +1311,7 @@ ticker_function proc
          dec a
          jr nz,cont1
 
-         ld b,$64
+         ld b,$65
 wait     djnz wait
          inc h
          ld a,6

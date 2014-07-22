@@ -1,60 +1,77 @@
-    2 rem *** notepad cpc, the text file editor, v1
-    4 rem *** converted from Commodore plus/4  
+    2 rem *** notepad cpc, the text file editor, v1 rev.1
+    4 rem *** converted from Commodore plus/4
     6 rem *** by litwr, 2014, (C) GNU GPL
-    8 cx=0:cy=0:ty=0:cc$=chr$(233):mc=80:cf$=chr$(230):mo$="ins":im=1:u=peek(&a700)
-   10 mode 2:un$=chr$(u+65)+":"
-   12 ml=700:dim a$(ml)
+    7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
+    8 defint a-z:cx=0:cy=0:ty=0:cc$=chr$(233):mc=80:cf$=chr$(127):mo$="ins":im=1
+   10 mode 2:u=peek(&a700):un$=chr$(u+65)+":"
+   12 ml=600:dim a$(ml)
+   14 window 1,80,1,24:window#1,1,80,25,25
 
-   15 'on break cont
+   15 on break cont
 
    20 gosub 100
    30 gosub 9700
    40 gosub 2600:goto 40
 
-   82 'data225,252,225,97,0,0,0,0,0,160,0,0,0,0,0,0,0
-   83 'data0,0,0,0,0,0,0,0,0,225,97,0,108,123,0,0,0,254,97
-   84 'data225,160,160,97,108,236,251,123,226,160,226,0,108,236,251,123,225
-   85 'data236,251,123,0,226,251,123,108,236,251,97,108,254,252,123,108,255,251,97
-   86 'data225,97,251,97,225,97,225,97,0,160,108,123,225,236,226,126,225
-   87 'data252,254,126,108,236,251,97,225,97,225,97,0,225,97,0,124,226,251,236
-   88 'data124,126,124,126,0,226,226,0,0,124,226,0,0,226,226,126,225
-   89 'data97,0,0,0,226,226,126,0,226,226,126,0,0,0,0,0,0,124,126
+   82 data 225,252,225,97,0,0,0,0,0,160,0,0,0,0,0,0,0
+   83 data 0,0,0,0,0,0,0,0,0,225,97,0,108,123,0,0,0,254,97
+   84 data 225,160,160,97,108,236,251,123,226,160,226,0,108,236,251,123,225
+   85 data 236,251,123,0,226,251,123,108,236,251,97,108,254,252,123,108,255,251,97
+   86 data 225,97,251,97,225,97,225,97,0,160,108,123,225,236,226,126,225
+   87 data 252,254,126,108,236,251,97,225,97,225,97,0,225,97,0,124,226,251,236
+   88 data 124,126,124,126,0,226,226,0,0,124,226,0,0,226,226,126,225
+   89 data 97,0,0,0,226,226,126,0,226,226,126,0,0,0,0,0,0,124,126
 
-  100 print chr$(12);
-  110 locate#0,23,23:print "Press Ctrl + H to get help"
-  120 'for i=0 to 3:for k=0 to 35
-  130 'readl:iflthenpoke3354+i*40+k,l
-  140 'nextk:nexti
-  145 locate#0,7,11:print "Amstrad CPC Edition";
-  150 locate#0,10,12:print "v1, by litwr, (c) 2014 gnu gpl"
-  160 i=time
-  170 if time-i<900 then 170
+  100 cls
+  110 locate#0,23,23:print "Press Ctrl + H to get help":locate#0,10,6
+  120 for i=0 to 3:c$="":for k=0 to 35
+  130 read l:gosub 200
+  140 next k:a$(i+1)="    "+c$:next i
+  145 for i=1 to 4:print a$(i):next i
+  150 locate#0,62,11:print "Amstrad CPC Edition";
+  155 locate#0,51,12:print "v1, by litwr, (c) 2014 gnu gpl"
+  160 tt!=time
+  170 if time-tt!<600 then 170
   180 c$=inkey$:if c$<>"" then 180
   190 return
 
- 2000 print chr$(12)"            Notepad CPC":print
- 2005 print "Commands list:":print
- 2010 print "C=H - help          C=N - new"
- 2020 print "C=L - load          C=S - save"
- 2030 print "C=U - page up       C=D - page down"
- 2040 print "C=B - begin         C=E - end"
- 2050 print "C=F - find forward  C=R - repeat find"
- 2070 print "C=C - cat&load      C=Q - quit"
- 2075 print "C=V - change disk   C=O - home":print
- 2080 print "TAB+A/C/D/I/J/K/O/P/Q/V/W/X":print
+  200 if l=0 then c$=c$+"  ":return
+  202 if l=225 then c$=c$+" "+chr$(143):return
+  205 if l=252 then c$=c$+chr$(143)+chr$(140):return
+  210 if l=97 then c$=c$+chr$(143)+" ":return
+  215 if l=160 then c$=c$+chr$(143)+chr$(143):return
+  220 if l=254 then c$=c$+chr$(140)+chr$(143):return
+  225 if l=108 then c$=c$+" "+chr$(140):return
+  230 if l=123 then c$=c$+chr$(140)+" ":return
+  235 if l=236 then c$=c$+chr$(143)+chr$(131):return
+  240 if l=251 then c$=c$+chr$(131)+chr$(143):return
+  245 if l=226 then c$=c$+chr$(131)+chr$(131):return
+  250 if l=255 then c$=c$+chr$(140)+chr$(131):return
+  255 if l=126 then c$=c$+chr$(131)+" ":return
+  260 if l=124 then c$=c$+" "+chr$(131)
+  265 return
+
+ 2000 cls#1:print chr$(12)tab(23)"Notepad +4 v1r1 CPC Edition commands list":print
+ 2005 print tab(30)chr$(24)"With the CONTROL key"chr$(24)
+ 2010 print "H - help"tab(20)"N - new"tab(40)"L/S - load/save"tab(60)"U/D - page up/down"
+ 2020 print "B/E - to begin/end"tab(20)"F - find forward"tab(40)"R - repeat find"tab(60)"C - cat & load"
+ 2030 print "V - change disk"tab(20)"O - cursor home"tab(40)"Q - quit":print
+ 2040 print tab(31)chr$(24)"With the TAB prefix"chr$(24)
+ 2050 print "  A/C - toggle insert/overwrite mode"tab(42)"D/I - delete/insert a line"
+ 2060 print "  J/K - to start/end of line"tab(42)"P/Q - erase begin/end of line"
+ 2070 print "  V/W - scroll up/down"tab(42)"Any other key - cancel TAB":print
  2090 print "del, clr, copy, return, cursors, ..."
- 2100 print:print:print tab(17)"Hit any key to continue"
- 2110 gosub 2900
+ 2100 print:print:print tab(28)"Hit any key to continue"
  2120 c$=inkey$:if c$="" then 2120
 
  2200 rem show screen
- 2205 if fo then return else fo=1
+ 2205 if fo then 2230 else fo=1
  2210 i=ty:cls
  2220 if i<lc and i-ty<24 then gosub 2400:i=i+1:goto 2220
  2230 gosub 2300
 
- 2250 locate#0,1,25:print f$;:locate#0,18,25:print mo$;
- 2260 locate#0,23,25:print un$;:return
+ 2250 locate#1,1,1:print#1,f$;:locate#1,28,1:print#1,mo$;
+ 2260 locate#1,33,1:print#1,un$;:return
 
  2270 i=cy
  2280 if i<lc and i-ty<24 then gosub 2500:if right$(a$(i),1)<>cc$ then i=i+1:goto 2280
@@ -65,7 +82,7 @@
  2320 c$=right$(c$,len(c$)-1):d$=right$(d$,len(d$)-1)
  2330 c$="x"+c$+" y"+d$
  2340 d$=str$(lc):c$=c$+"/"+right$(d$,len(d$)-1):l=mc-len(c$)
- 2350 locate#0,l-2,25:print "   "c$;
+ 2350 locate#1,l-2,1:print#1,"   "c$;
  2360 return
 
  2400 if len(a$(i))<mc then print a$(i) else print a$(i);
@@ -104,24 +121,18 @@
  2850 if i=16 then 3800
  2890 goto 2600
 
- 2900 'remove cursor
- 2910 return
-
  3000 rem load
- 3010 cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
+ 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
  3014 f$=s$:gosub 5900
- 3020 openin f$:cls:d$=""
+ 3020 on error goto 3700:openin f$:cls:d$=""
  3030 line input#9,c$:if len(c$)=255 then gosub 3160
  3060 gosub 7000
  3065 print chr$(13)lc;
  3070 if not eof goto 3030
  3080 a$(lc)=a$(lc)+cf$:gosub 7100
  3090 closein
+ 3095 on error goto 0
  3100 gosub 2200:goto 2300
-
- 3120 cls:gosub 2900:print f$" bad"
- 3130 c$=inkey$:if c$="" then 3130
- 3140 gosub 9700:goto 3090
 
  3160 if len(c$)>mc then gosub 7200:goto 3160
  3165 d$=c$:l=len(d$):line input#9,c$
@@ -132,36 +143,46 @@
  3190 a$(lc)=d$+left$(c$,mc-l):c$=right$(c$,len(c$)-mc+l):goto 7100
 
  3200 rem save
- 3210 cls:s$="":print"disk "dn$,f$
+ 3210 cls#1:cls:s$="":print"disk "un$,f$
  3212 print"Enter filename to save":print"  empty string - use the current one":print"  * - exit"
  3214 input s$:c$=s$:if s$="*" then 3100
  3216 if s$="" then c$=f$ else f$=c$
  3218 if instr(c$,"*") or instr(c$,"?") then 3350
- 3220 openout c$
+ 3220 on error goto 3710:openout c$
  3240 if a$(0)=cf$ goto 3330
  3250 for i=1 to lc
  3260 s$=a$(i-1):l=len(s$)
  3270 if l>1 then print#9,left$(s$,l-1);:s$=right$(s$,1)
  3280 if s$=cf$ goto 3310
- 3290 if s$=cc$ then print#9:goto 3310
- 3300 print#9,s$;:print chr$(13)i;
+ 3290 print chr$(13)i;:if s$=cc$ then print#9:goto 3310
+ 3300 print#9,s$;
  3310 next i
- 3330 closeout:goto 3100
+ 3320 on error goto 0 
+ 3330 closeout
+ 3340 goto 3100
 
- 3350 cls:gosub 2900:print "cannot open "c$:print ds$
- 3360 getkeyc$:goto 3100
+ 3350 cls:print "cannot open "c$:print ds$
+ 3360 c$=inkey$:if c$="" then 3360 else goto 3100
 
  3400 rem change drive letter
- 3410 u=u+1:if u>1 then u=0
+ 3410 cls:cls#1
+ 3415 u=u+1:if u>1 then u=0
  3420 un$=chr$(u+65)+":":if u=0 then |a else |b
- 3430 gosub 2260:goto 2300
+ 3430 goto 2200
 
  3500 rem directory & load
- 3510 cls:dm$="":print"disk "un$:print"enter directory mask (*.* by default)":input dm$:if dm$="" then dm$="*.*"
+ 3510 cls#1:cls:dm$="":print"disk "un$:print"enter directory mask (*.* by default)":input dm$:if dm$="" then dm$="*.*"
  3520 |dir,dm$
  3630 print "You may use second cursor to copy filename from the list"
  3640 s$="":input "Filename (empty string = exit)";s$:if s$="" then 3100
  3650 goto 3014
+
+ 3700 if err=14 then print " No memory - next lines are ignored" else print" Error";err,erl
+ 3702 print "Hit a key"
+ 3705 c$=inkey$:if c$="" then 3705 else resume 3080
+
+ 3710 print" Error";err:print "Hit a key"
+ 3715 c$=inkey$:if c$="" then 3715 else resume 3320
 
  3800 rem delete char
  3810 if mid$(a$(cy),cx+1,1)=cf$ then return
@@ -271,7 +292,7 @@
  5640 gosub 7100
  5650 goto 2200
 
- 5900 cx=0:cy=0:ty=0:lc=0:return
+ 5900 cx=0:cy=0:ty=0:lc=0:a$(0)="":return
 
  6000 cy=cy+1
  6010 if cy-ty>23 then ty=ty+1
@@ -284,8 +305,11 @@
  7000 rem input and optionally split line 
  7010 if len(c$)<mc then a$(lc)=c$+cc$ else gosub 7200:goto 7010
  
- 7100 if lc<ml-1 then lc=lc+1 else print"file too big":end
+ 7100 if lc<ml-1 then lc=lc+1 else goto 7130
  7110 a$(lc)="":return
+
+ 7130 print"file too big, a line skipped":lc=lc-1
+ 7140 return
 
  7200 a$(lc)=left$(c$,mc):c$=right$(c$,len(c$)-mc):goto 7100
 
@@ -403,9 +427,9 @@
  9720 goto 2200
 
  9800 rem search
- 9810 cls:fs$="":input "Find";fs$:l=len(fs$):if l=0 then 2200
- 9820 s$=fs$:gosub 10100:fs$=s$
- 9830 gosub 2900:l2=cx+2:gosub 10000
+ 9810 cls#1:cls:fs$="":input "Find";fs$:l=len(fs$):if l=0 then 2200
+ 9820 s$=upper$(fs$):fs$=s$
+ 9830 l2=cx+2:gosub 10000
  9840 if fi=0 then 2200
  9850 cx=fi-1:cy=j
  9860 if cy-ty>23 then ty=cy-12
@@ -413,23 +437,22 @@
 
  9900 rem repeat find
  9910 if fs$="" then return
- 9920 print chr$(12)"seek "fs$:l=len(fs$):goto 9830
+ 9920 cls#1:print chr$(12)"seek "fs$:l=len(fs$):goto 9830
 
  10000 for j=cy to lc-1
- 10010 s$=a$(j):gosub 10100:print chr$(13) j+1;
- 10020 fi=instr(l2,s$,fs$)
+ 10010 s$=upper$(a$(j)):print chr$(13) j+1;
+ 10020 fi=instr(l2,s$,fs$):if fi=0 and len(s$)=mc then gosub 10200
  10030 if fi then return
  10040 l2=1
  10050 next j
  10060 goto 180
 
- 10100 if s$="" then return
- 10105 l1=len(s$)
- 10110 for i=1 to l1
- 10120 k=asc(mid$(s$,i,1)):n=k
- 10130 if k>96 and k<123 then n=k-32:goto 10150
- 10140 if k>192 and k<219 then n=k-128
- 10150 if n<>k then mid$(s$,i,1)=chr$(n)
- 10160 next i
- 10170 return
+ 10200 l3=len(fs$):g$=upper$(a$(j+1)):l4=len(g$)
+ 10210 for i=l3-1 to 1 step -1
+ 10220 if l4<l3-i then return
+ 10225 if l2>mc-i+1 then 10240
+ 10230 c$=left$(fs$,i):d$=right$(fs$,l3-i)
+ 10235 if c$=right$(s$,i) and d$=left$(g$,l3-i) then fi=mc-i+1:return
+ 10240 next i
+ 10250 return
 

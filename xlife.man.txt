@@ -100,15 +100,19 @@
   8-bit Xlife for the destination file is written.  At Microsoft  Windows  envi-
   ronment (Mingw Xlife port) the sign \p>\g must be omitted.
 
-\g  is produces a file suitable to use at the Commodore  platform.  The  "cpcconv"
-  utility may convert the mentioned file to CPC format.  Use it by the next  ex-
-  ample
+\g  The file produced requires a small CPC adoptation.  It is necessary to  add  2
+  byte header to it.  This header has to contain number of cells  in  the  file.
+  This number may be easily calculated.  We should get the file length in bytes,
+  subtruct 6 from it and divide the result by 2.  The low byte should be  first
+  and the high byte second.  The utility "raw2cpc" may do the required  adopta-
+  tion, e.g.,
 
-\p   cpcconv CBMfile CPCfile
+\p   raw2cpc in-file out-file.8l
 
-\g  This utility is the script depended  on a lot of Unix utilities.  It  requires
-  the presence of "bash", "sed", "awk", "tr", "dd", and "cat"  programs  at  the
-  system.
+\g  This utility is the script depended on several Unix utilities. It requires the
+  presence of "bash", "awk", and "cat" programs at the system.  The appropriate
+  comments file should have the same name as 8l-file, the txt-extension,and its
+  content may be any textual data.
 
 
 \bRAMDISK
