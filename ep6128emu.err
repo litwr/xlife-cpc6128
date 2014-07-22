@@ -1,5 +1,6 @@
 breakpoints are disabled after reset!
 memory dump window shows ASCII in the inverted order
 can't attach some CP/M disks which Arnold can
+it is possible to create situation when even hardware reset cannot restore the emulator - this situation requires only immediate exit to OS
 ?screenshorts are always 768x576
 
