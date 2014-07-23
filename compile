@@ -1,17 +1,20 @@
 #p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
 
-sed 's/$/\r/' cr-src.txt >cr.txt
+#sed 's/$/\r/' cr-src.txt >cr.txt
 #iDSK xlife.dsk -r cr.txt
 #iDSK xlife.dsk -i cr.txt -t 0 && rm cr.txt
 
 sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
-#iDSK xlife.dsk -r notepad4.bas
-#iDSK xlife.dsk -i notepad4.bas -t 0 && rm notepad4.bas
+iDSK xlife.dsk -r notepad4.bas
+iDSK xlife.dsk -i notepad4.bas -t 0 && rm notepad4.bas
 
-sed 's/$/\r/' cat-cpc.bas >menu.bas
+#ed 's/$/\r/' cat-cpc.bas >menu.bas
 #iDSK xlife.dsk -r menu.bas
 #iDSK xlife.dsk -i menu.bas -t 0 && rm menu.bas
-#exit
+#awk -f xlife.man.awk xlife.man.txt >manpage.txt
+#iDSK xlife.dsk -r manpage.txt
+#iDSK xlife.dsk -i manpage.txt -t 0 #&& rm manpage.txt
+exit
 
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym

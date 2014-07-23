@@ -1,14 +1,16 @@
- 1 rem *** koi8-r encoding
- 2 rem *** notepad cpc, the text file editor, v1 rev.1
+ 1 rem *** koi8-r encoding - it is only for litwr's cross-development environment
+ 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.3
  4 rem *** converted from Commodore plus/4
- 6 rem *** by litwr, 2014, (C) GNU GPL
+ 6 rem *** by litwr, 2014, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
- 8 defint a-z:MEMORY &A5FF:cc$=chr$(233):mc=80:cf$=chr$(127):mo$="ins":im=1
-10 mode 2:u=peek(&a700):un$=chr$(u+65)+":"
+ 8 defint a-z:cl=72:openout "dummy.zzz":shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1:closeout
+ 9 cs2=cs1+28:cs3=cs2+28
+10 mc=80:cc$=chr$(233):cf$=chr$(127):mo$="ins":im=1
+11 mode 2:u=PEEK(PEEK(&BE7e)*256+PEEK(&BE7d)):un$=chr$(u+65)+":"
 12 ml=600:dim a$(ml)
 14 window 1,80,1,24:window#1,1,80,25,25
 
-15 on break cont
+16 on break cont
 
 20 gosub 100
 30 gosub 9700
@@ -17,7 +19,8 @@
 50 data 3E,08,11,00,C0,21,50,C0,01,30,07,E5,D5,ED,B0,D1
 55 data E1,47,3E,08,82,57,67,78,3D,20,ED,C9
 60 data 3E,08,11,7F,C7,21,2F,C7,01,30,07,E5,D5,ED,B8,D1
-65 data E1,47,7A,c6,08,57,67,78,3D,20,ED,C9
+65 data E1,47,7A,C6,08,57,67,78,3D,20,ED,C9
+70 data CD,80,BC,30,04,32,0F,A6,C9,AF,32,10,A6,C9
 
 100 cls
 110 locate#0,23,23:print "Press Ctrl + H to get help":locate#0,10,6
@@ -26,27 +29,23 @@
 116 PRINT "     èè Éèè  èè  èè   èè åå  èèÉÉÉÉ  èèååèÉ  åèÉÉèè  èè  èè    èè    ÉÉÉÉèèÉ"
 118 PRINT "     ÉÉ  ÉÉ   ÉÉÉÉ     ÉÉÉ    ÉÉÉÉÉ  èè       ÉÉÉÉÉ   ÉÉÉÉÉ              ÉÉ " 
 150 locate#0,62,11:print "Amstrad CPC Edition";
-155 locate#0,49,12:print "v1r1, by litwr, (c) 2014 gnu gpl"
-160 for i=0 to 55:read c$:poke &a600+i,val("&"+c$):next i
+154 locate#0,49,12:print "v1r3, by litwr, (c) 2014 gnu gpl"
+156 locate#0,68,14:print "Thanks to SyX"
+160 for i=0 to cl-3:read c$:poke cs1+i,val("&"+c$):next i
+162 efa=cs1+cl-1:cca=efa-1
+164 poke cs3+6,peek(@cca):poke cs3+7,peek(@cca+1)
+166 poke cs3+11,peek(@efa):poke cs3+12,peek(@efa+1)
 170 for i=1 to 50:call &bd19:next i
 180 c$=inkey$:if c$<>"" then 180
 190 return
 
-200 if l=0 then c$=c$+"  ":return
-202 if l=225 then c$=c$+" "+chr$(143):return
-205 if l=252 then c$=c$+chr$(143)+chr$(140):return
-210 if l=97 then c$=c$+chr$(143)+" ":return
-215 if l=160 then c$=c$+chr$(143)+chr$(143):return
-220 if l=254 then c$=c$+chr$(140)+chr$(143):return
-225 if l=108 then c$=c$+" "+chr$(140):return
-230 if l=123 then c$=c$+chr$(140)+" ":return
-235 if l=236 then c$=c$+chr$(143)+chr$(131):return
-240 if l=251 then c$=c$+chr$(131)+chr$(143):return
-245 if l=226 then c$=c$+chr$(131)+chr$(131):return
-250 if l=255 then c$=c$+chr$(140)+chr$(131):return
-255 if l=126 then c$=c$+chr$(131)+" ":return
-260 if l=124 then c$=c$+" "+chr$(131)
-265 return
+1000 l2=0:c$=""
+1010 gosub 1100:if efs=0 then return
+1020 if cch=13 then gosub 1100:if efs=0 or cch=10 then return
+1030 if cch<32 then 1010
+1040 c$=c$+chr$(cch):l2=l2+1:if l2<255 then 1010 else goto 3160
+
+1100 call cs3:efs=peek(efa):cch=peek(cca):return
 
 2000 cls#1:print chr$(12)tab(25)"Notepad +4 CPC Edition commands list":print
 2005 print tab(30)chr$(24)"With the CONTROL key"chr$(24)
@@ -65,29 +64,24 @@
 2205 if fo then 2230 else fo=1
 2210 i=ty:cls
 2220 if i<lc and i-ty<24 then gosub 2400:i=i+1:goto 2220
-2230 gosub 2300
+2230 gosub 2310
 
 2250 locate#1,1,1:print#1,f$;:locate#1,28,1:print#1,mo$;
 2260 locate#1,33,1:print#1,un$;:return
 
 2270 i=cy
-2280 if i<lc and i-ty<24 then gosub 2500:if right$(a$(i),1)<>cc$ then i=i+1:goto 2280
-2290 goto 2300
+2280 if i<lc and i-ty<24 then gosub 2510:if right$(a$(i),1)<>cc$ then i=i+1:goto 2280
+2290 goto 2310
 
 2300 rem show coors
-2310 c$=str$(cx+1):d$=str$(cy+1)
-2320 c$=right$(c$,len(c$)-1):d$=right$(d$,len(d$)-1)
-2330 c$="x"+c$+" y"+d$
-2340 d$=str$(lc):c$=c$+"/"+right$(d$,len(d$)-1):l=mc-len(c$)
-2350 locate#1,l-2,1:print#1,"   "c$;
-2360 return
+2310 c$=str$(cx+1):d$=str$(cy+1):mid$(c$,1,1)="x":mid$(d$,1,1)="y"
+2330 c$=c$+" "+d$:d$=str$(lc):mid$(d$,1,1)="/":c$=c$+d$:l=mc-len(c$)
+2350 locate#1,l-2,1:print#1,"   "c$;:return
 
-2400 if len(a$(i))<mc then print a$(i) else print a$(i);
-2410 return
+2400 if len(a$(i))<mc then print a$(i) else print a$(i);:return
 
 2500 rem show line #i
-2510 locate#0,1,i-ty+1:print chr$(18)a$(i);
-2530 return
+2510 locate#0,1,i-ty+1:print chr$(18)a$(i);:return
 
 2600 locate#0,cx+1,cy-ty+1:cursor 1 
 2604 c$=inkey$:if c$="" then 2604
@@ -103,7 +97,7 @@
 2700 if i=13 then 4900
 2710 if i=9 then 8000
 2720 if i=8 then 2000
-2730 if i=17 then mode 1:print chr$(12)"Welcome to Basic":end
+2730 if i=17 then memory shm:mode 1:print chr$(12)"Welcome to Basic":end
 2740 if i=2 then 9300
 2750 if i=5 then 9400
 2760 if i=21 then 9500
@@ -121,20 +115,17 @@
 3000 rem load
 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
 3014 f$=s$:gosub 5900
-3020 on error goto 3700:openin f$:cls:d$=""
-3030 line input#9,c$:if len(c$)=255 then gosub 3160
-3060 gosub 7000
-3065 print chr$(13)lc;
-3070 if not eof goto 3030
+3020 on error goto 3700:openin f$:cls:d$="":poke efa,1
+3030 gosub 1000:if efs then gosub 7000:print chr$(13)lc;:goto 3030
 3080 a$(lc)=a$(lc)+cf$:gosub 7100
 3090 closein
 3095 on error goto 0
-3100 gosub 2200:goto 2300
+3100 gosub 2205:goto 2310
 
 3160 if len(c$)>mc then gosub 7200:goto 3160
-3165 d$=c$:l=len(d$):line input#9,c$
-3170 if l+len(c$)<255 then c$=d$+c$:return
-3175 if len(c$)<255 then 3190
+3165 d$=c$:l=len(d$):gosub 1000
+3170 if l+l2<255 then c$=d$+c$:return
+3175 if l2<255 then 3190
 3180 gosub 3190:goto 3160
 
 3190 a$(lc)=d$+left$(c$,mc-l):c$=right$(c$,len(c$)-mc+l):goto 7100
@@ -165,7 +156,7 @@
 3410 cls:cls#1
 3415 u=u+1:if u>1 then u=0
 3420 un$=chr$(u+65)+":":if u=0 then |a else |b
-3430 goto 2200
+3430 goto 2205
 
 3500 rem directory & load
 3510 cls#1:cls:dm$="":print"disk "un$:print"enter directory mask (*.* by default)":input dm$:if dm$="" then dm$="*.*"
@@ -191,15 +182,15 @@
 
 4000 rem cursor right
 4010 if cx<len(a$(cy))-1 then cx=cx+1 else goto 4050
-4020 goto 2300
+4020 goto 2310
 
 4050 k=cy:gosub 4200
-4060 if k<>cy then cx=0:goto 2300
+4060 if k<>cy then cx=0:goto 2310
 4070 return
 
 4100 rem cursor left
 4110 if cx>0 then cx=cx-1 else if cy>0 then cx=len(a$(cy-1))-1:goto 4300
-4120 goto 2300
+4120 goto 2310
 
 4150 if cx>=len(a$(cy)) then cx=len(a$(cy))-1
 4160 return
@@ -209,43 +200,43 @@
 4220 if cy<lc-1 then cy=cy+1
 4230 if cy-ty>23 then ty=ty+1:e=1
 4240 gosub 4150
-4250 if e then call &a600:locate#0,1,24:print chr$(18)a$(ty+23);
-4260 goto 2300
+4250 if e then call cs1:locate#0,1,24:print chr$(18)a$(ty+23);
+4260 goto 2310
 
 4300 rem cursor up
 4305 e=0
 4310 if cy>0 then cy=cy-1
 4320 if cy-ty<0 then ty=ty-1:e=1
 4330 gosub 4150
-4340 if e then call &a61c:locate#0,1,1:print chr$(18)a$(ty);
-4350 goto 2300
+4340 if e then call cs2:locate#0,1,1:print chr$(18)a$(ty);
+4350 goto 2310
 
 4400 rem cursor home
 4410 cy=ty:cx=0
-4420 goto 2300
+4420 goto 2310
 
 4500 rem small letter,digits,...
 4510 if im then gosub 4820:goto 4000
 4520 if cx=len(a$(cy))-1 then gosub 5000 else mid$(a$(cy),cx+1,1)=c$
-4530 i=cy:gosub 2500
+4530 i=cy:gosub 2510
 4540 goto 4000
 
 4700 rem backspace
 4710 if cx=0 then 5400
 4720 cx=cx-1:a$(cy)=left$(a$(cy),cx)+right$(a$(cy),len(a$(cy))-cx-1)
 4730 d$=right$(a$(cy),1)
-4740 if d$<>cc$ and d$<>cf$ then gosub 5100 else i=cy:gosub 2500
-4750 goto 2300
+4740 if d$<>cc$ and d$<>cf$ then gosub 5100 else i=cy:gosub 2510
+4750 goto 2310
 
 4800 rem shift+backspace
 4810 c$=" "
 4820 a$(cy)=left$(a$(cy),cx)+c$+right$(a$(cy),len(a$(cy))-cx)
 4830 if len(a$(cy))>mc then 5500
-4840 i=cy:goto 2500
+4840 i=cy:goto 2510
 
 4900 rem return
 4910 if cx=len(a$(cy))-1 then gosub 7300 else gosub 7400
-4920 goto 2200
+4920 goto 2205
 
 5000 d$=right$(a$(cy),1)
 5010 if d$=cf$ then return
@@ -259,7 +250,7 @@
 5130 d$=a$(i):s$=right$(d$,1)
 5140 if s$=cc$ or s$=cf$ then 2270 else gosub 5300
 5150 i=i+1
-5160 if a$(i)="" then gosub 5200:goto 2200
+5160 if a$(i)="" then gosub 5200:goto 2205
 5170 goto 5120
 
 5200 for k=i to lc-2
@@ -275,7 +266,7 @@
 5400 if cy=0 then return
 5410 gosub 6100:cx=len(a$(cy))-1:a$(cy)=left$(a$(cy),cx)
 5420 gosub 5100
-5430 goto 2300
+5430 goto 2310
 
 5500 i=cy
 5520 d$=right$(a$(i),1):a$(i)=left$(a$(i),mc):i=i+1
@@ -289,7 +280,7 @@
 5620 next k
 5630 a$(i)=d$
 5640 gosub 7100
-5650 goto 2200
+5650 goto 2205
 
 5900 cx=0:cy=0:ty=0:lc=0:a$(0)="":return
 
@@ -349,46 +340,46 @@
 
 8200 rem esc+d
 8210 cx=0
-8220 if cy=lc-1 then a$(cy)=cf$:i=cy:gosub 2500:goto 2300
+8220 if cy=lc-1 then a$(cy)=cf$:i=cy:gosub 2510:goto 2310
 8230 for k=cy to lc-2
 8240 a$(k)=a$(k+1)
 8250 next k
-8260 lc=lc-1:goto 2200
+8260 lc=lc-1:goto 2205
 
 8300 rem esc+i
 8310 for k=lc-1 to cy step -1
 8320 a$(k+1)=a$(k)
 8330 next k
-8340 cx=0:a$(cy)=cc$:gosub 7100:goto 2200
+8340 cx=0:a$(cy)=cc$:gosub 7100:goto 2205
 
 8400 rem esc+j
-8410 cx=0:goto 2300
+8410 cx=0:goto 2310
 
 8500 rem esc+k
-8510 cx=len(a$(cy))-1:goto 2300
+8510 cx=len(a$(cy))-1:goto 2310
 
 8600 rem esc+p
 8610 c$=a$(cy):if cx=len(c$)-1 then 8200
 8620 a$(cy)=right$(c$,len(c$)-cx-1):cx=0:c$=right$(c$,1)
-8630 if c$=cf$ or c$=cc$ then i=cy:gosub 2500:goto 2300
+8630 if c$=cf$ or c$=cc$ then i=cy:gosub 2510:goto 2310
 8640 goto 5100
 
 8700 rem esc+q
 8710 if cx=0 then 8200
 8720 c$=a$(cy):a$(cy)=left$(c$,cx)
-8730 if right$(c$,1)=cf$ then a$(cy)=a$(cy)+cf$:i=cy:gosub 2500:goto 2300
+8730 if right$(c$,1)=cf$ then a$(cy)=a$(cy)+cf$:i=cy:gosub 2510:goto 2310
 8740 goto 5100
 
 8800 rem esc+v
 8810 if ty>=lc-1 then return
 8820 ty=ty+1:if cy<ty then cy=ty
-8830 call &a600:locate#0,1,24:print chr$(18);:if ty+23<lc then print a$(ty+23);
-8840 goto 2300
+8830 call cs1:locate#0,1,24:print chr$(18);:if ty+23<lc then print a$(ty+23);
+8840 goto 2310
 
 8900 rem esc+w
 8910 if ty=0 then return
 8920 ty=ty-1:if cy-ty>23 then cy=cy-1
-8930 call &a61c:locate#0,1,1:print chr$(18)a$(ty);:goto 2300
+8930 call cs2:locate#0,1,1:print chr$(18)a$(ty);:goto 2310
 
 9000 rem esc+a
 9010 im=1:mo$="ins"
@@ -402,13 +393,13 @@
 9210 goto 9110
 
 9300 rem to the begin
-9310 cx=0:cy=0:if ty<>0 then ty=0:goto 2200
-9320 goto 2300
+9310 cx=0:cy=0:if ty<>0 then ty=0:goto 2205
+9320 goto 2310
 
 9400 rem to the end
 9410 cx=0:cy=lc-1:l=lc-24:if l<0 then l=0
-9420 if ty<>l then ty=l:goto 2200
-9430 goto 2300
+9420 if ty<>l then ty=l:goto 2205
+9430 goto 2310
 
 9500 rem page up
 9510 cx=0:l=ty-24:if l<0 then l=0
@@ -424,16 +415,16 @@
 9700 rem new
 9705 gosub 5900
 9710 a$(0)=cf$:lc=1:cx=0:cy=0:f$=""
-9720 goto 2200
+9720 goto 2205
 
 9800 rem search
-9810 cls#1:cls:fs$="":input "Find";fs$:l=len(fs$):if l=0 then 2200
+9810 cls#1:cls:fs$="":input "Find";fs$:l=len(fs$):if l=0 then 2205
 9820 s$=upper$(fs$):fs$=s$
 9830 l2=cx+2:gosub 10000
-9840 if fi=0 then 2200
+9840 if fi=0 then 2205
 9850 cx=fi-1:cy=j
 9860 if cy-ty>23 then ty=cy-12
-9870 goto 2200
+9870 goto 2205
 
 9900 rem repeat find
 9910 if fs$="" then return

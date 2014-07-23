@@ -50,19 +50,19 @@
     ly at the start of the program.
  \xZ  Set and optionally save a palette.
 
-  Use (\rshift\g+) \rcursor keys\g and \rHome\g key to move the cursor.  Use  \rspace  bar\g  to
-  change the cell under cursor.
+ Use (\rshift\g +) \rcursor keys\g and \rHome\g key to move the cursor.  Use \rspace  bar\g  to
+ change the cell under cursor.
 
 \bSTATUS BAR
 
-\g  It shows number of generations, the total sum of live cells, the slowness  in-
-  dicator (100% means the maximum slowness), the rules, and the cursor coordina-
-  tes.
+\g It shows number of generations, the total sum of live cells, the  slowness  in-
+ dicator (100% means the maximum slowness), the rules, and the  cursor coordina-
+ tes.
 
 \bLIMITS
 
-\g  It is possible to see only up to 99 files from the disk directory. Use mask to
-  show only matched files.
+\g It is possible to see only up to 99 files from the disk directory.  Use mask to
+ show only matched files.
 
  The tentative pattern may show only up to 1024 cells.  The other cells are  not
  shown but loaded later.  This quantity is enough to show the every cell from  a
@@ -77,42 +77,42 @@
 \bFORMATS
 
 \g The first two bytes of a pattern file are the number of  cells.   The next  two
-  bytes of a pattern file are width and height.  The next  two  bytes  describes
-  "stay alive on" condition, and the next two - "born on". The next contents are
-  the sequence of X and Y  coordinate pairs of live cells.  The patterns have to
-  have 8L filename extension.
+ bytes of a pattern file are width and  height.  The next  two  bytes  describes
+ "stay alive on" condition, and the next two - "born on".  The next contents are
+ the sequence of X and Y  coordinate pairs of live cells.  The patterns have  to
+ have 8L filename extension.
 
-  The file with comments  must have the same name as the  corresponding  pattern
-  filename.  The comments' file is a common plain text file.  It maybe edited by
-  any editor.
+ The file with comments  must have the same name as  the  corresponding  pattern
+ filename.  The comments' file is a common plain text file.  It maybe edited  by
+ any editor.
 
 \bUsing the "lifeconv" utility
 
-\g  This utility  from Xlife  main  sources may convert CELLS, LIF,  L,  RLE,  and
-  MCL formats.  It may be used from any relative to Unix OS  or  from  Microsoft
-  Windows.  The lifeconv utility takes a pattern name as an argument.  It writes
-  a file to standard output that contains an equivalent version of  the  pattern
-  in a different format.  Usage is:
+\g This utility  from Xlife  main  sources may convert CELLS, LIF, L, RLE, and MCL
+ formats. It may be used from any relative to Unix OS or from Microsoft Windows.
+ The lifeconv utility takes a pattern name as an argument.  It writes a file  to
+ standard output that contains an equivalent version of the pattern in a  diffe-
+ rent format.  Usage is:
 
-\p   lifeconv pattern -4 >destination
+   \plifeconv pattern -4 >destination\g
 
-\g  where destination is any valid file name.  The "-4" option sets the format for
-  8-bit Xlife for the destination file is written.  At Microsoft  Windows  envi-
-  ronment (Mingw Xlife port) the sign \p>\g must be omitted.
+ where destination is any valid file name.  The "-4" option sets the format  for
+ 8-bit Xlife for the destination file is written.  At  Microsoft  Windows  envi-
+ ronment (Mingw Xlife port) the sign \p>\g must be omitted.
 
-\g  The file produced requires a small CPC adoptation.  It is necessary to  add  2
-  byte header to it.  This header has to contain number of cells  in  the  file.
-  This number may be easily calculated.  We should get the file length in bytes,
-  subtruct 6 from it and divide the result by 2.  The low byte should be  first
-  and the high byte second.  The utility "raw2cpc" may do the required  adopta-
-  tion, e.g.,
+ The file produced requires a small CPC adoptation.  It is necessary  to  add  2
+ byte header to it. This header has to contain number of cells in the file. This
+ number may be easily calculated.  We should get the file length in bytes,  sub-
+ truct 6 from it and divide the result by 2.  The low byte should be  first  and
+ and the high byte second. The utility "raw2cpc" may do the required adoptation,
+ e.g.,
 
-\p   raw2cpc in-file out-file.8l
+   \praw2cpc in-file out-file.8l\g
 
-\g  This utility is the script depended on several Unix utilities. It requires the
-  presence of "bash", "awk", and "cat" programs at the system.  The appropriate
-  comments file should have the same name as 8l-file, the txt-extension,and its
-  content may be any textual data.
+ This utility is the script depended on several Unix utilities.  It requires the
+ presence of "bash", "awk", and "cat" programs at the  system.  The  appropriate
+ comments file should have the same name as 8l-file, the  txt-extension, and its
+ content may be any textual data.
 
 
 \bRAMDISK
@@ -120,15 +120,15 @@
 \g It contains 10 patterns:
 
 \pglider gun\g  The Gosper glider gun is the first known gun, and indeed  the  first
-        known finite pattern with unbounded growth, found by Bill Gosper in November
-        1970.
+        known finite pattern with unbounded growth, found by Bill Gosper in Nov-
+        ember 1970.
 
 \psmall fish\g the lightweight spaceship (or LWSS) is the smallest orthogonally mov-
         ing spaceship, and the second  most common spaceship.  Random soups will
         emit one LWSS for approximately every 615 gliders.  It moves at c/2  and
         has period 4.
 
-\pHWSS\g    the heavyweight spaceship is the fourth most common  ship.
+\pHWSS\g    the heavyweight spaceship is the fourth most common ship.               
 
 \pr-pentomino\g a methuselah that was found by John Conway in 1970. It is by far the
         most active polyomino with fewer than six cells; all of the others  sta-
@@ -137,7 +137,7 @@
         glider it releases in generation 69, was the  first  glider ever  obser-
         ved.
 
-\pbunnies\g, \plidka\g, \pacorn\g methuselahs with 17332, 29055, 5206 generations lifespan.
+\pbunnies\g, \plidka\g, \pacorn\g methuselahs with 17332, 29055, 5206 generations  lifespan.
 
 \pbig glider\g The big glider was found by Dean Hickerson in December 1989  and  was
         the first known  diagonal spaceship other than the glider. 
@@ -191,6 +191,6 @@
 
 \bSEE ALSO
 
-\p  http://www.conwaylife.com\b
-\p  http://freecode.com/projects/xlife\b
+  \phttp://www.conwaylife.com\b
+  \phttp://freecode.com/projects/xlife\b
 
