@@ -14,13 +14,14 @@
 
 20 gosub 100
 30 gosub 9700
-40 gosub 2600:goto 40
+40 if fo then gosub 2210
+45 gosub 2600:goto 40
 
 50 data 3E,08,11,00,C0,21,50,C0,01,30,07,E5,D5,ED,B0,D1
 55 data E1,47,3E,08,82,57,67,78,3D,20,ED,C9
 60 data 3E,08,11,7F,C7,21,2F,C7,01,30,07,E5,D5,ED,B8,D1
 65 data E1,47,7A,C6,08,57,67,78,3D,20,ED,C9
-70 data CD,80,BC,30,04,32,0F,A6,C9,AF,32,10,A6,C9
+70 data CD,80,BC,30,04,32,d0,c7,C9,AF,32,d1,c7,C9
 
 100 cls
 110 locate#0,23,23:print "Press Ctrl + H to get help":locate#0,10,6
@@ -32,9 +33,6 @@
 154 locate#0,49,12:print "v1r3, by litwr, (c) 2014 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
 160 for i=0 to cl-3:read c$:poke cs1+i,val("&"+c$):next i
-162 efa=cs1+cl-1:cca=efa-1
-164 poke cs3+6,peek(@cca):poke cs3+7,peek(@cca+1)
-166 poke cs3+11,peek(@efa):poke cs3+12,peek(@efa+1)
 170 for i=1 to 50:call &bd19:next i
 180 c$=inkey$:if c$<>"" then 180
 190 return
@@ -45,7 +43,7 @@
 1030 if cch<32 then 1010
 1040 c$=c$+chr$(cch):l2=l2+1:if l2<255 then 1010 else goto 3160
 
-1100 call cs3:efs=peek(efa):cch=peek(cca):return
+1100 call cs3:efs=peek(&c7d1):cch=peek(&c7d0):return
 
 2000 cls#1:print chr$(12)tab(25)"Notepad +4 CPC Edition commands list":print
 2005 print tab(30)chr$(24)"With the CONTROL key"chr$(24)
@@ -61,13 +59,12 @@
 2120 c$=inkey$:if c$="" then 2120
 
 2200 rem show screen
-2205 if fo then 2230 else fo=1
+2205 fo=1:return
 2210 i=ty:cls
 2220 if i<lc and i-ty<24 then gosub 2400:i=i+1:goto 2220
 2230 gosub 2310
 
-2250 locate#1,1,1:print#1,f$;:locate#1,28,1:print#1,mo$;
-2260 locate#1,33,1:print#1,un$;:return
+2250 locate#1,1,1:print#1,f$,fre(0);:locate#1,38,1:print#1,mo$;:locate#1,43,1:print#1,un$;:return
 
 2270 i=cy
 2280 if i<lc and i-ty<24 then gosub 2510:if right$(a$(i),1)<>cc$ then i=i+1:goto 2280
@@ -78,7 +75,8 @@
 2330 c$=c$+" "+d$:d$=str$(lc):mid$(d$,1,1)="/":c$=c$+d$:l=mc-len(c$)
 2350 locate#1,l-2,1:print#1,"   "c$;:return
 
-2400 if len(a$(i))<mc then print a$(i) else print a$(i);:return
+2400 print a$(i);:if pos(#0)<>1 then print
+2410 return
 
 2500 rem show line #i
 2510 locate#0,1,i-ty+1:print chr$(18)a$(i);:return
@@ -115,7 +113,7 @@
 3000 rem load
 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
 3014 f$=s$:gosub 5900
-3020 on error goto 3700:openin f$:cls:d$="":poke efa,1
+3020 on error goto 3700:openin f$:cls:d$="":poke &c7d1,1
 3030 gosub 1000:if efs then gosub 7000:print chr$(13)lc;:goto 3030
 3080 a$(lc)=a$(lc)+cf$:gosub 7100
 3090 closein
