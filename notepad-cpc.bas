@@ -3,8 +3,8 @@
  4 rem *** converted from Commodore plus/4
  6 rem *** by litwr, 2014, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
- 8 defint a-z:cl=72:openout "dummy.zzz":shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1:closeout
- 9 cs2=cs1+28:cs3=cs2+28
+ 8 defint a-z:cl=119:openout "dummy.zzz":shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1:closeout
+ 9 cs2=cs1+28:cs3=cs2+28:cs4=cs3+44
 10 mc=80:cc$=chr$(233):cf$=chr$(127):mo$="ins":im=1
 11 mode 2:u=PEEK(PEEK(&BE7e)*256+PEEK(&BE7d)):un$=chr$(u+65)+":"
 12 ml=600:dim a$(ml)
@@ -21,7 +21,11 @@
 55 data E1,47,3E,08,82,57,67,78,3D,20,ED,C9
 60 data 3E,08,11,7F,C7,21,2F,C7,01,30,07,E5,D5,ED,B8,D1
 65 data E1,47,7A,C6,08,57,67,78,3D,20,ED,C9
-70 data CD,80,BC,30,04,32,d0,c7,C9,AF,32,d1,c7,C9
+70 data 21,50,Fd,0E,01,CD,80,BC,30,1C,FE,0D,20,09,CD,80
+75 data BC,30,13,FE,0A,28,09,FE,20,38,EA,77,23,0C,20,E5
+80 data 0D,79,32,D2,C7,C9,AF,32,D1,C7,18,F4
+85 data 13,1A,13,47,1A,57,58,21,50,Fd,3A,D2,C7,4F,06,00
+90 data ED,B0,C9
 
 100 cls
 110 locate#0,23,23:print "Press Ctrl + H to get help":locate#0,10,6
@@ -32,18 +36,13 @@
 150 locate#0,62,11:print "Amstrad CPC Edition";
 154 locate#0,49,12:print "v1r3, by litwr, (c) 2014 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
-160 for i=0 to cl-3:read c$:poke cs1+i,val("&"+c$):next i
+160 for i=0 to cl-1:read c$:poke cs1+i,val("&"+c$):next i
 170 for i=1 to 50:call &bd19:next i
 180 c$=inkey$:if c$<>"" then 180
 190 return
 
-1000 l2=0:c$=""
-1010 gosub 1100:if efs=0 then return
-1020 if cch=13 then gosub 1100:if efs=0 or cch=10 then return
-1030 if cch<32 then 1010
-1040 c$=c$+chr$(cch):l2=l2+1:if l2<255 then 1010 else goto 3160
-
-1100 call cs3:efs=peek(&c7d1):cch=peek(&c7d0):return
+1000 call cs3:efs=peek(&c7d1):l2=peek(&c7d2):c$=space$(l2):if l2=0 then return
+1020 call cs4,@c$:if l2=255 then 3160 else return
 
 2000 cls#1:print chr$(12)tab(25)"Notepad +4 CPC Edition commands list":print
 2005 print tab(30)chr$(24)"With the CONTROL key"chr$(24)
@@ -114,7 +113,8 @@
 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
 3014 f$=s$:gosub 5900
 3020 on error goto 3700:openin f$:cls:d$="":poke &c7d1,1
-3030 gosub 1000:if efs then gosub 7000:print chr$(13)lc;:goto 3030
+3030 gosub 1000:if efs=0 then gosub 7160:goto 3080
+3040 gosub 7000:print chr$(13)lc;:if efs goto 3030
 3080 a$(lc)=a$(lc)+cf$:gosub 7100
 3090 closein
 3095 on error goto 0
@@ -142,7 +142,7 @@
 3280 if s$=cf$ goto 3310
 3290 print chr$(13)i;:if s$=cc$ then print#9:goto 3310
 3300 print#9,s$;
-3310 next i
+3310 next
 3320 on error goto 0 
 3330 closeout
 3340 goto 3100
@@ -253,7 +253,7 @@
 
 5200 for k=i to lc-2
 5210 a$(k)=a$(k+1)
-5220 next k
+5220 next
 5230 lc=lc-1
 5240 return
 
@@ -275,7 +275,7 @@
 
 5600 for k=lc to i+1 step -1
 5610 a$(k)=a$(k-1)
-5620 next k
+5620 next
 5630 a$(i)=d$
 5640 gosub 7100
 5650 goto 2205
@@ -299,6 +299,8 @@
 7130 print"file too big, a line skipped":lc=lc-1
 7140 return
 
+7160 if len(c$)<mc then a$(lc)=c$:return else gosub 7200:goto 7160
+
 7200 a$(lc)=left$(c$,mc):c$=right$(c$,len(c$)-mc):goto 7100
 
 7300 if right$(a$(cy),1)=cf$ then 7600
@@ -312,7 +314,7 @@
 
 7500 for k=lc-1 to cy+1 step -1
 7510 a$(k+1)=a$(k)
-7520 next k
+7520 next
 7530 goto 7100
 
 7600 a$(cy)=left$(a$(cy),len(a$(cy))-1)+cc$
@@ -341,13 +343,13 @@
 8220 if cy=lc-1 then a$(cy)=cf$:i=cy:gosub 2510:goto 2310
 8230 for k=cy to lc-2
 8240 a$(k)=a$(k+1)
-8250 next k
+8250 next
 8260 lc=lc-1:goto 2205
 
 8300 rem esc+i
 8310 for k=lc-1 to cy step -1
 8320 a$(k+1)=a$(k)
-8330 next k
+8330 next
 8340 cx=0:a$(cy)=cc$:gosub 7100:goto 2205
 
 8400 rem esc+j
@@ -433,7 +435,7 @@
 10020 fi=instr(l2,s$,fs$):if fi=0 and len(s$)=mc then gosub 10200
 10030 if fi then return
 10040 l2=1
-10050 next j
+10050 next
 10060 goto 180
 
 10200 l3=len(fs$):g$=upper$(a$(j+1)):l4=len(g$)
@@ -442,6 +444,6 @@
 10225 if l2>mc-i+1 then 10240
 10230 c$=left$(fs$,i):d$=right$(fs$,l3-i)
 10235 if c$=right$(s$,i) and d$=left$(g$,l3-i) then fi=mc-i+1:return
-10240 next i
+10240 next
 10250 return
 
