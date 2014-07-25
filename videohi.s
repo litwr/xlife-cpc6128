@@ -988,9 +988,10 @@ cont2    dec de
          jr cont4
          endp
 
-chgdrv   ld a,(curdev)
+chgdrv   ld hl,(icurdev)
+         ld a,(hl)
          xor 1
-         ld (curdev),a
+         ld (hl),a
          add a,"A"
          ld (drvlett),a
          call TXT_REMOVE_CURSOR

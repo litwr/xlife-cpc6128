@@ -8,7 +8,6 @@ y0       equ digifont+55
 xchgdir  equ digifont+63
 t1       equ digifont+71
 zoom     equ digifont+79
-curdev   equ $a700
 
 hormax   equ 20     ;160
 vermax   equ 24     ;192

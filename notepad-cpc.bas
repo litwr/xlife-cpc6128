@@ -3,7 +3,7 @@
  4 rem *** converted from Commodore plus/4
  6 rem *** by litwr, 2014, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
- 8 defint a-z:cl=119:openout "dummy.zzz":shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1:closeout
+ 8 defint a-z:cl=119:shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1
  9 cs2=cs1+28:cs3=cs2+28:cs4=cs3+44
 10 mc=80:cc$=chr$(233):cf$=chr$(127):mo$="ins":im=1
 11 mode 2:u=PEEK(PEEK(&BE7e)*256+PEEK(&BE7d)):un$=chr$(u+65)+":"
@@ -112,7 +112,7 @@
 3000 rem load
 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
 3014 f$=s$:gosub 5900
-3020 on error goto 3700:openin f$:cls:d$="":poke &c7d1,1
+3020 on error goto 3700:openin f$:cls:locate#0,1,16:print "The flashing lines below is just a load indicator":d$="":poke &c7d1,1
 3030 gosub 1000:if efs=0 then gosub 7160:goto 3080
 3040 gosub 7000:print chr$(13)lc;:if efs goto 3030
 3080 a$(lc)=a$(lc)+cf$:gosub 7100
@@ -163,17 +163,18 @@
 3640 s$="":input "Filename (empty string = exit)";s$:if s$="" then 3100
 3650 goto 3014
 
-3700 if err=14 then print " No memory - next lines are ignored" else print" Error";err,erl
+3700 if err=14 then print " No memory - next lines are ignored" else print" Error";err
 3702 print "Hit a key"
 3705 c$=inkey$:if c$="" then 3705 else resume 3080
 
-3710 print" Error";err:print "Hit a key"
+3710 if err=7 or err=14 then print " No memory - remove several lines" else print" Error";err
+3712 print "Hit a key"
 3715 c$=inkey$:if c$="" then 3715 else resume 3320
 
 3800 rem delete char
 3810 if mid$(a$(cy),cx+1,1)=cf$ then return
 3820 if cx<len(a$(cy))-1 then cx=cx+1:goto 4700
-3830 k=cy:if cy<lc-1 then gosub 6000
+3830 k=cy:if cy<lc-1 then gosub 4200
 3840 gosub 4150
 3850 if k<>cy then cx=0
 3860 goto 4700
@@ -282,10 +283,6 @@
 
 5900 cx=0:cy=0:ty=0:lc=0:a$(0)="":return
 
-6000 cy=cy+1
-6010 if cy-ty>23 then ty=ty+1
-6020 return
-
 6100 cy=cy-1
 6110 if ty>cy then ty=cy
 6120 return
@@ -293,11 +290,8 @@
 7000 rem input and optionally split line 
 7010 if len(c$)<mc then a$(lc)=c$+cc$ else gosub 7200:goto 7010
 
-7100 if lc<ml-1 then lc=lc+1 else goto 7130
+7100 if lc<ml then lc=lc+1 else print chr$(24)"file too big, a line skipped"chr$(24);:a$(lc-1)=cf$
 7110 a$(lc)="":return
-
-7130 print"file too big, a line skipped":lc=lc-1
-7140 return
 
 7160 if len(c$)<mc then a$(lc)=c$:return else gosub 7200:goto 7160
 
@@ -306,21 +300,20 @@
 7300 if right$(a$(cy),1)=cf$ then 7600
 
 7400 gosub 7500
-7410 c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
-7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0
-7430 c$=right$(a$(cy+1),1)
+7410 if cy+2>ml then 7450 else c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
+7415 if cy+3>ml then 7450
+7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0:c$=right$(a$(cy+1),1)
 7440 if c$<>cc$ and c$<>cf$ then gosub 4200:goto 5100
-7450 goto 4200
+7450 cx=0:goto 4200
 
 7500 for k=lc-1 to cy+1 step -1
 7510 a$(k+1)=a$(k)
 7520 next
 7530 goto 7100
 
-7600 a$(cy)=left$(a$(cy),len(a$(cy))-1)+cc$
-7610 gosub 6000:cx=0
-7620 a$(cy)=cf$
-7630 goto 7100
+7600 a$(cy)=left$(a$(cy),cx)+cc$:a$(cy+1)=cf$
+7610 cx=0:gosub 7100
+7630 goto 4200
 
 8000 rem esc
 8010 c$=inkey$:if c$="" goto 8010

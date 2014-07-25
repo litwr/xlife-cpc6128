@@ -1,20 +1,20 @@
-#p4compress -m1 -start 0x1800 manpage.prg manpagec.prg
+D=xlife1-1.dsk
+#D=xlife-old.dsk
 
-#sed 's/$/\r/' cr-src.txt >cr.txt
-#iDSK xlife.dsk -r cr.txt
-#iDSK xlife.dsk -i cr.txt -t 0 && rm cr.txt
+sed 's/$/\r/' cr-src.txt >cr.txt
+iDSK $D -r cr.txt
+iDSK $D -i cr.txt -t 0 && rm cr.txt
 
-sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
-iDSK xlife.dsk -r notepad4.bas
-iDSK xlife.dsk -i notepad4.bas -t 0 && rm notepad4.bas
+#sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
+#iDSK $D -r notepad4.bas
+#iDSK $D -i notepad4.bas -t 0 && rm notepad4.bas
 
-#ed 's/$/\r/' cat-cpc.bas >menu.bas
-#iDSK xlife.dsk -r menu.bas
-#iDSK xlife.dsk -i menu.bas -t 0 && rm menu.bas
-#awk -f xlife.man.awk xlife.man.txt >manpage.txt
-#iDSK xlife.dsk -r manpage.txt
-#iDSK xlife.dsk -i manpage.txt -t 0 #&& rm manpage.txt
-exit
+sed 's/$/\r/' cat-cpc.bas >start.bas
+iDSK $D -r start.bas
+iDSK $D -i start.bas -t 0 && rm start.bas
+awk -f xlife.man.awk xlife.man.txt >manpage.txt
+iDSK $D -r manpage.txt
+iDSK $D -i manpage.txt -t 0 #&& rm manpage.txt
 
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym
@@ -22,5 +22,5 @@ pasmo6 --amsdos --listing xlife2.lst xlife2.asm xlife2.bin xlife2.sym && \
 grep -vEf excl.grep xlife2.sym >tmpzz && mv tmpzz xlife2.sym &&
 pasmo6 --listing cpchi.lst cpchi.asm cpchi.bin&& \
 pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin&& \
-iDSK xlife.dsk -i xlife1.bin -t 1 && \
-iDSK xlife.dsk -i xlife2.bin -t 1
+(iDSK $D -r xlife1.bin; iDSK $D -i xlife1.bin -t 1) && \
+(iDSK $D -r xlife2.bin; iDSK $D -i xlife2.bin -t 1)

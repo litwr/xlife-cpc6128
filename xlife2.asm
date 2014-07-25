@@ -947,7 +947,7 @@ lnext
 ;*         
 ;*         cpx #1
 ;*         beq stage2
-        
+
 ;*cont2    sta currp+1
 ;*         stx currp
 ;*         jmp loop
@@ -959,8 +959,8 @@ cont2      push hl
 stage2     ld iy,(startp)
            ld de,gentab
 ;*         .bend
-           
-;*         
+
+;*
 ;*genloop2 ldy #sum
 ;*         .block
 ;*         lda #0

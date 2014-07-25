@@ -6,8 +6,16 @@ start      call prg
            call CAS_IN_CLOSE
 
 fn         db "XLIFE2.BIN"
-prg        ld c,7
+
+prg        ;ld hl,(icurdev)
+           ;ld a,(hl)
+           ;push af
+           ;push hl
+           ld c,7
            call KL_INIT_BACK   ;restore AMSDOS
+           ;pop hl
+           ;pop af
+           ;ld (hl),a
 
            ld a,4
            call KL_BANK_SWITCH   ;get ext 16K

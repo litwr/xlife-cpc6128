@@ -35,4 +35,5 @@ CAS_OUT_CLOSE equ $bc8f
 CAS_OUT_CHAR equ $bc95
 CAS_CATALOG equ $bc9b
 MC_WAIT_FLYBACK equ &bd19
+icurdev  equ $be7d
 
