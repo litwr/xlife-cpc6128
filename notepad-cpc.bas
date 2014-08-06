@@ -1,5 +1,5 @@
  1 rem *** koi8-r encoding - it is only for litwr's cross-development environment
- 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.3
+ 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.4
  4 rem *** converted from Commodore plus/4
  6 rem *** by litwr, 2014, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
@@ -34,7 +34,7 @@
 116 PRINT "      ƒ        ŒŒ  ƒƒƒƒ  ŒŒƒ  Œƒƒ            ƒƒƒƒƒ"
 118 PRINT "     ƒƒ  ƒƒ   ƒƒƒƒ     ƒƒƒ    ƒƒƒƒƒ         ƒƒƒƒƒ   ƒƒƒƒƒ              ƒƒ " 
 150 locate#0,62,11:print "Amstrad CPC Edition";
-154 locate#0,49,12:print "v1r3, by litwr, (c) 2014 gnu gpl"
+154 locate#0,49,12:print "v1r4, by litwr, (c) 2014 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
 160 for i=0 to cl-1:read c$:poke cs1+i,val("&"+c$):next i
 170 for i=1 to 50:call &bd19:next i
@@ -112,7 +112,7 @@
 3000 rem load
 3010 cls#1:cls:s$="":print"disk "un$:print"enter file name to load":input s$:if s$="" goto 3100
 3014 f$=s$:gosub 5900
-3020 on error goto 3700:openin f$:cls:locate#0,1,16:print "The flashing lines below is just a load indicator":d$="":poke &c7d1,1
+3020 on error goto 3700:openin f$:cls:locate#0,1,16:print "The flashing lines below is just a load indicator":poke &c7d1,1
 3030 gosub 1000:if efs=0 then gosub 7160:goto 3080
 3040 gosub 7000:print chr$(13)lc;:if efs goto 3030
 3080 a$(lc)=a$(lc)+cf$:gosub 7100
@@ -120,11 +120,13 @@
 3095 on error goto 0
 3100 gosub 2205:goto 2310
 
+3140 call cs3:efs=peek(&c7d1):l2=peek(&c7d2):c$=space$(l2):if l2>0 then call cs4,@c$
+3150 return
+
 3160 if len(c$)>mc then gosub 7200:goto 3160
-3165 d$=c$:l=len(d$):gosub 1000
+3165 d$=c$:l=len(d$):if efs then gosub 3140 else return
 3170 if l+l2<255 then c$=d$+c$:return
-3175 if l2<255 then 3190
-3180 gosub 3190:goto 3160
+3180 if l2>254 then gosub 3190:goto 3160
 
 3190 a$(lc)=d$+left$(c$,mc-l):c$=right$(c$,len(c$)-mc+l):goto 7100
 
