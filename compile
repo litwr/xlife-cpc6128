@@ -1,19 +1,20 @@
 #make disk image and place its name at the next line after = sign
 D=xlife1-1.dsk
-#D=xlife-old.dsk
-
-sed 's/$/\r/' cr-src.txt >cr.txt
-iDSK $D -r cr.txt
-iDSK $D -i cr.txt -t 0 && rm cr.txt
+#D=cpm+1.dsk
 
 sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
 #it is later compressed by BPC
 iDSK $D -r notepad4.bas
 iDSK $D -i notepad4.bas -t 0 && rm notepad4.bas
 
-sed 's/$/\r/' cat-cpc.bas >start.bas
-iDSK $D -r start.bas
-iDSK $D -i start.bas -t 0 && rm start.bas
+sed 's/$/\r/' cat-cpc.bas >+start.bas
+iDSK $D -r +start.bas
+iDSK $D -i +start.bas -t 0 && rm +start.bas
+
+sed 's/$/\r/' cr-src.txt >cr.txt
+iDSK $D -r cr.txt
+iDSK $D -i cr.txt -t 0 && rm cr.txt
+
 awk -f xlife.man.awk xlife.man.txt >manpage.txt
 iDSK $D -r manpage.txt
 iDSK $D -i manpage.txt -t 0 #&& rm manpage.txt

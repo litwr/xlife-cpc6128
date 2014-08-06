@@ -21,7 +21,7 @@
 330 closein
 340 c$=inkey$:if c$="" then 340 else goto 30
 
-400 run"notepad4"
+400 run"np4"
 
 500 |era,"colors.cfg"
 510 goto 35
