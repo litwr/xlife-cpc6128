@@ -6,3 +6,6 @@ them to a disk image file.  It uses Pasmo, iDSK and several utilities (bash,
 grep, sed, awk).
 
 It is required to write a name of the disk image into beginning of this script.
+
+The file 'notepad4.bas' should be renamed to 'np4.bas'.  It is better to 
+compress it by BPC at first.
