@@ -81,7 +81,7 @@ ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
          db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 dirname  db "????????"      ;filename mask used to access directory
 cfn      db "colors.cfg"
-live     db 12,0
+live     db 12,0 ;must be after cfn
 born     db 8,0  ;must be after born
 vptilecx db 0
 vptilecy db 0    ;must be after vptilex!

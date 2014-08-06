@@ -2,6 +2,7 @@
 D=xlife1-1.dsk
 #D=cpm+1.dsk
 
+if ! echo; then
 sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
 #it is later compressed by BPC
 iDSK $D -r notepad4.bas
@@ -18,6 +19,7 @@ iDSK $D -i cr.txt -t 0 && rm cr.txt
 awk -f xlife.man.awk xlife.man.txt >manpage.txt
 iDSK $D -r manpage.txt
 iDSK $D -i manpage.txt -t 0 #&& rm manpage.txt
+fi
 
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym
