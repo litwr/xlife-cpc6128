@@ -8,7 +8,7 @@ savecf   proc
          jr nc,ioerror
 
          ld hl,borderpc
-         ld b,bggo-borderpc+1
+         ld b,tentc-borderpc+1
 loop     ld a,(hl)
          inc hl
          push hl
