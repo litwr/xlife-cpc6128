@@ -161,7 +161,7 @@
 3500 rem directory & load
 3510 cls#1:cls:dm$="":print"disk "un$:print"enter directory mask (*.* by default)":input dm$:if dm$="" then dm$="*.*"
 3520 |dir,dm$
-3630 print "You may use second cursor to copy filename from the list"
+3630 print "You may use the second cursor to copy filename from the list"
 3640 s$="":input "Filename (empty string = exit)";s$:if s$="" then 3100
 3650 goto 3014
 

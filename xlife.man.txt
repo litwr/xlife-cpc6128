@@ -16,7 +16,6 @@
  \x-  Zoom the view out.
  \x.  Place cursor to the center  of  universe.
  \x?  Help for xlife.
- \x@  Toggle disk drive letter at the load menu.
  \xB  Benchmark. Enter number  of  generations and get time.   This  is  also  the
     fastest  mode of the evolution.
  \xC  Clear the universe.
