@@ -10,4 +10,4 @@ USAGE
 USAGE
     rawcpc rawfile cpcfile.8l
 
-These utility are scripts using bash, cat, tr, sed, awk, dd.
+These utilities are scripts using bash, cat, tr, sed, awk, dd.
