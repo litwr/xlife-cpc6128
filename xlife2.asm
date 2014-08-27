@@ -231,9 +231,9 @@ lleft
 ;*         lda (currp),y
          ld a,(iy)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll1
-         jr z,ll1
+         jp p,ll1
 
 ;*         sta t1
          ld (t1),a
@@ -269,9 +269,9 @@ ll1
 ;*         lda (currp),y
          ld a,(iy+1)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll2
-         jr z,ll2
+         jp p,ll2
 
 ;*         sta t1
          ld (t1),a
@@ -296,9 +296,9 @@ ll2
 ;*         lda (currp),y
          ld a,(iy+2)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll3
-         jr z,ll3
+         jp p,ll3
 
 ;*         sta t1
          ld (t1),a
@@ -323,9 +323,9 @@ ll3
 ;*         lda (currp),y
          ld a,(iy+3)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll4
-         jr z,ll4
+         jp p,ll4
 
 ;*         sta t1
          ld (t1),a
@@ -377,9 +377,9 @@ ll5
 ;*         lda (currp),y
          ld a,(iy+5)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll6
-         jr z,ll6
+         jp p,ll6
 
 ;*         sta t1
          ld (t1),a
@@ -404,9 +404,9 @@ ll6
 ;*         lda (currp),y
          ld a,(iy+6)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq ll7
-         jr z,ll7
+         jp p,ll7
 
 ;*         sta t1
          ld (t1),a
@@ -431,9 +431,9 @@ ll7
 ;*         lda (currp),y
          ld a,(iy+7)
 ;*         and #$80
-         and $80
+         and a
 ;*         beq lexit
-         jr z,lexit
+         jp p,lexit
 
 ;*         sta t1
          ld (t1),a
