@@ -1,6 +1,6 @@
 ;**this program doesn't contain code of the original Xlife
 ;**it is the conversion from 6502 port for Commodore +4 v3
-;**written by litwr, 2013-14
+;**written by litwr, 2013-14, v2
 ;**it is under GNU GPL
 
          include "cpc.mac"
@@ -48,6 +48,59 @@ cont5    call zerocc
          jp mainloop
          endp
 
+vptilecx db 0
+vptilecy db 0    ;must be after vptilex!
+density  db 3
+borderpc db 6    ;plain
+bordertc db 19   ;torus
+crsrc    db 20
+crsrocc  db 16   ;over cell
+crsroncc db 16   ;over new cell
+livcellc db 9
+newcellc db 15
+bgedit   db 26
+bggo     db 23
+framec   db 17
+framecellc db 17
+frameocellc db 17
+tentc    db 2
+copyleft db "cr.txt"
+errst    db 0   ;0 - do not print i/o-errors message, 1 - print
+
+gentab   db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 0, all 7s are free
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0  ;last byte is equal to 1st of ttab
+
+ttab     db 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
+         db $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
+         db $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
+         db $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
+         db $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
+         db $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
+         db $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
+         db $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
+         db $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
+         db $95,$96,$97,$98,$98,$99
+
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 1 = block 0 + $100
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0  ;last byte is equal to 1st of ctab
+
+ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
+         db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
+bittab   db 1,2,4,8,16,32,64,128
 viewport db 0,0
 startp   db 1,0
 i1       db 0,0
@@ -66,50 +119,46 @@ crsrbit  db $80    ;x bit position
 crsrbyte db 0      ;y%8 - must be after crsrbit!
 crsrx    db 0      ;x/8 - not at pseudographics
 crsry    db 0      ;y/8
-ttab     db 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
-         db $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
-         db $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
-         db $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
-         db $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
-         db $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
-         db $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
-         db $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
-         db $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
-         db $95,$96,$97,$98,$98,$99
-bittab   db 1,2,4,8,16,32,64,128
-ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
-         db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 dirname  db "????????"      ;filename mask used to access directory
 cfn      db "colors.cfg"
 live     db 12,0 ;must be after cfn
 born     db 8,0  ;must be after born
-vptilecx db 0
-vptilecy db 0    ;must be after vptilex!
-density  db 3
-topology db 0    ;0 - torus
-borderpc db 6    ;plain
-bordertc db 19   ;torus
-crsrc    db 20
-crsrocc  db 16   ;over cell
-crsroncc db 16   ;over new cell
-livcellc db 9
-newcellc db 15
-bgedit   db 26
-bggo     db 23
-framec   db 17
-framecellc db 17
-frameocellc db 17
-tentc    db 2
-
-copyleft db "cr.txt"
-errst    db 0   ;0 - do not print i/o-errors message, 1 - print
 crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
 splitst  db 1   ;1..255 - split on, 0 - off
 ppmode   db 1   ;putpixel mode: 0 - tentative, 1 - active
 memb8    db 0
 memb9    db 0
+topology db 0    ;0 - torus
 
-         include "gentab.s"
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 2 = block 1 + $100
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0
+
+         db 7,7,7,7,7,7,7  ;free
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
+
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 3 = block 2 + $100
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
+         db 0,0,1,1,0,0,0,0,0
+         
 tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          db 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
          db 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
