@@ -65,7 +65,7 @@ tilesize equ 69
 ;*         sta t1
 ;*         ora (adjcell),y
 ;*         sta (adjcell),y
-;*finish       
+;*finish
 ;*         .endm
 
 ;*testrt   .macro
@@ -77,7 +77,7 @@ tilesize equ 69
 ;*         sta t1
 ;*         ora (adjcell),y
 ;*         sta (adjcell),y
-;*finish       
+;*finish
 ;*         .endm
 
 ;*cellsum  .macro

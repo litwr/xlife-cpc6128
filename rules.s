@@ -2,6 +2,30 @@
 ;fillrt
 ;setrconst
 
+setrtc   proc   ;changes A
+         local l1
+         push bc
+         push iy
+         ld bc,(~gentab) + 1
+         add iy,bc
+         push iy
+         pop bc
+         pop iy
+         ld b,a
+         ld a,c
+         cp $90
+         jr nc, l1
+
+         and $f
+         cp $9
+         jr nc,l1
+
+         ld a,b
+         ld (iy),a
+l1       pop bc
+         ret
+         endp
+
 fillrt   proc
          local l1,l2,l3,l5,l12,l22,l32,loop0,loop1,loop12
          local m1,m2,lnext,lnext2,fillrta
@@ -42,7 +66,7 @@ loop0    ld a,e
          jr nz,l5
  
 ;*         sta (adjcell),y
-         ld (iy),a
+         call setrtc
 
 ;*l5       lda i1+1
 ;*         and #1
@@ -93,7 +117,7 @@ l2       and (ix)
 ;*m2       beq lnext2
 l3       ld a,(iy)
          or 1
-         ld (iy),a
+         call setrtc
 lnext    ld a,h
          and 2
 m2       jr z,lnext2
@@ -143,7 +167,7 @@ l22      and (ix)
 ;*         sta (adjcell),y
 l32      ld a,(iy)
          or 2
-         ld (iy),a
+         call setrtc
 
 ;*lnext2   inc i1
 ;*         inc adjcell

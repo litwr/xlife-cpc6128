@@ -204,7 +204,7 @@ calcspd    proc
            ld a,c
            cp 3
            jr nc,cont1
-           
+
            ld a,3
            ld (hl),a
 cont1      xor a
@@ -270,10 +270,10 @@ loop       srl (ix+3)
            rr (ix+1)
            rr (ix)
            djnz loop
-           
+
            ld hl,stringbuf
            adc a,b
-           ld (hl),a 
+           ld (hl),a
            ld de,0
            ld iyl,0
            ld bc,1

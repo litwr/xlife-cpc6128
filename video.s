@@ -321,9 +321,9 @@ loop     push hl
          dec a
          jp z,crsrset
          jp loop
-         
+
 ;*         jmp crsrset
-         
+
 ;*cont     sta currp+1
 ;*         stx currp
 ;*         jmp loop
