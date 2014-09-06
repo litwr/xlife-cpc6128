@@ -1,4 +1,5 @@
            include "cpc.mac"
+           include "printn.inc"
            org $40
 
 start      call prg
@@ -7,15 +8,21 @@ start      call prg
 
 fn         db "XLIFE2.BIN"
 
-prg        ;ld hl,(icurdev)
-           ;ld a,(hl)
-           ;push af
-           ;push hl
+prg        push hl
+           ld hl,(icurdev)
+           ld a,(hl)
+           pop hl
+           push af
            ld c,7
            call KL_INIT_BACK   ;restore AMSDOS
-           ;pop hl
-           ;pop af
-           ;ld (hl),a
+           pop af
+           scf
+           ccf
+           sbc hl,de
+           inc hl
+           push hl
+           ld hl,(icurdev)
+           ld (hl),a
 
            ld a,4
            call KL_BANK_SWITCH   ;get ext 16K
@@ -25,14 +32,27 @@ prg        ;ld hl,(icurdev)
            ld hl,start1
            ldir
 
+           ld b,prg-fn
+           ld hl,fn
+           ld de,$c000
+           call CAS_IN_OPEN
+           pop hl
+           jr nc,error1
+
+           ccf
+           sbc hl,bc
+           jr c,error2
+
            xor a
            call KL_BANK_SWITCH   ;get main 16K
 
-           ld b,prg-fn
            ld hl,fn
-           push hl
-           ld de,$c000
-           call CAS_IN_OPEN
+           ret
+
+error2     call printn
+           db "Not enough memory$"
+
+error1     call KM_WAIT_CHAR
            pop hl
            ret
 
@@ -40,5 +60,4 @@ start1
            incbin "cpchi.bin"
 end1
            end start
-
 

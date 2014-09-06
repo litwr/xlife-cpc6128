@@ -18,7 +18,7 @@ iDSK $D -i cr.txt -t 0 && rm cr.txt
 
 awk -f xlife.man.awk xlife.man.txt >manpage.txt
 iDSK $D -r manpage.txt
-iDSK $D -i manpage.txt -t 0 #&& rm manpage.txt
+iDSK $D -i manpage.txt -t 0 && rm manpage.txt
 fi
 
 iDSK $D -r xlife1.bin
@@ -26,6 +26,7 @@ iDSK $D -r xlife2.bin
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym
 pasmo6 --amsdos --listing xlife2.lst xlife2.asm xlife2.bin xlife2.sym && \
+grep printn xlife2.sym >printn.inc && \
 grep -vEf excl.grep xlife2.sym >tmpzz && mv tmpzz xlife2.sym &&
 pasmo6 --listing cpchi.lst cpchi.asm cpchi.bin&& \
 pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin&& \

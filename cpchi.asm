@@ -389,7 +389,11 @@ cont3      ld a,(hl)
            ret
            endp
 
-initprg    call loadcf
+initprg    ld hl,(icurdev)
+           ld a,(hl)
+           add a,"A"
+           ld (drvlett),a
+           call loadcf
            ld a,1
            ld (errst),a
            call copyr
