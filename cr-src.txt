@@ -17,7 +17,7 @@ Vladimir Lidovski at 2011
 http://freecode.com/projects/xlife
 
 This program creation was inspired by
-Luca, Mkarcz, and Gaia.  Thanks to
+Luca, Mkarcz, Gaia, and Opqa. Thanks to
 makers of 'pasmo' assembler, ep128emu
 emulator, http://www.cpctech.org.uk/,
 the original 'xlife', Commodore +4,
