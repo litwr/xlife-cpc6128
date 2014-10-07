@@ -25,10 +25,14 @@ iDSK $D -r xlife1.bin
 iDSK $D -r xlife2.bin
 rm xlife?.bin xlife?.sym xlife?.lst cpchi.bin cpchi.lst
 echo >xlife2.sym
+gcc -DCPC6128 geninitiles.c && ./a.out >initiles.s && \
+gcc -DCPC6128 gentab12.c && ./a.out >tab12.s && \
+gcc -DCPC6128 gengentab.c && ./a.out >gentab.s && \
 pasmo6 --amsdos --listing xlife2.lst xlife2.asm xlife2.bin xlife2.sym && \
 grep printn xlife2.sym >printn.inc && \
 grep -vEf excl.grep xlife2.sym >tmpzz && mv tmpzz xlife2.sym &&
 pasmo6 --listing cpchi.lst cpchi.asm cpchi.bin&& \
 pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin&& \
 (iDSK $D -r xlife1.bin; iDSK $D -i xlife1.bin -t 1) && \
-(iDSK $D -r xlife2.bin; iDSK $D -i xlife2.bin -t 1)
+(iDSK $D -r xlife2.bin; iDSK $D -i xlife2.bin -t 1) && \
+rm initiles.s tab12.s gentab.s a.out

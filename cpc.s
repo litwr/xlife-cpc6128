@@ -106,10 +106,7 @@ readhl   ld l,(iy)
          ld h,(iy+1)
          ret
 
-inciy    inc (iy+sum)
-         ret
-
-deciy    dec (iy+sum)
+setiy    ld (iy+sum),1
          ret
 
 xoriy    ld a,(iy)
@@ -123,12 +120,6 @@ oriy     or (iy)
 readde   ld e,(iy+video)      ;in: iy
          ld d,(iy+video+1)    ;out: de
          ret
-
-readc    proc
-         ld (m1+2),a
-m1       ld c,(iy)
-         ret
-         endp
 
 fixvp    ld l,(iy+ul)
          ld h,(iy+ul+1)

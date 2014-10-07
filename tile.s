@@ -7,7 +7,7 @@ zerocc   inibcd cellcnt,4
 ;*         #assign16 currp,startp
 clear    proc
 ;clear all occupied tiles
-         local cont1,cont2,loop,loop0,lnext
+         local cont2,loop,loop0,lnext
          call zerocc
          inibcd gencnt,6
          ld iy,(startp)
@@ -29,7 +29,7 @@ loop     ld a,(iy+sum)
          push iy
          ld b,8
 loop0    ld (iy),a
-         ld (iy+pc),a
+         ;??ld (iy+pc),a
          inc iy
          djnz loop0
          pop iy
@@ -46,24 +46,16 @@ loop0    ld (iy),a
 ;*         iny
 ;*         lda (currp),y
 ;*         bne cont1
-;*
-;*         cpx #1
-;*         beq cont2
-lnext    ld l,(iy+next)
-         ld h,(iy+next+1)
-         ld a,h
+lnext    ld a,(iy+next+1)
          or a
-         jr nz,cont1
-
-         ld a,l
-         dec a
          jr z,cont2
 
+         ld b,(iy+next)
 ;*cont1    sta currp+1
 ;*         stx currp
 ;*         jmp loop
-cont1   push hl
-        pop iy
+        ld iyh,a
+        ld iyl,b
         jr loop
 
 ;*cont2    jsr showscn
@@ -91,30 +83,27 @@ cont2    call showscn
 ;*         adc (currp),y
 ;*         sta (currp),y
 ;*         rts
-fixcnt2  add a,c       ;in: a, bc, de
+fixcnt2  add a,c       ;in: a, bc, e
          ld c,a        ;chg: a, bc, hl
          ld a,0
          adc a,b
          ld b,a
-         ld hl,tab20
-         add hl,de
+         ld h,high(tab20)
+         ld l,e
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab21
-         add hl,de
+         inc h
          inc bc
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab22
-         add hl,de
+         inc h
          inc bc
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab23
-         add hl,de
+         inc h
          inc bc
          ld a,(bc)
          add a,(hl)
@@ -137,30 +126,27 @@ fixcnt2  add a,c       ;in: a, bc, de
 ;*         adc (adjcell),y
 ;*         sta (adjcell),y
 ;*         rts
-fixcnt1x add a,c       ;in: a, bc, de
+fixcnt1x add a,c       ;in: a, bc, e
          ld c,a        ;chg: a, bc, hl
          ld a,0
          adc a,b
          ld b,a
-         ld hl,tab13
-         add hl,de
+         ld h,high(tab13)
+         ld l,e
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab12
-         add hl,de
+         dec h
          dec bc
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab11
-         add hl,de
+         dec h
          dec bc
          ld a,(bc)
          add a,(hl)
          ld (bc),a
-         ld hl,tab10
-         add hl,de
+         dec h
          dec bc
          ld a,(bc)
          add a,(hl)
@@ -181,12 +167,8 @@ chkaddt    ld a,(t1)
 ;*         iny
 ;*         ora (adjcell),y
 ;*         bne exit2
-chkadd     ld a,next    ;in: bc - adjcell or adjcell2
-           add a,c      ;used: a, hl, de
-           ld l,a
-           ld a,0
-           adc a,b
-           ld h,a
+chkadd     ld hl,next   ;in: bc - adjcell or adjcell2
+           add hl,bc    ;used: a, hl, de
            ld a,(hl)
            inc hl
            or (hl)
@@ -426,7 +408,7 @@ cont5
          endp
 
 calccells proc
-         local cont1,loop2,loop4
+         local loop2,loop4
          ld hl,(tilecnt)
          ld a,l
          or h
@@ -455,23 +437,30 @@ loop4    ld a,(iy)
          dec c
          jr nz,loop4
 
-         ld l,(ix+next)
-         ld h,(ix+next+1)
-         ld a,h
-         or a      ;l?
-         jr nz,cont1
-
-         ld a,l
-         dec a
+         ld a,(ix+next+1)
+         or a
          jp z,infoout
 
-cont1    push hl
-         pop iy
+         ld iyh,a
+         ld a,(ix+next)
+         ld iyl,a
          jr loop2
          endp
 
-inctsum  cellsum  ;in: A
+inctsum  proc
+         local loop
+         ld hl,cellcnt+4
+         ld b,5
+loop     inc (hl)
+         ld a,(hl)
+         cp 10
+         ret nz
+
+         ld (hl),0
+         dec hl
+         djnz loop
          ret
+         endp
 
 ;*dectsum  .block
 ;*         ldx #4
@@ -492,9 +481,7 @@ dectsum  proc
          ld hl,cellcnt+4
          ld b,5
 loop     dec (hl)
-         ld a,(hl)
-         inc a
-         ret nz
+         ret p
 
          ld (hl),9
          dec hl
@@ -835,6 +822,19 @@ nextcell add a,c       ;in: a, bc; changed: a, hl; set: bc
          ld c,(hl)
          inc hl
          ld b,(hl)
+         ret
+
+vnextcelllo
+         add a,iyl
+         ld l,a
+         ld a,iyh
+         adc a,0
+         ld h,a
+         ld a,(hl)
+         ld iyl,a
+         inc hl
+         ld a,(hl)
+         ld iyh,a
          ret
 
 ;*torus    .block

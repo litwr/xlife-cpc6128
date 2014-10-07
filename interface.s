@@ -414,20 +414,10 @@ cont17   cp 32          ;space
          and d
          jr z,lsp1
 
-;*         clc
-;*         lda (crsrtile),y
-;*         adc #1
-;*         sta (crsrtile),y
-;*         lda #1
-;*         jsr inctsum
-;*lsp2     lda zoom
-;*         beq lsp3
-         ld hl,inciy
+         call inctsum
+lsp2     ld hl,setiy
          call calllo
-         ld a,1
-         ld hl,inctsum
-         call calllo
-lsp2     ld a,(zoom)
+         ld a,(zoom)
          or a
          push af
          call z,crsrclr
@@ -439,21 +429,11 @@ lsp2     ld a,(zoom)
 
 ;*lsp3     jsr infoout
 ;*         jmp crsrset
-         ld hl,infoout
-         call calllo
+         call infoout
          ld hl,crsrset
          jp calllo
 
-;*lsp1     sec
-;*         lda (crsrtile),y
-;*         sbc #1
-;*         sta (crsrtile),y
-;*         jsr dectsum
-;*         bne lsp2
-lsp1     ld hl,deciy
-         call calllo
-         ld hl,dectsum
-         call calllo
+lsp1     call dectsum
          jr lsp2
 
 cont17c  cp "."

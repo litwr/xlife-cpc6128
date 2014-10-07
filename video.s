@@ -118,7 +118,7 @@ loop4    ld a,(crsrtile)
          ld a,1
          ld (i1),a
 cont4    ld c,8
-loop2    ld d,(ix+pc)
+loop2    ;??ld d,(ix+pc)
          ld e,(ix)
          ld b,8
 loop1    rlc d              ;pseudocolor
@@ -315,14 +315,7 @@ loop     push hl
          xor a
          or h
          jp nz,loop
-;*         cpx #1
-;*         bne cont
-         ld a,l
-         dec a
-         jp z,crsrset
-         jp loop
-
-;*         jmp crsrset
+         jp crsrset
 
 ;*cont     sta currp+1
 ;*         stx currp
@@ -442,22 +435,14 @@ loop     ld e,(iy+video)
 ;*         iny
 ;*         lda (currp),y
 ;*         bne cont
-         ld c,(iy+next-7)
          ld a,(iy+next-6)
+         or a
+         jp z,crsrset
+
+         ld c,(iy+next-7)
          ld iyh,a
          ld iyl,c
-         or a
-         jp nz,loop
-;*         cpx #1
-;*         bne cont
-;*         jmp crsrset
-         dec c
-         jp nz,loop
-
-;*cont     sta currp+1
-;*         stx currp
-;*         jmp loop
-         jp crsrset
+         jp loop
          endp
 
 ;*showtinfo
@@ -735,7 +720,7 @@ vidmacp  proc   ;in: iy,ix,de; changed: b,c,h
          rlca
          and 3
          ld c,a
-         ld a,(iy+pc)
+         ;??ld a,(iy+pc)
          ld b,a
          rlca
          rlca
@@ -796,7 +781,7 @@ m4       ld a,(ix)
          endp
 
 clrrectlo  proc       ;in: x8poscp, y8poscp
-         local lltpc,lrtpc,lx,lxpc11,lxpc01
+         local lltpc,lrtpc,lx,lxpc11,lxpc01,m7,m8
          local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,mask,localbase
          local looplt,looprt,loopdn,loopup,looprt1,looplt1,looprtpc,loopltpc
          local xmove,nextrt,nextlt
@@ -995,7 +980,8 @@ clrect1  ld e,(iy+video)
          add a,d
          ld d,a
          ld a,b
-         call readc
+         ld (m8+2),a
+m8       ld c,(iy)
          ld hl,x8bit
          ret
 
@@ -1067,20 +1053,13 @@ lxpc01   ld a,(hl)
 
 clrect3  ld a,b
          ld b,c
-         add a,pc
-         call readc
-         ld a,c
+         ;??add a,pc
+         ld (m7+2),a
+m7       ld a,(iy)
          ld c,b
          ld b,a
          ld hl,x8bit
          ld a,(hl)
          ret
          endp
-
-vnextcelllo push iy
-         pop bc
-         call nextcell
-         push bc
-         pop iy
-         ret
 

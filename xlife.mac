@@ -23,10 +23,16 @@ dr       equ 18
 down     equ 20
 dl       equ 22
 next     equ 24
-count    equ 26
+count0   equ 26
+count1   equ 30
+count2   equ 34
+count3   equ 38
+count4   equ 42
+count5   equ 46
+count6   equ 50
+count7   equ 54
 video    equ 58
 sum      equ 60
-pc       equ 61
 tile     macro
          db 0  ;l0
          db 0  ;l1
@@ -50,11 +56,8 @@ tile     macro
          endm
          dw 0  ;video;+58
          db 0  ;sum  ;+60
-         rept 8
-         db 0  ;pc   ;+61
          endm
-         endm
-tilesize equ 69
+tilesize equ 61
 
 ;*testlf   .macro
 ;*         lda (currp),y
@@ -103,7 +106,7 @@ l1       sub $a
 ;*         sta cellcnt+4
          ld (hl),a
 ;*         ldy #$30
-         ld b,0
+         ld c,0
          dec hl
 ;*         #incbcd cellcnt+3
 ;*         sty cellcnt+3
@@ -137,10 +140,10 @@ incbcd   macro n
          cp $a
          jr nz,cont2
 
-         ld (hl),b
+         ld (hl),c
          endm
 
-incbcd2  macro n
+incbcd2  macro
          inc (hl)
          ld a,(hl)
          cp $a
@@ -166,149 +169,102 @@ loop     ld (hl),a
          djnz loop
          endm
 
-;*genmac   .macro
-genmac   macro cnt,n
-         local cont2
-;*         ldy #\1+3
-;*         lda (currp),y
-;*         tax
-;*         ldy #\2 
-;*         lda (currp),y
-;*         and #3
-;*         clc
-;*         adc #>gentab
-;*         sta m1+2
-;*m1       lda gentab,x
-;*         sta i2
-         ld l,(iy+cnt+3)
+;*setcount .macro
+setcount macro n
          ld a,(iy+n)
-         and 3
-         ld h,a
-         add hl,de
-         ld b,(hl)
-
-;*         ldy #\1+2
-;*         lda (currp),y
 ;*         tax
-;*         ldy #\2
-;*         lda (currp),y
-;*         and #$c
-;*         lsr
-;*         lsr
-;*         adc #>gentab
-;*         sta m2+2
-;*m2       lda gentab,x
-;*         asl
-;*         asl
-;*         ora i2
-;*         sta i2
-         ld l,(iy+cnt+2)
-         ld a,(iy+n)
-         and $c
-         rrca
-         rrca
-         ld h,a
-         add hl,de
-         ld a,(hl)
-         rlca
-         rlca
-         or b
+;*         and #$c0
+;*         sta (currp),y
          ld b,a
+         and $c0
+         ld (hl),a
 
-;*         ldy #\1+1
-;*         lda (currp),y
-;*         tax
-;*         ldy #\2
-;*         lda (currp),y
+;*         txa
 ;*         and #$30
 ;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         adc #>gentab
-;*         sta m3+2
-;*m3       lda gentab,x
-;*         asl
-;*         asl
-;*         asl
-;*         asl
-;*         ora i2
-;*         sta i2
-         ld l,(iy+cnt+1)
-         ld a,(iy+n)
+;*         iny
+;*         sta (currp),y
+         ld a,b
          and $30
          rrca
-         rrca
-         rrca
-         rrca
-         ld h,a
-         add hl,de
-         ld a,(hl)
-         rlca
-         rlca
-         rlca
-         rlca
-         or b
-         ld b,a
+         inc hl
+         ld (hl),a
 
-;*         ldy #\1
-;*         lda (currp),y
-;*         tax
-;*         ldy #\2
-;*         lda (currp),y
-;*         and #$c0
-;*         rol	;CY=0 must be
-;*         rol
-;*         rol
-;*         adc #>gentab
-;*         sta m4+2
-;*m4       lda gentab,x
-;*         ror
-;*         ror
-;*         ror
-;*         ora i2
-         ld l,(iy+cnt)
-         ld a,(iy+n)
-         and $c0
-         rlca
-         rlca
-         ld h,a
-         add hl,de
-         ld a,(hl)
-         rrca
-         rrca
-         or b
-         ld l,a
-         ld h,0
-
-;*         tax
-;*         ldy #\2
-;*         sta (currp),y
-;*         lda tab3,x
-;*         tax
-;*         ldy #sum 
-;*         adc (currp),y
-;*         sta (currp),y
-         ld (iy+n),a
-         ld bc,tab3
-         add hl,bc
-         ld a,(hl)
-         ld b,a
-         add a,(iy+sum)
-         ld (iy+sum),a
-
-;*         lda mode
-;*         cmp #2       ;hide?
-;*         beq cont2
 ;*         txa
-;*         #cellsum
-;*cont2
-;*         .endm
+;*         and #$c
+;*         asl
+;*         iny
+;*         sta (currp),y
+         ld a,b
+         and $c
+         rlca
+         inc hl
+         ld (hl),a
+
+;*         txa
+;*         and #$3
+;*         iny
+;*         sta (currp),y
+         ld a,b
+         and 3
+         inc hl
+         ld (hl),a
+         endm
+
+;*genmac   .macro
+genmac   macro n
+         local cont2
+         ld e,(hl)
+         ld a,(de)
+         and $c0
+         ld c,a
+
+         inc hl
+         ld e,(hl)
+         ld a,(de)
+         and $30
+         or c
+         ld c,a
+
+         inc hl
+         ld e,(hl)
+         ld a,(de)
+         and $c
+         or c
+         ld c,a
+
+         inc hl
+         ld e,(hl)
+         ld a,(de)
+         and 3
+         or c
+         ld (iy+n),a
+         ld c,a
+         ld a,(bc)
+         or a
+         jr z,cont2
+
+         ld (iy+sum),a
+         ld c,a
          ld a,(mode)
          cp 2
          jr z,cont2
 
-         ld a,b
+         ld a,c
+         push hl
          cellsum
+         pop hl
 cont2    endm
+
+ispyr4   macro addr
+         ld a,4
+         add a,addr
+         ld addr,a
+         endm
+
+ispyr8   macro addr
+         ld a,8
+         add a,addr
+         ld addr,a
+         endm
 

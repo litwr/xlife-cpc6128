@@ -34,8 +34,8 @@ mainloop proc
          jp mainloop
 
 cont4    ld a,(mode)
-         cp 2
-         jr nz,cont5
+         dec a
+         jr z,cont5
 
          call generate     ;hide
          call cleanup
@@ -48,28 +48,7 @@ cont5    call zerocc
          jp mainloop
          endp
 
-ttab     db 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
-         db $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
-         db $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
-         db $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
-         db $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
-         db $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
-         db $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
-         db $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
-         db $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
-         db $95,$96,$97,$98,$98,$99
-
-gentab   db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 0, all 7s are free
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7
 topology db 0    ;0 - torus
-         db 0,0,0,1,0,0,0,0,0
-
 vptilecx db 0
 vptilecy db 0    ;must be after vptilex!
 density  db 3
@@ -88,19 +67,6 @@ frameocellc db 17
 tentc    db 2
 copyleft db "cr.txt"
 errst    db 0   ;0 - do not print i/o-errors message, 1 - print
-
-	 ds 96  ;free
-
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 1 = block 0 + $100
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0
-
 ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
          db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
 bittab   db 1,2,4,8,16,32,64,128
@@ -122,39 +88,12 @@ crsrbit  db $80    ;x bit position
 crsrbyte db 0      ;y%8 - must be after crsrbit!
 crsrx    db 0      ;x/8 - not at pseudographics
 crsry    db 0      ;y/8
-dirname  db "????????"      ;filename mask used to access directory
-cfn      db "colors.cfg"
-live     db 12,0 ;must be after cfn
-born     db 8,0  ;must be after born
-crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
-splitst  db 1   ;1..255 - split on, 0 - off
-ppmode   db 1   ;putpixel mode: 0 - tentative, 1 - active
-memb8    db 0
-memb9    db 0
 
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 2 = block 1 + $100
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 2,2,2,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,0,1,0,0,0,0,0
-
-         ds 119   ;free
-
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7  ;block 3 = block 2 + $100
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 2,2,3,3,2,2,2,2,2,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0,7,7,7,7,7,7,7
-         db 0,0,1,1,0,0,0,0,0
-
-tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
+         org $100   ;???
+gentab   ;page aligned!
+         include "gentab.s"
+         include "tab12.s"
+tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 ;page aligned!
          db 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
          db 1, 2, 2, 3, 2, 3, 3, 4, 2, 3, 3, 4, 3, 4, 4, 5
          db 2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6
@@ -171,12 +110,113 @@ tab3     db 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4
          db 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7
          db 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8
 
+ttab     db 0,1,2,3,3,4,5,6,7,8,8,9,$10,$11,$12,$13,$13,$14
+         db $15,$16,$17,$18,$18,$19,$20,$21,$22,$23,$23,$24
+         db $25,$26,$27,$28,$28,$29,$30,$31,$32,$33,$33,$34
+         db $35,$36,$37,$38,$38,$39,$40,$41,$42,$43,$43,$44
+         db $45,$46,$47,$48,$48,$49,$50,$51,$52,$53,$53,$54
+         db $55,$56,$57,$58,$58,$59,$60,$61,$62,$63,$63,$64
+         db $65,$66,$67,$68,$68,$69,$70,$71,$72,$73,$73,$74
+         db $75,$76,$77,$78,$78,$79,$80,$81,$82,$83,$83,$84
+         db $85,$86,$87,$88,$88,$89,$90,$91,$92,$93,$93,$94
+         db $95,$96,$97,$98,$98,$99
+
+dirname  db "????????"      ;filename mask used to access directory
+cfn      db "colors.cfg"
+live     db 12,0 ;must be after cfn
+born     db 8,0  ;must be after born
+crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
+splitst  db 1   ;1..255 - split on, 0 - off
+ppmode   db 1   ;putpixel mode: 0 - tentative, 1 - active
+memb8    db 0
+memb9    db 0
+
          include "tile.s"
          include "cpc.s"
 
 generate proc
-         local cont2,cont4,ll1,ll2,ll3,ll4,ll5,ll7
-         local lr1,lr2,lr3,lr4,lr5,lr6,lr7,l2,l3,l4,l5,l6,loop3,loop8
+         local cont10,ll1,ll2,ll3,ll4,ll5,ll7
+         local lr1,lr2,lr3,lr4,lr5,lr6,lr7,l2,l3,l4,l5,l6,loop3
+
+;*         #assign16 currp,startp
+         ld hl,(startp)
+
+;*loop3    ldy #0
+;*         lda (currp),y
+;*         ldy #count0
+;*         #setcount
+loop3    push hl
+         pop iy
+         ld bc,count0
+         add hl,bc
+         setcount 0
+
+;*         ldy #1
+;*         lda (currp),y
+;*         ldy #count1
+;*         #setcount
+         inc hl
+         setcount 1
+
+;*         ldy #2
+;*         lda (currp),y
+;*         ldy #count2
+;*         #setcount
+         inc hl
+         setcount 2
+
+;*         ldy #3
+;*         lda (currp),y
+;*         ldy #count3
+;*         #setcount
+         inc hl
+         setcount 3
+
+;*         ldy #4
+;*         lda (currp),y
+;*         ldy #count4
+;*         #setcount
+         inc hl
+         setcount 4
+
+;*         ldy #5
+;*         lda (currp),y
+;*         ldy #count5
+;*         #setcount
+         inc hl
+         setcount 5
+;*         ldy #6
+;*         lda (currp),y
+;*         ldy #count6
+;*         #setcount
+         inc hl
+         setcount 6
+
+;*         ldy #7
+;*         lda (currp),y
+;*         ldy #count7
+;*         #setcount
+         inc hl
+         setcount 7
+
+;*         ldy #next+1
+;*         lda (currp),y
+;*         beq cont10
+         ld a,(iy+next+1)
+         or a
+         jr z,cont10
+
+;*         tax
+;*         dey
+;*         lda (currp),y
+;*         sta currp
+;*         stx currp+1
+;*         jmp loop3
+         ld h,a
+         ld l,(iy+next)
+         jp loop3
+
+cont10
 ;*         #assign16 currp,startp
          ld iy,(startp)
 ;*loop     ldy #sum
@@ -193,31 +233,23 @@ loop     ld a,(iy+sum)
          or a
 ;*         beq ldown
          jr z,ldown
-;*         
+;*
 ;*         tax
-         ld d,0
          ld e,a
 ;*         ldy #up
 ;*         jsr iniadjc
          ld c,(iy+up)
          ld b,(iy+up+1)  ;bc=adjcell
          push bc
-;*         clc
-;*         ldy #count+31
-;*         jsr fixcnt1e
-         ld a,count+31
+         ld a,count7+3
          call fixcnt1x
-;*         ldy #count+7
-;*         jsr fixcnt1
          ld b,iyh
          ld c,iyl
          push bc
-         ld a,count+7
+         ld a,count1+3
          call fixcnt1x
-;*         ldy #count
-;*         jsr fixcnt2
          pop bc
-         ld a,count
+         ld a,count0
          call fixcnt2
 ;*         jsr chkadd
          pop bc
@@ -228,33 +260,27 @@ ldown    ld a,(iy+7)
          or a
 ;*         beq lleft
          jr z,lleft
-;*         
+;*
 ;*         tax
-         ld d,0
          ld e,a
 ;*         ldy #down
 ;*         jsr iniadjc
          ld c,(iy+down)
          ld b,(iy+down+1)  ;bc=adjcell
          push bc
-;*         clc
-;*         ldy #count+3
-;*         jsr fixcnt1e
-         ld a,count+3
+         ld a,count0+3
          call fixcnt1x
-;*         
+
 ;*         ldy #count+27
 ;*         jsr fixcnt1
          ld b,iyh
          ld c,iyl
          push bc
-         ld a,count+27
+         ld a,count6+3
          call fixcnt1x
 
-;*         ldy #count+28
-;*         jsr fixcnt2
          pop bc
-         ld a,count+28
+         ld a,count7
          call fixcnt2
 ;*         jsr chkadd
          pop bc
@@ -273,37 +299,19 @@ lleft
          xor a
          ld (t1),a
 ;*         lda (currp),y
-         ld a,(iy)
-;*         and #$80
-         and a
-;*         beq ll1
+         or (iy)
          jp p,ll1
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+3
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+3)
-;*         lda #1
-;*         ldy #count+7
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+7)
-;*         ldy #ul
-;*         jsr iniadjc2
-;*         lda #1
-;*         ldy #count+31
+         ispyr4 (ix+count0+3)
+         ispyr4 (ix+count1+3)
          ld l,(iy+ul)
          ld h,(iy+ul+1)
          push hl
-         ld de,count+31
+         ld de,count7+3
          add hl,de
-;*         adc (adjcell2),y
-;*         sta (adjcell2),y
-         inc (hl)
+         ispyr4 (hl)
          pop bc
 ;*         jsr chkadd2
          call chkadd
@@ -312,198 +320,91 @@ lleft
 ll1
 ;*         lda (currp),y
          ld a,(iy+1)
-;*         and #$80
          and a
-;*         beq ll2
          jp p,ll2
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+3
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+3)
-;*         lda #1
-;*         ldy #count+7
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+7)
-;*         lda #1
-;*         ldy #count+11
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+11)
+         ispyr4 (ix+count0+3)
+         ispyr4 (ix+count1+3)
+         ispyr4 (ix+count2+3)
 ;*ll2      ldy #2
 ll2
 ;*         lda (currp),y
          ld a,(iy+2)
-;*         and #$80
          and a
-;*         beq ll3
          jp p,ll3
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+7
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+7)
-;*         lda #1
-;*         ldy #count+11
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+11)
-;*         lda #1
-;*         ldy #count+15
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+15)
+         ispyr4 (ix+count1+3)
+         ispyr4 (ix+count2+3)
+         ispyr4 (ix+count3+3)
 ;*ll3      ldy #3
 ll3
 ;*         lda (currp),y
          ld a,(iy+3)
-;*         and #$80
          and a
-;*         beq ll4
          jp p,ll4
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+11
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+11)
-;*         lda #1
-;*         ldy #count+15
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+15)
-;*         lda #1
-;*         ldy #count+19
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+19) 
+         ispyr4 (ix+count2+3)
+         ispyr4 (ix+count3+3)
+         ispyr4 (ix+count4+3) 
 ;*ll4      ldy #4
 ll4
 ;*         lda (currp),y
          ld a,(iy+4)
-;*         and #$80
-         and $80
-;*         beq ll5
-         jr z,ll5
+         and a
+         jp p,ll5
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+15
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+15)
-;*         lda #1
-;*         ldy #count+19
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+19)
-;*         lda #1
-;*         ldy #count+23
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+23)
+         ispyr4 (ix+count3+3)
+         ispyr4 (ix+count4+3)
+         ispyr4 (ix+count5+3)
 ;*ll5      ldy #5
 ll5
 ;*         lda (currp),y
          ld a,(iy+5)
-;*         and #$80
          and a
-;*         beq ll6
          jp p,ll6
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+19
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+19)
-;*         lda #1
-;*         ldy #count+23
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+23)
-;*         lda #1
-;*         ldy #count+27
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+27)
+         ispyr4 (ix+count4+3)
+         ispyr4 (ix+count5+3)
+         ispyr4 (ix+count6+3)
 ;*ll6      ldy #6
 ll6
 ;*         lda (currp),y
          ld a,(iy+6)
-;*         and #$80
          and a
-;*         beq ll7
          jp p,ll7
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+23
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+23)
-;*         lda #1
-;*         ldy #count+27
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+27)
-;*         lda #1
-;*         ldy #count+31
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+31)
+         ispyr4 (ix+count5+3)
+         ispyr4 (ix+count6+3)
+         ispyr4 (ix+count7+3)
 ;*ll7      ldy #7
 ll7
 ;*         lda (currp),y
          ld a,(iy+7)
-;*         and #$80
          and a
-;*         beq lexit
          jp p,lexit
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+27
-;*         lda #1
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+27)
-;*         lda #1
-;*         ldy #count+31
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         inc (ix+count+31)
-;*         ldy #dl
-;*         jsr iniadjc2
+         ispyr4 (ix+count6+3)
+         ispyr4 (ix+count7+3)
          ld l,(iy+dl)
          ld h,(iy+dl+1)
          push hl
-         ld de,count+3
+         ld de,count0+3
          add hl,de
-;*         lda #1
-;*         ldy #count+3
-;*         adc (adjcell2),y
-;*         sta (adjcell2),y
-         inc (hl)
+         ispyr4 (hl)
          pop bc
 ;*         jsr chkadd2
          call chkadd
@@ -526,40 +427,21 @@ lexit    pop bc
 ;*         and #1
 ;*         beq lr1
          ld a,(iy)
-         and 1
-         jr z,lr1
+         rrca
+         jr nc,lr1
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count)
-         ld (ix+count),a
-;*         lda #$10
-;*         ldy #count+4
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+4)
-         ld (ix+count+4),a
+         ispyr8 (ix+count0)
+         ispyr8 (ix+count1)
 ;*         ldy #ur
 ;*         jsr iniadjc2
          ld l,(iy+ur)
          ld h,(iy+ur+1)
          push hl
-         ld de,count+28
+         ld de,count7
          add hl,de
-;*         lda #$10
-;*         ldy #count+28
-;*         adc (adjcell2),y
-;*         sta (adjcell2),y
-         ld a,$10
-         add a,(hl)
-         ld (hl),a
+         ispyr8 (hl)
          pop bc
 ;*         jsr chkadd2
          call chkadd
@@ -568,232 +450,101 @@ lexit    pop bc
 ;*         and #1
 ;*         beq lr2
 lr1      ld a,(iy+1)
-         and 1
-         jr z,lr2
+         rrca
+         jr nc,lr2
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count)
-         ld (ix+count),a
-;*         lda #$10
-;*         ldy #count+4
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+4)
-         ld (ix+count+4),a
-;*         lda #$10
-;*         ldy #count+8
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+8)
-         ld (ix+count+8),a
+         ispyr8 (ix+count0)
+         ispyr8 (ix+count1)
+         ispyr8 (ix+count2)
 ;*lr2      ldy #2
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq lr3
 lr2      ld a,(iy+2)
-         and 1
-         jr z,lr3
+         rrca
+         jr nc,lr3
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+4
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+4)
-         ld (ix+count+4),a
-;*         lda #$10
-;*         ldy #count+8
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+8)
-         ld (ix+count+8),a
-;*         lda #$10
-;*         ldy #count+12
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+12)
-         ld (ix+count+12),a
+         ispyr8 (ix+count1)
+         ispyr8 (ix+count2)
+         ispyr8 (ix+count3)
 ;*lr3      ldy #3
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq lr4
 lr3      ld a,(iy+3)
-         and 1
-         jr z,lr4
+         rrca
+         jr nc,lr4
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+8
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+8)
-         ld (ix+count+8),a
-;*         lda #$10
-;*         ldy #count+12
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+12)
-         ld (ix+count+12),a
-;*         lda #$10
-;*         ldy #count+16
-;*         adc (adjcell),y
-;*         sta (adjcell),y 
-         ld a,$10
-         add a,(ix+count+16)
-         ld (ix+count+16),a
+         ispyr8 (ix+count2)
+         ispyr8 (ix+count3)
+         ispyr8 (ix+count4)
 ;*lr4      ldy #4
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq lr5
 lr4      ld a,(iy+4)
-         and 1
-         jr z,lr5
+         rrca
+         jr nc,lr5
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+12
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+12)
-         ld (ix+count+12),a
-;*         lda #$10
-;*         ldy #count+16
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+16)
-         ld (ix+count+16),a
-;*         lda #$10
-;*         ldy #count+20
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+20)
-         ld (ix+count+20),a
+         ispyr8 (ix+count3)
+         ispyr8 (ix+count4)
+         ispyr8 (ix+count5)
 ;*lr5      ldy #5
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq lr6
 lr5      ld a,(iy+5)
-         and 1
-         jr z,lr6
+         rrca
+         jr nc,lr6
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+16
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+16)
-         ld (ix+count+16),a
-;*         lda #$10
-;*         ldy #count+20
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+20)
-         ld (ix+count+20),a
-;*         lda #$10
-;*         ldy #count+24
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+24)
-         ld (ix+count+24),a
+         ispyr8 (ix+count4)
+         ispyr8 (ix+count5)
+         ispyr8 (ix+count6)
 ;*lr6      ldy #6
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq lr7
 lr6      ld a,(iy+6)
-         and 1
-         jr z,lr7
+         rrca
+         jr nc,lr7
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+20
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+20)
-         ld (ix+count+20),a
-;*         lda #$10
-;*         ldy #count+24
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+24)
-         ld (ix+count+24),a
-;*         lda #$10
-;*         ldy #count+28
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+28)
-         ld (ix+count+28),a
+         ispyr8 (ix+count5)
+         ispyr8 (ix+count6)
+         ispyr8 (ix+count7)
 ;*lr7      ldy #7
 ;*         lda (currp),y
 ;*         and #1
 ;*         beq rexit
 lr7      ld a,(iy+7)
-         and 1
-         jr z,rexit
+         rrca
+         jr nc,rexit
 
 ;*         sta t1
          ld (t1),a
-;*         ldy #count+24
-;*         lda #$10
-;*         clc
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+24)
-         ld (ix+count+24),a
-;*         lda #$10
-;*         ldy #count+28
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         ld a,$10
-         add a,(ix+count+28)
-         ld (ix+count+28),a
-;*         ldy #dr
-;*         jsr iniadjc2
+         ispyr8 (ix+count6)
+         ispyr8 (ix+count7)
          ld l,(iy+dr)
          ld h,(iy+dr+1)
          push hl
-         ld de,count
+         ld de,count0
          add hl,de
 ;*         lda #$10
 ;*         ldy #count
 ;*         adc (adjcell2),y
 ;*         sta (adjcell2),y
-         ld a,$10
-         add a,(hl)
-         ld (hl),a
+         ispyr8 (hl)
          pop bc
 ;*         jsr chkadd2
          call chkadd
@@ -804,30 +555,22 @@ rexit    pop bc
 ;*         ldy #1
 ;*         lda (currp),y
 ;*         beq l2
-         ld d,0
          ld a,(iy+1)
          or a
          jr z,l2
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+3
-;*         jsr fixcnt1
-         ld a,count+3
+         ld a,count0+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+4
-;*         jsr fixcnt2
-         ld a,count+4
+         ld a,count1
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+11
-;*         jsr fixcnt1
-         ld a,count+11
+         ld a,count2+3
          pop bc
          call fixcnt1x
 ;*l2       ldy #2
@@ -839,23 +582,16 @@ l2       ld a,(iy+2)
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+7
-;*         jsr fixcnt1
-         ld a,count+7
+         ld a,count1+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+8
-;*         jsr fixcnt2
-         ld a,count+8
+         ld a,count2
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+15
-;*         jsr fixcnt1
-         ld a,count+15
+         ld a,count3+3
          pop bc
          call fixcnt1x
          
@@ -868,23 +604,16 @@ l3       ld a,(iy+3)
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+11
-;*         jsr fixcnt1
-         ld a,count+11
+         ld a,count2+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+12
-;*         jsr fixcnt2
-         ld a,count+12
+         ld a,count3
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+19
-;*         jsr fixcnt1
-         ld a,count+19
+         ld a,count4+3
          pop bc
          call fixcnt1x
 ;*l4       ldy #4
@@ -896,23 +625,16 @@ l4       ld a,(iy+4)
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+15
-;*         jsr fixcnt1
-         ld a,count+15
+         ld a,count3+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+16
-;*         jsr fixcnt2
-         ld a,count+16
+         ld a,count4
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+23
-;*         jsr fixcnt1
-         ld a,count+23
+         ld a,count5+3
          pop bc
          call fixcnt1x
 ;*l5       ldy #5
@@ -924,23 +646,16 @@ l5       ld a,(iy+5)
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+19
-;*         jsr fixcnt1
-         ld a,count+19
+         ld a,count4+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+20
-;*         jsr fixcnt2
-         ld a,count+20
+         ld a,count5
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+27
-;*         jsr fixcnt1
-         ld a,count+27
+         ld a,count6+3
          pop bc
          call fixcnt1x
 ;*l6       ldy #6
@@ -952,145 +667,65 @@ l6       ld a,(iy+6)
 
 ;*         tax
          ld e,a
-;*         clc
-;*         ldy #count+23
-;*         jsr fixcnt1
-         ld a,count+23
+         ld a,count5+3
          ld b,iyh
          ld c,iyl
          push bc
          call fixcnt1x
-;*         ldy #count+24
-;*         jsr fixcnt2
-         ld a,count+24
+         ld a,count6
          pop bc
          push bc
          call fixcnt2
-;*         ldy #count+31
-;*         jsr fixcnt1
-         ld a,count+31
+         ld a,count7+3
          pop bc
          call fixcnt1x
+
 ;*lnext    ldy #next
 ;*         lda (currp),y
-lnext
-         ld l,(iy+next)
-         ld h,(iy+next+1)
-         ld a,h
+lnext    ld a,(iy+next+1)
          or a
-         jr nz,cont2
-
-         ld a,l
-         dec a
          jr z,stage2
          
-;*         tax
-;*         iny
-;*         lda (currp),y
-;*         bne cont2
-;*         
-;*         cpx #1
-;*         beq stage2
-
-;*cont2    sta currp+1
-;*         stx currp
-;*         jmp loop
-cont2      push hl
-           pop iy
-           jp loop
+         ld b,(iy+next)
+         ld iyh,a
+         ld iyl,b
+         jp loop
 
 ;*stage2   #assign16 currp,startp
 stage2     ld iy,(startp)
-           ld de,gentab
+           ld b,high(tab3)
+           ld d,high(gentab)
+genloop2   ld a,count0
+           add a,iyl
+           ld l,a
+           ld a,0
+           adc a,iyh
+           ld h,a
 ;*         .bend
 
-;*
-;*genloop2 ldy #sum
-;*         .block
-;*         lda #0
-;*         sta (currp),y
-genloop2   ld (iy+sum),0
-;*         lda pseudoc   ;commented = 5% slower
-;*         beq cont4     ;with no pseudocolor
-           ld a,(pseudoc)
-           or a
-           jr z, cont4
-
-;*         ldx #8
-;*         lda #0
-;*         sta loop8+1
-;*         lda #pc
-;*         sta mpc+1
-;*loop8    ldy #0
-;*         lda (currp),y
-;*mpc      ldy #pc
-;*         sta (currp),y
-;*         inc loop8+1
-;*         inc mpc+1
-;*         dex
-;*         bne loop8
-           push iy
-           ld b,8
-loop8      ld a,(iy)
-           ld (iy+pc),a
-           inc iy
-           djnz loop8
-           pop iy
-
-;*cont4    #genmac count,0
-;*         #genmac count+4,1
-;*         #genmac count+8,2
-;*         #genmac count+12,3
-;*         #genmac count+16,4
-;*         #genmac count+20,5
-;*         #genmac count+24,6
-;*         #genmac count+28,7
-cont4    genmac count,0
-         genmac count+4,1
-         genmac count+8,2
-         genmac count+12,3
-         genmac count+16,4
-         genmac count+20,5
-         genmac count+24,6
-         genmac count+28,7
-;*         ldy #count
-;*         lda #0
-;*loop3    sta (currp),y
-;*         iny
-;*         cpy #count+32
-;*         bne loop3
-         ld b,32
-         push iy
-loop3    ld (iy+count),0
-         inc iy
-         djnz loop3
-         pop iy         
-;*         ldy #next
-;*         lda (currp),y
-;*         tax
-;*         iny
-;*         lda (currp),y
-;*         bne gencont1
-
-;*         cpx #1
-;*         bne gencont1
-         ld l,(iy+next)
-         ld h,(iy+next+1)
-         ld a,h
+         ld (iy+sum),0
+         genmac 0
+         inc hl
+         genmac 1
+         inc hl
+         genmac 2
+         inc hl
+         genmac 3
+         inc hl
+         genmac 4
+         inc hl
+         genmac 5
+         inc hl
+         genmac 6
+         inc hl
+         genmac 7
+         ld a,(iy+next+1)
          or a
-         jr nz,gencont1
-
-         ld a,l
-         dec a
          jr z,incgen
-;*         .bend
-;*rts2     rts
 
-;*gencont1 sta currp+1
-;*         stx currp
-;*         jmp genloop2
-gencont1 push hl
-         pop iy
+         ld c,(iy+next)
+         ld iyh,a
+         ld iyl,c
          jp genloop2
          endp
 
@@ -1161,7 +796,7 @@ cleanup  ld a,(clncnt)
 
 ;*cleanup0 .block
 cleanup0 proc
-         local loop,cont2
+         local loop
 ;*         #assign16 currp,startp
          ld iy,(startp)
 ;*         #zero16 adjcell   ;mark 1st
@@ -1173,36 +808,22 @@ cleanup0 proc
 loop     ld a,(iy+sum)
          or a
          jr z,delel
-;*         ldy #next
-;*         lda (currp),y
-         ld l,(iy+next)
-;*         tax
-         ld b,l
-;*         iny
-;*         lda (currp),y
-;*         bne cont2
-         ld h,(iy+next+1)
-         ld a,h
-         or a
-         jr nz,cont2
 
-;*         cpx #1
-;*         bne cont2
-         dec b
+         ld a,(iy+next+1)
+         or a
          ret z
-;*         rts
 
 ;*cont2    ldy currp    ;save pointer to previous
 ;*         sty adjcell
 ;*         ldy currp+1
 ;*         sty adjcell+1
-cont2      push iy
+           push iy
            pop ix
 ;*         sta currp+1
 ;*         stx currp
-           push hl
-           pop iy
-;*         jmp loop
+           ld b,(iy+next)
+           ld iyl,b
+           ld iyh,a
            jp loop
 
 ;*delel    lda tilecnt
@@ -1214,23 +835,36 @@ delel    ld hl,(tilecnt)
          dec hl
          ld (tilecnt),hl
 
+         xor a
+         ld bc,count7+3
+         push iy
+         pop hl
+         add hl,bc
+         rept 32
+         ld (hl),a
+         dec hl
+         endm
+         
 ;*         ldy #next
 ;*         lda (currp),y
 ;*         sta i1
 ;*         iny
 ;*         lda (currp),y
 ;*         sta i1+1
-         ld l,(iy+next)
-         ld h,(iy+next+1)
-         ld (i1),hl
+         ld c,(iy+next)
+         ld b,(iy+next+1)
+         ld (i1),bc
 
 ;*         lda #0
 ;*         sta (currp),y
 ;*         dey
 ;*         sta (currp),y
-         xor a
-         ld (iy+next),a
-         ld (iy+next+1),a
+         ;xor a   ;ac=0 here
+         ;ld (iy+next),a
+         ;ld (iy+next+1),a
+         ld (hl),a
+         dec hl
+         ld (hl),a
 ;*         #assign16 currp,i1
          ld iy,(i1)
 
@@ -1252,15 +886,7 @@ delel    ld hl,(tilecnt)
          ld (ix+next+1),h
          ld a,h
          or a
-         jr nz,loop
-
-;*         lda #1
-;*         cmp i1
-;*         bne loop
-         dec l
-         jr nz,loop
-
-;*exit     rts
+         jp nz,loop
          ret
 
 ;*del1st   #assign16 startp,i1
@@ -1290,7 +916,7 @@ dispatcher
          jp callhi
 
          include "video.s"
-         include "tab12.s"
+tiles
          include "initiles.s"
 
 realnum2 db 0,0,0,0,0
