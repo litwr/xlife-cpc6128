@@ -5,4 +5,5 @@ it is possible to create situation when even hardware reset cannot restore the e
 no support for joy fire 2
 wrong kbd picture at kbd config
 ?screenshorts are always 768x576
-
+sometimes shows wrong addresses after d command at the debugger window
+'Permission denied' error during S at the debugger

@@ -30,13 +30,13 @@ fillrtsl proc
 ;*         jsr fillrt1
          call fillrt1
 ;*         sta adjcell
-         ld ($fff0),a
+         ld ixl,a  ;adjcell -> ix
 ;*         lda #0
 ;*         rol
 ;*         sta adjcell+1
          ld a,0
          rla
-         ld ($fff1),a
+         ld ixh,a
 ;*         txa
          ld a,l
 ;*         rts
@@ -52,10 +52,10 @@ fillrtsr proc
 ;*         lda #0
 ;*         rol
 ;*         sta adjcell2+1
-         ld ($fff2),a
+         ld iyl,a   ;adjcell2 -> iy
          ld a,0
          rla
-         ld ($fff3),a
+         ld iyh,a
 ;*         rts
          ret
          endp
@@ -69,18 +69,14 @@ fillrt2  proc
 ;*         and adjcell
 ;*         bne l2
          ld a,(live)
-         ld b,a
-         ld a,($fff0)
-         and b
+         and ixl
          jr nz,l2
 
 ;*         lda live+1
 ;*         and adjcell+1
 ;*         beq l3
          ld a,(live+1)
-         ld b,a
-         ld a,($fff1)
-         and b
+         and ixh
          jr z,l3
 
 ;*l2       asl t1
@@ -100,18 +96,14 @@ l2       sla d
 ;*         and adjcell
 ;*         bne l2
 l1       ld a,(born)
-         ld b,a
-         ld a,($fff0)
-         and b
+         and ixl
          jr nz,l2
 
 ;*         lda born+1
 ;*         and adjcell+1
 ;*         bne l2
          ld a,(born+1)
-         ld b,a
-         ld a,($fff1)
-         and b
+         and ixh
          jr nz,l2
 
 ;*l3       .bend
@@ -130,18 +122,14 @@ l3       endp
 ;*         and adjcell2
 ;*         bne l2
          ld a,(live)
-         ld b,a
-         ld a,($fff2)
-         and b
+         and iyl
          jr nz,l2
 
 ;*         lda live+1
 ;*         and adjcell2+1
 ;*         beq l3
          ld a,(live+1)
-         ld b,a
-         ld a,($fff3)
-         and b
+         and iyh
          ret z
 
 ;*l2       lda gentab,x
@@ -157,18 +145,14 @@ l2       ld a,(hl)
 ;*         and adjcell2
 ;*         bne l2
 l1       ld a,(born)
-         ld b,a
-         ld a,($fff2)
-         and b
+         and iyl
          jr nz,l2
 
 ;*         lda born+1
 ;*         and adjcell2+1
 ;*         bne l2
          ld a,(born+1)
-         ld b,a
-         ld a,($fff3)
-         and b
+         and iyh
          jr nz,l2
  
 ;*l3       .bend
@@ -209,7 +193,7 @@ l0       ld d,1        ;x -> l, t1 -> d
          rrca  ;CY=0
 
 ;*         pha
-         ld ($fff4),a
+         ld c,a
 ;*         clc
 ;*         jsr fillrtsl
          call fillrtsl
@@ -245,7 +229,7 @@ l0       ld d,1        ;x -> l, t1 -> d
 ;*         sta i1 ;r
          ld e,a
 ;*         pla
-         ld a,($fff4)
+         ld a,c
 ;*         jsr fillrtsl
          call fillrtsl
 ;*         and #$10
