@@ -2,227 +2,339 @@
 ;fillrt
 ;setrconst
 
-setrtc   proc   ;changes A
-         local l1
-         push bc
-         push iy
-         ld bc,(~gentab) + 1
-         add iy,bc
-         push iy
-         pop bc
-         pop iy
+fillrt1  proc
+         local l2
+;*         tay
+;*         php
+;*         lda #1
+;*         plp
+;*         beq l1
          ld b,a
-         ld a,c
-         cp $90
-         jr nc, l1
+         or a
+         ld a,1
+         ret z
 
-         and $f
-         cp $9
+;*l2       asl
+;*         dey
+;*         bne l2
+l2       rla
+         djnz l2
+
+;*l1       rts
+         ret
+         endp
+
+fillrtsl proc
+;*         adc i1
+         add a,e
+;*         jsr fillrt1
+         call fillrt1
+;*         sta adjcell
+         ld ($fff0),a
+;*         lda #0
+;*         rol
+;*         sta adjcell+1
+         ld a,0
+         rla
+         ld ($fff1),a
+;*         txa
+         ld a,l
+;*         rts
+         ret
+         endp
+
+fillrtsr proc
+;*         adc #0
+         adc a,0
+;*         jsr fillrt1
+         call fillrt1
+;*         sta adjcell2
+;*         lda #0
+;*         rol
+;*         sta adjcell2+1
+         ld ($fff2),a
+         ld a,0
+         rla
+         ld ($fff3),a
+;*         rts
+         ret
+         endp
+
+fillrt2  proc
+         local l1,l2,l3
+;*         bcc l1
          jr nc,l1
 
-         ld a,b
-         ld (iy),a
-l1       pop bc
+;*         lda live
+;*         and adjcell
+;*         bne l2
+         ld a,(live)
+         ld b,a
+         ld a,($fff0)
+         and b
+         jr nz,l2
+
+;*         lda live+1
+;*         and adjcell+1
+;*         beq l3
+         ld a,(live+1)
+         ld b,a
+         ld a,($fff1)
+         and b
+         jr z,l3
+
+;*l2       asl t1
+;*         lda gentab,x
+;*         ora t1
+;*         sta gentab,x
+;*         lsr t1
+;*         bne l3
+l2       sla d
+         ld a,(hl)
+         or d
+         ld (hl),a
+         srl d
+         jr l3
+
+;*l1       lda born
+;*         and adjcell
+;*         bne l2
+l1       ld a,(born)
+         ld b,a
+         ld a,($fff0)
+         and b
+         jr nz,l2
+
+;*         lda born+1
+;*         and adjcell+1
+;*         bne l2
+         ld a,(born+1)
+         ld b,a
+         ld a,($fff1)
+         and b
+         jr nz,l2
+
+;*l3       .bend
+l3       endp
+
+;*         .block
+;*         lda i1  ;test r
+;*         beq l1
+         proc
+         local l1,l2
+         ld a,e
+         or a
+         jr z,l1
+
+;*         lda live
+;*         and adjcell2
+;*         bne l2
+         ld a,(live)
+         ld b,a
+         ld a,($fff2)
+         and b
+         jr nz,l2
+
+;*         lda live+1
+;*         and adjcell2+1
+;*         beq l3
+         ld a,(live+1)
+         ld b,a
+         ld a,($fff3)
+         and b
+         ret z
+
+;*l2       lda gentab,x
+;*         ora t1
+;*         sta gentab,x
+;*         bne l3
+l2       ld a,(hl)
+         or d
+         ld (hl),a
+         ret
+
+;*l1       lda born
+;*         and adjcell2
+;*         bne l2
+l1       ld a,(born)
+         ld b,a
+         ld a,($fff2)
+         and b
+         jr nz,l2
+
+;*         lda born+1
+;*         and adjcell2+1
+;*         bne l2
+         ld a,(born+1)
+         ld b,a
+         ld a,($fff3)
+         and b
+         jr nz,l2
+ 
+;*l3       .bend
+;*         rts
          ret
          endp
 
 fillrt   proc
-         local l1,l2,l3,l5,l12,l22,l32,loop0,loop1,loop12
-         local m1,m2,lnext,lnext2,fillrta
-;*         ldy #0
-;*         lda #$f0   ;beq
-;*         jsr fillrta
-;*         ldy #2
-;*         lda #$d0   ;bne
-         ld ix,live
-         ld e,0
-         ld a,$28     ;jr z
-         call fillrta
-         ld ix,born
-         ld e,2
-         ld a,$20     ;jr nz
-;*fillrta  sta m1
-;*         sta m2
-;*         sty t1
-fillrta  ld (m1),a
-         ld (m2),a
-;*         lda #<gentab
-;*         sta adjcell
-;*         lda #>gentab
-;*         sta adjcell+1
-         ld iy,gentab
+         local l0
+;*         ldx #0
+;*l0       lda #1
+;*         sta t1
+         ld hl,gentab
+l0       ld d,1        ;x -> l, t1 -> d
 
 ;*         lda #0
-;*         sta i1
-;*         sta i1+1
-         xor a
-         ld h,a
-         ld l,a
+;*         sta gentab,x
+         ld (hl),0
 
-;*loop0    lda t1
-;*         bne l5
-loop0    ld a,e
-         or a
-         jr nz,l5
- 
-;*         sta (adjcell),y
-         call setrtc
-
-;*l5       lda i1+1
+;*         txa
 ;*         and #1
-;*m1       beq lnext
-l5       ld a,h
-         and 1
-m1       jr z,lnext
-
-;*         lda i1
-;*         and #$f
-;*         cmp #8
-;*         beq l1
-;*         bcs lnext
+;*         sta i1  ;r - see gengentab.c
          ld a,l
-         and $f
-         cp 8
-         jr z,l1
-         jr nc,lnext
-
-;*         tay
-;*         lda #1
-;*         cpy #0
-;*         beq l2
-         ld d,a
-         or a
-         ld a,1
-         jr z,l2
-
-;*loop1    asl
-;*         dey
-;*         bne loop1
-loop1    sla a
-         dec d
-         jr nz,loop1
-
-;*l2       ldy t1
-;*         and live,y
-;*         beq lnext
-l2       and (ix)
-         jr z,lnext
-
-;*l3       ldy #0
-;*         lda (adjcell),y
-;*         ora #1
-;*         sta (adjcell),y
-;*lnext    lda i1+1
-;*         and #2
-;*m2       beq lnext2
-l3       ld a,(iy)
-         or 1
-         call setrtc
-lnext    ld a,h
-         and 2
-m2       jr z,lnext2
-
-;*         lda i1
+         and d
+         ld e,a    ;i1 -> e
+;*         txa
 ;*         lsr
 ;*         lsr
 ;*         lsr
 ;*         lsr
-;*         cmp #8
-;*         beq l12
-;*         bcs lnext2
+;*         lsr
          ld a,l
-         srl a
-         srl a
-         srl a
-         srl a
-         cp 8
-         jr z,l12
-         jr nc,lnext2
+         and $e0
+         rrca
+         rrca
+         rrca
+         rrca
+         rrca  ;CY=0
 
-;*         tay
-;*         lda #1
-;*         cpy #0
-;*         beq l22
-         ld d,a
-         or a
-         ld a,1
-         jr z,l22
+;*         pha
+         ld ($fff4),a
+;*         clc
+;*         jsr fillrtsl
+         call fillrtsl
 
-;*loop12   asl
-;*         dey
-;*         bne loop12
-loop12   sla a
-         dec d
-         jr nz,loop12
+;*         and #$1e
+;*         lsr
+;*         lsr
+         and $1e
+         rrca
+         rra
+;*         php
+         push af  ;saves CY
+;*         jsr fillrtsr
+         call fillrtsr
+;*         plp
+;*         jsr fillrt2
+         pop af  ;restore CY
+         call fillrt2
 
-;*l22      ldy t1
-;*         and live,y
-;*         beq lnext2
-l22      and (ix)
-         jr z,lnext2
-
-;*l32      ldy #0
-;*         lda (adjcell),y
-;*         ora #2
-;*         sta (adjcell),y
-l32      ld a,(iy)
-         or 2
-         call setrtc
-
-;*lnext2   inc i1
-;*         inc adjcell
-;*         bne l4
-lnext2   inc l
-         inc iy
-
-;*         inc i1+1
-;*         inc adjcell+1
-;*         bne loop0
-
-;*l4       lda i1
-;*         cmp #$89
-;*         bne loop0
+;*         lda #4
+;*         sta t1
+         ld d,4
+;*         txa
          ld a,l
-         cp $89
-         jr nz,loop0
+;*         and #8
+         and 8
+;*         lsr
+;*         lsr
+;*         lsr
+         rrca
+         rrca
+         rrca   ;CY=0
+;*         sta i1 ;r
+         ld e,a
+;*         pla
+         ld a,($fff4)
+;*         jsr fillrtsl
+         call fillrtsl
+;*         and #$10
+         and $10
+;*         asl
+;*         asl
+;*         asl
+         rlca
+         rlca
+         rlca
+;*         ;sta i1+1
+;*         asl
+         rla
+;*         php
+         rl c
+;*         txa
+         ld a,l
+;*         and #7
+         and 7
+         rr c
+         push af
+;*         jsr fillrtsr
+         call fillrtsr
+;*         plp
+         pop af
+;*         php
+         push af
+;*         jsr fillrt2
+         call fillrt2
 
-         ld l,0
-         inc h
-         ld a,iyl
-         add a,$77
-         ld iyl,a
-         ld a,iyh
+;*         lda #16
+;*         sta t1
+         ld d,16
+;*         plp
+         pop af
+;*         jsr fillrt2
+         call fillrt2
+
+;*         lda #64
+;*         sta t1
+         ld d,64
+;*         txa
+         ld a,l
+;*         and #$40
+;*         asl
+;*         asl
+;*         adc #0
+;*         sta i1
+         and d
+         rlca
+         rla
          adc a,0
-         ld iyh,a
-;*         lda i1+1
-;*         cmp #3
-;*         bne loop0
-         ld a,h
-         cp 4
-         jr nz,loop0 
+         ld e,a
+;*         txa
+;*         and #$38
+;*         lsr
+;*         lsr
+;*         lsr
+         ld a,l
+         and $38
+         rrca
+         rrca
+         rrca
+;*         jsr fillrtsl
+         call fillrtsl
+;*         asl
+         rla
+;*         php
+         rl c
+;*         txa
+         ld a,l
+;*         and #7
+         and 7   ;sets CY=0
+         rr c    ;restores CY
+         push af
+;*         jsr fillrtsr
+         call fillrtsr
+;*         plp
+         pop af
+;*         jsr fillrt2
+         call fillrt2
 
-;*         rts       ;ZF=1
+;*         inx
+;*         bne l0
+         inc l
+         jr nz,l0
+
+;*         rts
          ret
-
-;*l1       lda #1
-;*         ldy t1
-;*         and live+1,y
-;*         beq lnext
-;*         bne l3
-l1       ld a,1
-         and (ix+1)
-         jr z,lnext
-         jr l3
-
-;*l12      lda #1
-;*         ldy t1
-;*         and live+1,y
-;*         beq lnext2
-;*         bne l32
-l12      ld a,1
-         and (ix+1)
-         jr z,lnext2
-         jr l32
          endp
 
 setrconst proc        ;in: ix, l
