@@ -59,30 +59,6 @@ tile     macro
          endm
 tilesize equ 61
 
-;*testlf   .macro
-;*         lda (currp),y
-;*         and #$80
-;*         beq finish
-
-;*         lda #1
-;*         sta t1
-;*         ora (adjcell),y
-;*         sta (adjcell),y
-;*finish
-;*         .endm
-
-;*testrt   .macro
-;*         lda (currp),y
-;*         and #1
-;*         beq finish
-
-;*         lda #$80
-;*         sta t1
-;*         ora (adjcell),y
-;*         sta (adjcell),y
-;*finish
-;*         .endm
-
 ;*cellsum  .macro
 cellsum  macro
          local cont2, l1
@@ -266,5 +242,106 @@ ispyr8   macro addr
          ld a,8
          add a,addr
          ld addr,a
+         endm
+
+vidmacp  macro   off1,off2    ;in: iy,h,de,c=3; changed: b,l
+         ld a,(iy+off1)
+         ld b,a
+         rlca
+         rlca
+         and c
+         ld l,a
+         ld a,(iy+off2)
+         rlca
+         rlca
+         and c
+         rlca
+         rlca
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         rrca
+         rrca
+         rrca
+         rrca
+         and c
+         ld l,a
+         ld a,(iy+off2+1)
+         rrca
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         rrca
+         rrca
+         and c
+         ld l,a
+         ld a,(iy+off2+2)
+         rrca
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         and c
+         ld l,a
+         ld a,(iy+off2+3)
+         and c
+         rlca
+         rlca
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+         endm
+
+vidmacpa macro
+         dec e
+         dec e
+         dec e
+         ld a,d
+         add a,8
+         ld d,a
+         endm
+
+vidmac   macro       ;in: hl, de, c=$c0; changed: b
+         ld a,(hl)
+         and c
+         ld (de),a
+         ld a,(hl)
+         rlca
+         rlca
+         ld b,a
+         inc e
+         and c
+         ld (de),a
+         ld a,b
+         rlca
+         rlca
+         inc e
+         and c
+         ld (de),a
+         ld a,(hl)
+         rrca
+         rrca
+         inc e
+         and c
+         ld (de),a
+         endm
+
+vidmaca  macro
+         inc hl
+         vidmacpa
          endm
 

@@ -32,7 +32,7 @@ dispat2  proc
          local nozoom,exitload,nozoom3
 
          cp "g"
-         jr nz,cont3 
+         jr nz,cont3
 
          ld a,(mode)
          or a

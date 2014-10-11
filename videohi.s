@@ -500,12 +500,6 @@ crsrclr  proc
          ld hl,readde
          call calllo
          ld a,(crsrbyte)
-         add a,iyl
-         ld l,a
-         ld a,iyh
-         adc a,0
-         ld h,a
-         ld a,(crsrbyte)
          rlca
          rlca
          rlca
@@ -524,9 +518,8 @@ crsrclr  proc
 
 ;*         #vidmac1
 ;*exit     rts
-         ld ix,vidmac
-         ld (jsrfar+1),ix
-         jp calllo1
+         ld hl,vidmacx
+         jp calllo
 
 pgcur    xor a
          ld (crsrpgmk),a
@@ -537,19 +530,8 @@ pgcur    xor a
          ld iy,(crsrtile)
          ret
 
-;*cont2    lda #pc
-;*         clc
-;*         adc crsrbyte
-;*         sta t1
-;*         #vidmac1p
-;*         rts
-cont2    ld ix,pctable
-         push hl
-         pop iy
-         ld hl,vidmacp
-         call calllo
-         ld iy,(crsrtile)
-         ret
+cont2    ld hl,vidmacpx
+         jp calllo
 
 ;*cont1    lda #8
 ;*         eor i1
@@ -559,28 +541,6 @@ cont2    ld ix,pctable
 
 ;*         #vidmac2
 ;*         rts
-
-;*cont3    lda #pc
-;*         clc
-;*         adc crsrbyte
-;*         sta t1
-;*         lda (currp),y
-;*         sty 7
-;*         sta i2
-;*         ldy t1
-;*         lda (currp),y
-;*         tay
-;*         and i2
-;*         ldx 7
-;*         sta pctemp1,x   ;old
-;*         tya
-;*         eor #$ff
-;*         and i2
-;*         sta pctemp2,x   ;new
-;*         ldy crsrbyte
-;*         #vidmac2p
-;*         rts
-;*         .bend
          endp
 
 if 0

@@ -220,106 +220,48 @@ xcont2   ld a,(pseudoc)
 
 showscn2 proc      ;must be after showscn
          local loop
-;*         #assign16 currp,startp
-         ld c,8
+         ld c,$c0
          ld hl,(startp)
-;*loop     ldy #video
-;*         lda (currp),y
-;*         sta i1
-;*         iny
-;*         lda (currp),y
-;*         sta i1+1
-loop     push hl
-         pop iy
+         ld a,h
+loop     ld iyh,a
+         ld a,l
+         ld iyl,a
          ld e,(iy+video)
          ld d,(iy+video+1)
-;*         ldy #0
-;*         #vidmac1
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         iny
-;*         #vidmac1
-         inc hl
-         ld a,d
-         add a,c
-         ld d,a
-         call vidmac
-;*         lda #8
-;*         eor i1
-;*         sta i1
-;*         ldy #0
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         iny
-;*         #vidmac2
-;*         ldy #next
-;*         lda (currp),y
-;*         tax
-;*         iny
-;*         lda (currp),y
-;*         bne cont
-         ld l,(iy+next)
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
+         vidmaca
+         vidmac
          ld h,(iy+next+1)
          xor a
          or h
-         jp nz,loop
-         jp crsrset
+         jp z, crsrset
 
-;*cont     sta currp+1
-;*         stx currp
-;*         jmp loop
+         ld l,(iy+next)
+         jp loop
+         endp
+
+vidmacx  proc
+         ld c,$c0
+         ld a,(crsrbyte)
+         add a,iyl
+         ld l,a
+         ld a,iyh
+         adc a,0
+         ld h,a
+         vidmac
+         ret
          endp
 
 infoout  proc
@@ -337,112 +279,110 @@ infoout  proc
 
 showscnp proc
          local loop
-;*         #assign16 currp,startp
          ld iy,(startp)
-         ld ix,pctable
-         ld l,8
-;*loop     ldy #video
-;*         lda (currp),y
-;*         sta i1
-;*         iny
-;*         lda (currp),y
-;*         sta i1+1
+         ld h,high(pctable)
+         ld c,3
 loop     ld e,(iy+video)
          ld d,(iy+video+1)
-;*         ldy #pc
-;*         sty t1
-;*         ldy #0
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-;*         iny
-;*         inc t1
-         call vidmacp
-         inc iy
-         ld a,d
-         add a,l
-         ld d,a
-;*         #vidmac1p
-         call vidmacp
-;*         lda #8
-;*         eor i1
-;*         sta i1
-;*         ldy #0
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         iny
-;*         #vidmac2p
-;*         ldy #next
-;*         lda (currp),y
-;*         tax
-;*         iny
-;*         lda (currp),y
-;*         bne cont
-         ld a,(iy+next-6)
+         vidmacp 0,count0
+         vidmacpa
+         vidmacp 1,count1
+         vidmacpa
+         vidmacp 2,count2
+         vidmacpa
+         vidmacp 3,count3
+         vidmacpa
+         vidmacp 4,count4
+         vidmacpa
+         vidmacp 5,count5
+         vidmacpa
+         vidmacp 6,count6
+         vidmacpa
+         vidmacp 7,count7
+         ld a,(iy+next+1)
          or a
          jp z,crsrset
 
-         ld c,(iy+next-7)
+         ld b,(iy+next)
          ld iyh,a
-         ld iyl,c
+         ld iyl,b
          jp loop
+         endp
+
+vidmacpx proc   ;in: iy,de
+         local m0,m1,m2,m3,m4
+         ld c,3
+         ld a,(crsrbyte)
+         ld (m0+2),a
+         rlca
+         rlca
+         add a,count0
+         ld (m1+2),a
+         inc a
+         ld (m2+2),a
+         inc a
+         ld (m3+2),a
+         inc a
+         ld (m4+2),a
+         ld h,high(pctable)
+m0       ld a,(iy)
+         ld b,a
+         rlca
+         rlca
+         and c
+         ld l,a
+m1       ld a,(iy)
+         rlca
+         rlca
+         rlca
+         rlca
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         rrca
+         rrca
+         rrca
+         rrca
+         and c
+         ld l,a
+m2       ld a,(iy)
+         rrca
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         rrca
+         rrca
+         and c
+         ld l,a
+m3       ld a,(iy)
+         rrca
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+
+         inc e
+         ld a,b
+         and c
+         ld l,a
+m4       ld a,(iy)
+         and $c
+         or l
+         ld l,a
+         ld a,(hl)
+         ld (de),a
+         ret
          endp
 
 ;*showtinfo
@@ -653,132 +593,6 @@ crsrset  call crsrset1
          ret nz
 
          jp pixel11
-
-;*tograph0 lda #$18
-;*         ora ntscmask
-;*         sta $ff07
-;*         lda #$3b
-;*         sta $ff06
-;*         lda #$18
-;*         sta $ff14
-;*         lda #$c8
-;*         sta $ff12
-;*         sei
-;*         sta $ff3f
-;*         lda #<irq194
-;*         sta $fffe
-;*         lda #194
-;*         sta $ff0b
-;*         cli
-;*         rts
-
-vidmac   proc       ;in: hl, de; changed: b
-         local m1,m2,m3,m4
-         ld ix,bitable
-         ld a,(hl)
-         rlca
-         rlca
-         ld b,a
-         and 3
-         ld (m1+2),a
-m1       ld a,(ix)
-         ld (de),a
-         ld a,b
-         rlca
-         rlca
-         ld b,a
-         inc e
-         and 3
-         ld (m2+2),a
-m2       ld a,(ix)
-         ld (de),a
-         ld a,b
-         rlca
-         rlca
-         inc e
-         and 3
-         ld (m3+2),a
-m3       ld a,(ix)
-         ld (de),a
-         ld a,(hl)
-         inc e
-         and 3
-         ld (m4+2),a
-m4       ld a,(ix)
-         ld (de),a
-         dec e
-         dec e
-         dec e
-         ret
-         endp
-
-vidmacp  proc   ;in: iy,ix,de; changed: b,c,h
-         local m1,m2,m3,m4
-         ld a,(iy)
-         ld h,a
-         rlca
-         rlca
-         and 3
-         ld c,a
-         ;??ld a,(iy+pc)
-         ld b,a
-         rlca
-         rlca
-         rlca
-         rlca
-         and $c
-         or c
-         ld (m1+2),a
-m1       ld a,(ix)
-         ld (de),a
-
-         inc e
-         ld a,h
-         rrca
-         rrca
-         rrca
-         rrca
-         and 3
-         ld c,a
-         ld a,b
-         rrca
-         rrca
-         and $c
-         or c
-         ld (m2+2),a
-m2       ld a,(ix)
-         ld (de),a
-
-         inc de
-         ld a,h
-         rrca
-         rrca
-         and 3
-         ld c,a
-         ld a,b
-         and $c
-         or c
-         ld (m3+2),a
-m3       ld a,(ix)
-         ld (de),a
-
-         inc de
-         ld a,h
-         and 3
-         ld c,a
-         ld a,b
-         rlca
-         rlca
-         and $c
-         or c
-         ld (m4+2),a
-m4       ld a,(ix)
-         ld (de),a
-         dec e
-         dec e
-         dec e
-         ret
-         endp
 
 clrrectlo  proc       ;in: x8poscp, y8poscp
          local lltpc,lrtpc,lx,lxpc11,lxpc01,m7,m8
