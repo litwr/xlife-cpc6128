@@ -356,8 +356,8 @@ loop2    ld a,sum
          dec a
          ret z
 
-cont1    push bc
-         pop iy
+cont1    ld iyl,c
+         ld iyh,b
          jr loop2
          endp
 

@@ -270,21 +270,14 @@ loop1    ld a,(i1)
          ld bc,bittab
          add a,c
          ld c,a
-         ld a,0
-         adc a,b
-         ld b,a
          ld a,(bc)
          or (hl)
          ld (hl),a
 ;*         tax
 ;*         lda tab3,x
          push hl
-         ld hl,tab3
-         add a,l
+         ld h,high(tab3)
          ld l,a
-         ld a,0
-         adc a,h
-         ld h,a
          ld a,(hl)
          pop hl
 ;*         ldy #sum
@@ -344,8 +337,8 @@ loop1    push bc
 ;*         dec i2
 ;*         beq cont2
          push de
-         push iy
-         pop bc
+         ld c,iyl
+         ld b,iyh
          call chkadd
          pop de
          dec e
@@ -360,18 +353,16 @@ loop1    push bc
 ;*         sta adjcell+1
 ;*         bne cont3
          ld a,ixh
-cont4    push iy
-         pop hl
-         add a,l
+cont4    add a,iyl
          ld l,a
          ld a,0
-         adc a,h
+         adc a,iyh
          ld h,a
          ld c,(hl)
          inc hl
          ld b,(hl)
-         push bc
-         pop iy
+         ld iyl,c
+         ld iyh,b
          jr cont3
 
 ;*cont2    dec i1
@@ -491,7 +482,7 @@ loop     dec (hl)
 
 putpixel proc   ;in: x0,y0,xdir,ydir,xchgdir
          local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8,cont9
-         local cup,cdown,cleft,cright,m1
+         local cup,cdown,cleft,cright
 ;x8pos  - ixl; x8bit - ixh; y8pos - d; y8byte - e; adjcell - bc
 ;*         jsr xchgxy
          call xchgxy
@@ -678,10 +669,10 @@ loop3    jp m,cleft
 ;*         rts
          ld a,7
          sub ixh
-         ld iy,bittab
-         ld (m1+2),a
-m1       ld a,(iy)
-         ld d,a
+         ld hl,bittab
+         add a,l
+         ld l,a
+         ld d,(hl)
          ld a,(ppmode)
          or a
          jr nz,cont5
@@ -716,8 +707,8 @@ m1       ld a,(iy)
 ;*         sta (i1),y
 ;*         rts
 ;*         .bend
-         push bc
-         pop iy
+         ld iyl,c
+         ld iyh,b
          ld l,d
          ld a,e      ;y8byte
          ld e,(iy+video)      ;call readde

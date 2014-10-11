@@ -395,3 +395,23 @@ domac    macro
          ld (de),a
          endm
 
+printhex macro       ;print hex (<$A0) number in AC
+         local l1
+         ld b,a
+         and $f0
+         rrca
+         rrca
+         rrca
+         rrca
+         xor $30
+         call TXT_OUTPUT
+         ld a,b
+         and $f
+         xor $30
+         cp $3a
+         jr c,l1
+
+         add a,7
+l1       call TXT_OUTPUT
+         endm
+

@@ -1,23 +1,3 @@
-printhex macro       ;print hex (<$A0) number in AC
-         local l1
-         ld b,a
-         and $f0
-         rrca
-         rrca
-         rrca
-         rrca
-         xor $30
-         call TXT_OUTPUT
-         ld a,b
-         and $f
-         xor $30
-         cp $3a
-         jr c,l1
-
-         add a,7
-l1       call TXT_OUTPUT
-         endm
-
 showscn0 ld a,(zoom)
          or a
          ret nz
@@ -111,9 +91,6 @@ cont6    rlca
          ld b,a
          add a,l
          ld l,a
-         ld a,h
-         add a,0
-         ld h,a
          ld a,(hl)
          add a,d
          daa
@@ -185,12 +162,9 @@ l1       ld a,h
 ;*         ldx #$30
 ;*         bcs l4
          ld b,a
-         ld l,low(ctab)
+         ld hl,ctab
          add a,l
          ld l,a
-         ld a,high(ctab)
-         adc a,0
-         ld h,a
          ld a,(hl)
          add a,c
          daa
@@ -316,8 +290,8 @@ cont1    ld iy,viewport
          ld hl,readhl
          call calllo
          ld (viewport),hl
-         push hl
-         pop bc
+         ld c,l
+         ld b,h
 
 ;*         ldy #down
 ;*         jsr nextcell
@@ -640,8 +614,8 @@ cont4    call TXT_PLACE_CURSOR
          jr loop1
 
 cont1    call TXT_REMOVE_CURSOR
-         push de
-         pop hl
+         ld l,e
+         ld h,d
          ld a,c
          or a
          ret z
@@ -695,9 +669,9 @@ l1       ld (ix),l
          ret
          endp
 
-nofnchar db 63,37,40,41,44,46,47,59,60,61,62,91,92,93,95,124,126,127
+nofnchar db 37,40,41,44,46,47,58,59,60,61,62,63,91,92,93,95,124,126,127
 
-loadmenu proc
+loadmenu proc  ;must be after nofnchar!
          local loop1,loop1a,loop3,loop3a,loopx,exit,menu2,repeat
          local cont1,cont1a,cont2,cont2a,cont4,cont4a,cont7,cont7a,cont8,cont11
 
@@ -743,7 +717,7 @@ cont8    and $7f
 
          ld hl,nofnchar
          push bc
-         ld bc,18
+         ld bc,loadmenu-nofnchar
          cpir
          pop bc
          jr z,loop1
@@ -2148,12 +2122,12 @@ drrect1  ld hl,readde
          jp xcont1
          endp
 
-vnextcell push iy
-         pop bc
+vnextcell ld c,iyl
+         ld b,iyh
          ld hl,nextcell
          call calllo
-         push bc
-         pop iy
+         ld iyl,c
+         ld iyh,b
          ret
 
 clrrect  proc       ;in: x8poscp, y8poscp

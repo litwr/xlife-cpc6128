@@ -67,9 +67,9 @@ frameocellc db 17
 tentc    db 2
 copyleft db "cr.txt"
 errst    db 0   ;0 - do not print i/o-errors message, 1 - print
-ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96
+ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96 ;no page cross
          db 4,$12,$20,$28,$36,$44,$52,$60,$68,$76,$84
-bittab   db 1,2,4,8,16,32,64,128
+bittab   db 1,2,4,8,16,32,64,128   ;no page cross
 viewport db 0,0
 startp   db 1,0
 i1       db 0,0
@@ -156,10 +156,14 @@ generate proc
 ;*         lda (currp),y
 ;*         ldy #count0
 ;*         #setcount
-loop3    push hl
-         pop iy
-         ld bc,count0
-         add hl,bc
+loop3    ld a,l
+         ld iyl,a
+         add a,count0
+         ld l,a
+         ld a,h
+         ld iyh,a
+         adc a,0
+         ld h,a
          setcount 0
 
 ;*         ldy #1
@@ -847,9 +851,9 @@ delel    ld hl,(tilecnt)
          ld (tilecnt),hl
 
          xor a
-         ld bc,count7+3
-         push iy
-         pop hl
+         ld hl,count7+3
+         ld c,iyl
+         ld b,iyh
          add hl,bc
          rept 32
          ld (hl),a

@@ -153,8 +153,8 @@ loop       dec de
            ld a,c
            push bc
            call REAL_POW_10   ;REAL *10^A
-           push hl
-           pop de
+           ld e,l
+           ld d,h
            ld hl,realnum1
            call REAL_ADDITION   ;realnum1+realnum2 -> realnum1
            pop bc
@@ -162,8 +162,8 @@ loop       dec de
            inc c
            djnz loop
 
-           push hl
-           pop de
+           ld e,l
+           ld d,h
            ld hl,realnum2
            call MOVE_REAL    ;realnum1 -> realnum2
            jp REAL_TO_BINARY ;at realnum2
@@ -172,8 +172,8 @@ loop       dec de
 calcspd    proc
            local cont1
 
-           push hl
-           pop bc
+           ld c,l
+           ld b,h
            ld hl,stringbuf
            ld a,c
            sub (hl)
@@ -214,12 +214,12 @@ cont1      xor a
            xor a
            ld h,a
            call INTEGER_TO_REAL     ;3 -> realnum2
-           push hl
-           pop de
+           ld e,l
+           ld d,h
            ld hl,stringbuf
            call REAL_DIVISION     ;timer/3 -> stringbuf
-           push hl
-           pop de
+           ld e,l
+           ld d,h
            ld hl,realnum2
            call MOVE_REAL     ;timer/3 -> realnum2
            call printn
@@ -242,8 +242,8 @@ cont1      xor a
 
 sprint     proc   ;in: hl
            local loop,loop1,loop2,cont1
-           push hl
-           pop de
+           ld e,l
+           ld d,h
            ld hl,realnum3
            push hl
            call MOVE_REAL     ;(de) -> (hl)
