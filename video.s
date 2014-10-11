@@ -157,7 +157,7 @@ cont1    xor a
          endp
 
 showscnzp proc
-         local m1,m2,m3,m4,loop1,loop2,loop3,loop4
+         local m1,loop1,loop2,loop3,loop4
          local cont1,cont2,cont2a,cont4,cont5,cont6,cont8,cont12
 ;use: i1:2, temp:1
 ;ylimit - iyh, xlimit - iyl
@@ -174,31 +174,35 @@ loop4    ld a,(crsrtile)
          ld (i1),a
 cont4    xor a
          ld (m1+2),a
-         ld a,count0
-         ld (loop2+2),a
-         inc a
-         ld (m2+2),a
-         inc a
-         ld (m3+2),a
-         inc a
-         ld (m4+2),a
          ld c,8
-loop2    ld a,(ix)
-         and $c0
+loop2    ld a,(m1+2)
+         rlca
+         rlca
+         add a,count0
+         add a,ixl
+         ld e,a
+         ld a,ixh
+         adc a,0
          ld d,a
-m2       ld a,(ix)
+         ld a,(de)
+         and $c0
+         ld b,a
+         inc de
+         ld a,(de)
          rlca
          and $30
-         or d
-         ld d,a
-m3       ld a,(ix)
+         or b
+         ld b,a
+         inc de
+         ld a,(de)
          rrca
          and $c
-         or d
-         ld d,a
-m4       ld a,(ix)
+         or b
+         ld b,a
+         inc de
+         ld a,(de)
          and 3
-         or d
+         or b
          ld d,a
 m1       ld e,(ix)
          ld b,8
@@ -248,19 +252,10 @@ cont5    djnz loop1
          dec c
          jr z,cont8
 
-         ld a,(m1+2)
+         ld de,m1+2
+         ld a,(de)
          inc a
-         ld (m1+2),a
-         rlca
-         rlca
-         add a,count0
-         ld (loop2+2),a
-         inc a
-         ld (m2+2),a
-         inc a
-         ld (m3+2),a
-         inc a
-         ld (m4+2),a
+         ld (de),a
          ld de,80-16
          add hl,de
          jp loop2
