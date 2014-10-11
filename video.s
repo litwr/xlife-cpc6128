@@ -27,10 +27,10 @@ crsrpg   xor a
          ld a,$f
          ld (hl),a
          inc l
-         nexthlds
+         nexthlds 8
          rept 6
          nexthlc
-         nexthlds
+         nexthlds 8
          endm
          ld a,$f
          ld (hl),a
@@ -40,7 +40,7 @@ crsrpg   xor a
          ret
 
 clrcur   nexthlls
-         nexthlds
+         nexthlds 8
          ld a,h
          add a,48
          ld h,a
@@ -85,22 +85,23 @@ loop4    ld a,(crsrtile)
 
          ld a,1
          ld (i1),a
-cont4    ld c,8
+cont4    ld d,8
 loop2    ld e,(ix)
          ld b,8
+         ld c,b
 loop1    sla e
          jp nc,cont1
 
          nexthll 3
-         nexthld $c
+         nexthld $c,c
          nexthll 7
-         nexthld $e
+         nexthld $e,c
          nexthll 7     ;live cell char
-         nexthld $e
+         nexthld $e,c
          nexthll 7
-         nexthld $e
+         nexthld $e,c
 cont2    nexthll 7
-         nexthld $e
+         nexthld $e,c
          nexthll 3
          ld (hl),$c
 cont2a   ld a,h
@@ -112,7 +113,7 @@ cont6    inc hl
          jr nz,cont5
 
          ld a,(i1+1)
-         cp c
+         cp d
          jr nz,cont5
 
          ld a,(temp)
@@ -121,15 +122,15 @@ cont6    inc hl
 cont5    djnz loop1
 
          inc ix
-         ld de,80-16
-         add hl,de
-         dec c
+         ld c,80-16      ;b=0
+         add hl,bc
+         dec d
          jp nz,loop2 
 
          ld de,(~(80*8-16))+1
          add hl,de
-         ld de,tilesize-8
-         add ix,de
+         ld c,tilesize-8 ;b=0
+         add ix,bc
          dec iyl
          jp nz,loop4
 
@@ -149,7 +150,7 @@ cont1    xor a
          jp z,cont6
 
          rept 5
-         nexthlds
+         nexthlds c
          nexthlls
          endm
          ld (hl),a
@@ -211,25 +212,25 @@ loop1    rlc d              ;pseudocolor
          jp nc,cont1
 
          nexthll 3
-         nexthld $c
+         nexthld $c,8
          nexthll 7
-         nexthld $e
+         nexthld $e,8
          ld a,d
          rrca
          jr c,cont12
      
          nexthll 6     ;new cell char
-         nexthld 6
+         nexthld 6,8
          nexthll 6
-         nexthld 6
+         nexthld 6,8
          jp cont2
 
 cont12   nexthll 7     ;live cell char
-         nexthld $e
+         nexthld $e,8
          nexthll 7
-         nexthld $e
+         nexthld $e,8
 cont2    nexthll 7
-         nexthld $e
+         nexthld $e,8
          nexthll 3
          ld (hl),$c
 cont2a   ld a,h
@@ -262,8 +263,8 @@ cont5    djnz loop1
 
 cont8    ld de,(~(80*7))+1
          add hl,de
-         ld de,tilesize
-         add ix,de
+         ld c,tilesize  ;b=0
+         add ix,bc
          dec iyl
          jp nz,loop4
 
@@ -283,7 +284,7 @@ cont1    xor a
          jp z,cont6
 
          rept 5
-         nexthlds
+         nexthlds 8
          nexthlls
          endm
          ld (hl),a

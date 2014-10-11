@@ -345,10 +345,10 @@ vidmaca  macro
          vidmacpa
          endm
 
-nexthld  macro data
+nexthld  macro data,opt
          ld (hl),data
          ld a,h
-         add a,8
+         add a,opt
          ld h,a
          dec l
          endm
@@ -358,10 +358,10 @@ nexthll  macro data
          inc l
          endm
 
-nexthlds macro
+nexthlds macro opt
          ld (hl),a
          ld a,h
-         add a,8
+         add a,opt
          ld h,a
          dec l
          endm
