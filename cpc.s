@@ -1,30 +1,3 @@
-digifont db $3c,$66,$6e,$76,$66,$66,$3c,0
-         db $18,$18,$38,$18,$18,$18,$7e,0
-         db $3c,$66,6,$c,$30,$60,$7e,0
-         db $3c,$66,6,$e,6,$66,$3c,0
-         db 6,$e,$1e,$36,$7f,6,6,0
-         db $7e,$60,$7c,6,6,$66,$3c,0   ;5
-         db $3c,$66,$60,$7c,$66,$66,$3c,0
-         db $7e,$66,$c,$18,$18,$18,$18,0
-         db $3c,$66,$66,$3c,$66,$66,$3c,0
-         db $3c,$66,$66,$3e,6,$66,$3c,0  ;zoom equ digifont+79
-         db 0,0,0,0,0,0,0                ;space
-tinfo    db 0,0,0
-
-domac    macro
-         ld a,(hl)
-         rlca
-         rlca
-         rlca
-         rlca
-         and c
-         ld (de),a
-         ld a,(hl)
-         and c
-         inc e
-         ld (de),a
-         endm
-
 digiout  proc         ;in: b - length, de - scrpos, hl - data
          local loop
          ld c,$f
@@ -35,9 +8,7 @@ loop     ld a,(hl)
          rlca
          add a,low(digifont)
          ld l,a
-         ld a,0
-         adc a,high(digifont)
-         ld h,a
+         ld h,high(digifont)
          domac
          dec e
 

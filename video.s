@@ -530,12 +530,9 @@ showtinfo  proc
 
 cont1      ld hl,$0a0a
            ld (tinfo),hl
-           ld hl,ttab
-           add a,l
+           ld h,high(ttab)
+           add a,low(ttab)
            ld l,a
-           ld a,0
-           adc a,h
-           ld h,a
            ld a,(hl)
            and $f
            ld (tinfo+2),a

@@ -381,3 +381,17 @@ nexthlc  macro
          xor $f
          endm
 
+domac    macro
+         ld a,(hl)
+         rlca
+         rlca
+         rlca
+         rlca
+         and c
+         ld (de),a
+         ld a,(hl)
+         and c
+         inc e
+         ld (de),a
+         endm
+
