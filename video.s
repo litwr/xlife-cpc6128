@@ -158,7 +158,7 @@ cont1    xor a
 
 showscnzp proc
          local m1,m2,m3,m4,loop1,loop2,loop3,loop4
-         local cont1,cont2,cont2a,cont4,cont5,cont6,cont12
+         local cont1,cont2,cont2a,cont4,cont5,cont6,cont8,cont12
 ;use: i1:2, temp:1
 ;ylimit - iyh, xlimit - iyl
 loop3    ld iyl,5
@@ -245,6 +245,9 @@ cont6    inc hl
          call z,crsrpg
 cont5    djnz loop1
 
+         dec c
+         jr z,cont8
+
          ld a,(m1+2)
          inc a
          ld (m1+2),a
@@ -260,10 +263,9 @@ cont5    djnz loop1
          ld (m4+2),a
          ld de,80-16
          add hl,de
-         dec c
-         jp nz,loop2 
+         jp loop2
 
-         ld de,(~(80*8-16))+1
+cont8    ld de,(~(80*7))+1
          add hl,de
          ld de,tilesize
          add ix,de
