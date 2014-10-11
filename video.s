@@ -175,7 +175,7 @@ loop4    ld a,(crsrtile)
 cont4    xor a
          ld (m1+2),a
          ld c,8
-loop2    ld a,(m1+2)
+loop2    ;ld a,(m1+2)
          rlca
          rlca
          add a,count0
