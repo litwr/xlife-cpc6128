@@ -1,0 +1,1 @@
+/home/micro/.plus4emu/progs/xlife-p4/gentab12.c

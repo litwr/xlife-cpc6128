@@ -423,8 +423,7 @@ lsp2     ld hl,setiy
          call z,crsrclr
          pop af
 
-;*         jsr showscnpg
-         ld hl,showscnpg
+         ld hl,showscnz
          call nz,calllo
 
 ;*lsp3     jsr infoout
@@ -458,10 +457,8 @@ cont17t  ld (crsrbit),a
          or a
          jr z,crsrupd
 
-;*         jsr setviewport
-;*         jsr showscnpg
          call setviewport
-         ld hl,showscnpg
+         ld hl,showscnz
          call calllo
 ;*cont17u  jmp crsrset
 crsrupd  ld hl,crsrset

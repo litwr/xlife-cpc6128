@@ -345,3 +345,39 @@ vidmaca  macro
          vidmacpa
          endm
 
+nexthld  macro data
+         ld (hl),data
+         ld a,h
+         add a,8
+         ld h,a
+         dec l
+         endm
+
+nexthll  macro data
+         ld (hl),data
+         inc l
+         endm
+
+nexthlds macro
+         ld (hl),a
+         ld a,h
+         add a,8
+         ld h,a
+         dec l
+         endm
+
+nexthlls macro
+         xor a
+         ld (hl),a
+         inc l
+         endm
+
+nexthlc  macro
+         ld a,(hl)
+         xor $f
+         ld (hl),a
+         inc l
+         ld a,(hl)
+         xor $f
+         endm
+

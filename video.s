@@ -12,42 +12,6 @@ cl2      inc b
          ret
          endp
 
-nexthld  macro data
-         ld (hl),data
-         ld a,h
-         add a,8
-         ld h,a
-         dec l
-         endm
-
-nexthll  macro data
-         ld (hl),data
-         inc l
-         endm
-
-nexthlds macro
-         ld (hl),a
-         ld a,h
-         add a,8
-         ld h,a
-         dec l
-         endm
-
-nexthlls macro
-         xor a
-         ld (hl),a
-         inc l
-         endm
-
-nexthlc  macro
-         ld a,(hl)
-         xor $f
-         ld (hl),a
-         inc l
-         ld a,(hl)
-         xor $f
-         endm
-
 crsrpg   xor a
          ld (i1),a
          push hl
@@ -87,8 +51,8 @@ clrcur   nexthlls
          pop hl         
          ret
 
-showscnpg proc
-         local loop1,loop2,loop3,loop4,cont1,cont2,cont2a,cont4,cont5,cont6,cont12
+showscnz proc
+         local loop1,loop2,loop3,loop4,cont1,cont2,cont2a,cont4,cont5,cont6
 ;use: i1:2, temp:1
 ;ylimit - iyh, xlimit - iyl
          ld ix,(viewport)
@@ -106,6 +70,10 @@ showscnpg proc
          ld (temp),a
          ld hl,$c800
          ld iyh,3
+         ld a,(pseudoc)
+         or a
+         jp nz,showscnzp
+
 loop3    ld iyl,5
 loop4    ld a,(crsrtile)
          cp ixl
@@ -118,32 +86,16 @@ loop4    ld a,(crsrtile)
          ld a,1
          ld (i1),a
 cont4    ld c,8
-loop2    ;??ld d,(ix+pc)
-         ld e,(ix)
+loop2    ld e,(ix)
          ld b,8
-loop1    rlc d              ;pseudocolor
-         sla e
+loop1    sla e
          jp nc,cont1
 
          nexthll 3
          nexthld $c
          nexthll 7
          nexthld $e
-         ld a,(pseudoc)
-         or a
-         jr z,cont12
-
-         ld a,d
-         rrca
-         jr c,cont12
-     
-         nexthll 6     ;new cell char
-         nexthld 6
-         nexthll 6
-         nexthld 6
-         jp cont2
-
-cont12   nexthll 7     ;live cell char
+         nexthll 7     ;live cell char
          nexthld $e
          nexthll 7
          nexthld $e
@@ -204,10 +156,147 @@ cont1    xor a
          jp cont2a
          endp
 
+showscnzp proc
+         local m1,m2,m3,m4,loop1,loop2,loop3,loop4
+         local cont1,cont2,cont2a,cont4,cont5,cont6,cont12
+;use: i1:2, temp:1
+;ylimit - iyh, xlimit - iyl
+loop3    ld iyl,5
+loop4    ld a,(crsrtile)
+         cp ixl
+         jp nz,cont4
+
+         ld a,(crsrtile+1)
+         cp ixh
+         jr nz,cont4
+
+         ld a,1
+         ld (i1),a
+cont4    xor a
+         ld (m1+2),a
+         ld a,count0
+         ld (loop2+2),a
+         inc a
+         ld (m2+2),a
+         inc a
+         ld (m3+2),a
+         inc a
+         ld (m4+2),a
+         ld c,8
+loop2    ld a,(ix)
+         and $c0
+         ld d,a
+m2       ld a,(ix)
+         rlca
+         and $30
+         or d
+         ld d,a
+m3       ld a,(ix)
+         rrca
+         and $c
+         or d
+         ld d,a
+m4       ld a,(ix)
+         and 3
+         or d
+         ld d,a
+m1       ld e,(ix)
+         ld b,8
+loop1    rlc d              ;pseudocolor
+         sla e
+         jp nc,cont1
+
+         nexthll 3
+         nexthld $c
+         nexthll 7
+         nexthld $e
+         ld a,d
+         rrca
+         jr c,cont12
+     
+         nexthll 6     ;new cell char
+         nexthld 6
+         nexthll 6
+         nexthld 6
+         jp cont2
+
+cont12   nexthll 7     ;live cell char
+         nexthld $e
+         nexthll 7
+         nexthld $e
+cont2    nexthll 7
+         nexthld $e
+         nexthll 3
+         ld (hl),$c
+cont2a   ld a,h
+         sub 40
+         ld h,a
+cont6    inc hl
+         ld a,(i1)
+         dec a
+         jr nz,cont5
+
+         ld a,(i1+1)
+         cp c
+         jr nz,cont5
+
+         ld a,(temp)
+         cp b
+         call z,crsrpg
+cont5    djnz loop1
+
+         ld a,(m1+2)
+         inc a
+         ld (m1+2),a
+         rlca
+         rlca
+         add a,count0
+         ld (loop2+2),a
+         inc a
+         ld (m2+2),a
+         inc a
+         ld (m3+2),a
+         inc a
+         ld (m4+2),a
+         ld de,80-16
+         add hl,de
+         dec c
+         jp nz,loop2 
+
+         ld de,(~(80*8-16))+1
+         add hl,de
+         ld de,tilesize
+         add ix,de
+         dec iyl
+         jp nz,loop4
+
+         dec iyh
+         jp z,crsrset
+
+         ld de,tilesize*15
+         add ix,de
+         ld de,560
+         add hl,de
+         jp loop3
+
+cont1    xor a
+         cp (hl)     ;is it empty cell?
+         ld (hl),a
+         inc hl
+         jp z,cont6
+
+         rept 5
+         nexthlds
+         nexthlls
+         endm
+         ld (hl),a
+         jp cont2a
+         endp
+
 showscn  call infoout
          ld a,(zoom)
          or a
-         jp nz,showscnpg
+         jp nz,showscnz
 
          ld hl,(tilecnt)
          ld a,h

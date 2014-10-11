@@ -125,7 +125,7 @@ dirname  db "????????"      ;filename mask used to access directory
 cfn      db "colors.cfg"
 live     db 12,0 ;must be after cfn
 born     db 8,0  ;must be after born
-crsrpgmk db 1   ;0 - do not draw cursor during showscnpg, 1 - draw
+crsrpgmk db 1   ;0 - do not draw cursor during showscnz, 1 - draw
 splitst  db 1   ;1..255 - split on, 0 - off
 ppmode   db 1   ;putpixel mode: 0 - tentative, 1 - active
 memb8    db 0

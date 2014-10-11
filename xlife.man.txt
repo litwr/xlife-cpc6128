@@ -20,7 +20,7 @@
     fastest  mode of the evolution.
  \xC  Clear the universe.
  \xE  Toggle pseudocolor display mode.  In this mode, the new cells are  shown  in
-    the extra color.  It is about 10% slower.
+    the extra color.  It is slightly slower.
  \xg  Toggle running the game.  Evolve/Stop.  Then step through generations  until
     something exceptional happens, like still life or a key pressed.
  \xh  (Hide) stop  displaying  after  each generation.  This mode  is  up  to  40%

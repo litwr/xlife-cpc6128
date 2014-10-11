@@ -35,4 +35,4 @@ pasmo6 --listing cpchi.lst cpchi.asm cpchi.bin && \
 pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin && \
 iDSK $D -i xlife1.bin -t 1 && \
 iDSK $D -i xlife2.bin -t 1 && \
-rm initiles.s tab12.s gentab.s a.out
+rm initiles.s tab12.s gentab.s printn.inc a.out

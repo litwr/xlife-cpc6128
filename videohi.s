@@ -365,10 +365,8 @@ loopx    ld a,right
          cp c
          jr z,cont0
 
-;*l7       jsr setviewport
-;*cont0    jsr showscnpg
 l7       call setviewport
-cont0    ld hl,showscnpg
+cont0    ld hl,showscnz
          jp calllo
 ;*cont2    lda #0
 ;*         sta t1
@@ -523,7 +521,7 @@ crsrclr  proc
 
 pgcur    xor a
          ld (crsrpgmk),a
-         ld hl,showscnpg
+         ld hl,showscnz
          call calllo
          ld a,1
          ld (crsrpgmk),a
