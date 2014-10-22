@@ -351,7 +351,7 @@ vidmacx  proc
          ret
          endp
 
-infoout  proc
+infoout  proc    ;must be before showtinfo
          ld hl,gencnt
          ld b,7
          ld de,$c782
@@ -361,8 +361,86 @@ infoout  proc
          ld b,5
          ld de,$c792
          call digiout
-         jp showtinfo
          endp
+
+;*showtinfo
+;*         .block
+;*         lda tilecnt
+;*         sta t1
+;*         lda tilecnt+1
+;*         lsr
+;*         ror t1
+;*         lsr
+;*         ror t1
+;*         ldx t1
+;*         cpx #120
+;*         bne cont1
+
+;*         ldx #$31
+;*         stx tcscr
+;*         dex
+;*         stx tcscr+1
+;*         stx tcscr+2
+;*         rts
+
+;*cont1    lda #$20
+;*         sta tcscr
+;*         sta tcscr+1
+;*         lda ttab,x
+;*         tax
+;*         and #$f
+;*         eor #$30
+;*         sta tcscr+2
+;*         txa
+;*         lsr
+;*         lsr
+;*         lsr
+;*         lsr
+;*         beq exit
+
+;*         eor #$30
+;*         sta tcscr+1
+;*exit     rts 
+;*         .bend
+showtinfo  proc          ;must be after infoout
+           local cont1,cont2
+           ld hl,(tilecnt)
+           srl h
+           rr l
+           srl h
+           rr l
+           ld a,l
+           cp 120
+           jr nz,cont1
+
+           ld a,1
+           ld (tinfo),a
+           ld hl,0
+           ld (tinfo+1),hl
+           jp cont2
+
+cont1      ld hl,$0a0a
+           ld (tinfo),hl
+           ld h,high(ttab)
+           add a,low(ttab)
+           ld l,a
+           ld a,(hl)
+           and $f
+           ld (tinfo+2),a
+           ld a,(hl)
+           and $f0
+           rrca
+           rrca
+           rrca
+           rrca
+           jr z,cont2
+
+           ld (tinfo+1),a
+cont2      ld b,3
+           ld hl,tinfo
+           ld de,$c79e
+           jp digiout
+           endp
 
 showscnp proc
          local loop
@@ -471,85 +549,6 @@ m4       ld a,(iy)
          ld (de),a
          ret
          endp
-
-;*showtinfo
-;*         .block
-;*         lda tilecnt
-;*         sta t1
-;*         lda tilecnt+1
-;*         lsr
-;*         ror t1
-;*         lsr
-;*         ror t1
-;*         ldx t1
-;*         cpx #120
-;*         bne cont1
-
-;*         ldx #$31
-;*         stx tcscr
-;*         dex
-;*         stx tcscr+1
-;*         stx tcscr+2
-;*         rts
-
-;*cont1    lda #$20
-;*         sta tcscr
-;*         sta tcscr+1
-;*         lda ttab,x
-;*         tax
-;*         and #$f
-;*         eor #$30
-;*         sta tcscr+2
-;*         txa
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         beq exit
-
-;*         eor #$30
-;*         sta tcscr+1
-;*exit     rts 
-;*         .bend
-showtinfo  proc
-           local cont1,cont2
-           ld hl,(tilecnt)
-           srl h
-           rr l
-           srl h
-           rr l
-           ld a,l
-           cp 120
-           jr nz,cont1
-
-           ld a,1
-           ld (tinfo),a
-           ld hl,0
-           ld (tinfo+1),hl
-           jp cont2
-
-cont1      ld hl,$0a0a
-           ld (tinfo),hl
-           ld h,high(ttab)
-           add a,low(ttab)
-           ld l,a
-           ld a,(hl)
-           and $f
-           ld (tinfo+2),a
-           ld a,(hl)
-           and $f0
-           rrca
-           rrca
-           rrca
-           rrca
-           jr z,cont2
-
-           ld (tinfo+1),a
-cont2      ld b,3
-           ld hl,tinfo
-           ld de,$c79e
-           jp digiout
-           endp
 
 xchgxy   proc
          ld a,(xchgdir)
