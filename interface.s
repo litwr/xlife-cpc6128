@@ -678,15 +678,9 @@ setbench call SCR_CLEAR
          ld (temp+1),a
          ld a,2
          ld (mode),a
-         ld a,(pseudoc)
-         ld (temp),a
-         xor a
-         ld (pseudoc),a
          ret
 
 exitbench ld a,(temp+1)
          ld (mode),a
-         ld a,(temp)
-         ld (pseudoc),a
          ret
 
