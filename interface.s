@@ -1,27 +1,3 @@
-chgtopology macro
-         local l2
-
-         ld a,(topology)
-         or a
-         jr z,l2
-
-         xor a
-         ld (topology),a
-         ld hl,torus
-         call calllo
-         ld a,(bordertc)
-         jr chgbr
-
-l2       inc a
-         ld (topology),a
-         ld hl,plain
-         call calllo
-         ld a,(borderpc)
-chgbr    ld b,a
-         ld c,a
-         jp SCR_SET_BORDER
-         endm
-
 dispat2  proc
          local cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont10,cont11,cont12
          local cont14,cont15,cont16,cont16b,cont16c,cont16x,cont17,cont17a
@@ -29,7 +5,7 @@ dispat2  proc
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,finish,zoomin,zoomout
-         local nozoom,exitload,nozoom3
+         local nozoom,exitload,nozoom3,ltopo
 
          cp "g"
          jr nz,cont3
@@ -78,7 +54,25 @@ setbg1   ld a,(bggo)
 cont4    cp "T"
          jr nz,cont6
 
-         chgtopology
+         ld a,(topology)
+         or a
+         jr z,ltopo
+
+         xor a
+         ld (topology),a
+         ld hl,torus
+         call calllo
+         ld a,(bordertc)
+         jr chgbr
+
+ltopo    inc a
+         ld (topology),a
+         ld hl,plain
+         call calllo
+         ld a,(borderpc)
+chgbr    ld b,a
+         ld c,a
+         jp SCR_SET_BORDER
 
 cont6    cp "o"
          jr nz,cont7

@@ -52,7 +52,7 @@ clrcur   nexthlls
          ret
 
 showscnz proc
-         local loop1,loop2,loop3,loop4,cont1,cont2,cont2a,cont4,cont5,cont6
+         local loop1,loop2,loop3,loop4,cont1,cont2,cont4,cont5,cont6
 ;use: i1:2, temp:1
 ;ylimit - iyh, xlimit - iyl
          ld ix,(viewport)
@@ -100,11 +100,11 @@ loop1    sla e
          nexthld $e,c
          nexthll 7
          nexthld $e,c
-cont2    nexthll 7
+         nexthll 7
          nexthld $e,c
          nexthll 3
          ld (hl),$c
-cont2a   ld a,h
+cont2    ld a,h
          sub 40
          ld h,a
 cont6    inc hl
@@ -135,7 +135,7 @@ cont5    djnz loop1
          jp nz,loop4
 
          dec iyh
-         jp z,crsrset
+         ret z
 
          ld de,tilesize*15
          add ix,de
@@ -154,7 +154,7 @@ cont1    xor a
          nexthlls
          endm
          ld (hl),a
-         jp cont2a
+         jp cont2
          endp
 
 showscnzp proc
@@ -269,7 +269,7 @@ cont8    ld de,(~(80*7))+1
          jp nz,loop4
 
          dec iyh
-         jp z,crsrset
+         ret z
 
          ld de,tilesize*15
          add ix,de
@@ -670,11 +670,11 @@ pixel11  ld a,(de)
 ;*         eor (i1),y
 ;*         sta (i1),y
 ;*         rts
-crsrset  call crsrset1
-         ld a,(zoom)
+crsrset  ld a,(zoom)
          or a
          ret nz
 
+         call crsrset1
          jp pixel11
 
 clrrectlo  proc       ;in: x8poscp, y8poscp

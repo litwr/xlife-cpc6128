@@ -28,8 +28,7 @@ loop     ld a,(iy+sum)
          ld (iy+sum),a
          push iy
          ld b,8
-loop0    ld (iy),a
-         ;??ld (iy+pc),a
+loop0    ld (iy),a    ;to clear pseudocolor info?
          inc iy
          djnz loop0
          pop iy
