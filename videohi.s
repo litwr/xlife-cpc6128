@@ -355,6 +355,7 @@ cont0    ld hl,showscnz
          endp
 
 nohide   call setbg0  ;must be before xyout
+         call zerocc
          call incgen
          call initxt
          call showrules
