@@ -119,7 +119,8 @@ cont8    cp "C"
          or l
          jr nz,yesclear
 
-         jp zerogc
+         call zerogc
+         jp infoout
 
 yesclear ld hl,clear
          jp calllo
