@@ -212,14 +212,7 @@ l3       ld a,h
          ld (xcrsr+1),a
          ld a,b
          ld (crsrx),a
-xyout    ld b,3
-         ld hl,xcrsr
-         ld de,$c7c2
-         call digiout
-         ld b,3
-         ld hl,ycrsr
-         ld de,$c7ca
-         call digiout
+         call xyout
 
 ;*         lda zoom
 ;*         beq exit
@@ -360,6 +353,21 @@ cont0    ld hl,showscnz
 ;*         sta $ff0c
 ;*exit     rts
          endp
+
+nohide   call setbg0  ;must be before xyout
+         call incgen
+         call initxt
+         call showrules
+         ld hl,showscn
+         call calllo
+xyout    ld b,3       ;must be after nohide
+         ld hl,xcrsr
+         ld de,$c7c2
+         call digiout
+         ld b,3
+         ld hl,ycrsr
+         ld de,$c7ca
+         jp digiout
 
 help     call printn
          db 12,"        *** XLIFE COMMANDS ***",$d,$a

@@ -5,7 +5,7 @@ dispat2  proc
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,finish,zoomin,zoomout
-         local nozoom,exitload,nozoom3,ltopo
+         local nozoom,exitload,nozoom3,ltopo,yesclear
 
          cp "g"
          jr nz,cont3
@@ -87,7 +87,10 @@ cont6    cp "o"
 
          inc hl
          or (hl)
-         ret z
+         jr nz,l8
+
+         call incgen
+         jp infoout
 
 l8       call zerocc
          ld hl,generate
@@ -114,9 +117,11 @@ cont8    cp "C"
          ld hl,(tilecnt)
          ld a,h
          or l
-         ret z
+         jr nz,yesclear
 
-         ld hl,clear
+         jp zerogc
+
+yesclear ld hl,clear
          jp calllo
 
 cont10   cp "E"

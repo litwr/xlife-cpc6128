@@ -13,7 +13,7 @@ EOP      dw $
          org $49
 start    ld hl,initprg
          call callhi
-mainloop proc
+mainloop proc                  ;check $100 page boundary after any edit!
          local cont4,cont5
          call dispatcher
          ld a,(mode)
@@ -29,9 +29,9 @@ mainloop proc
          jr nz,cont4
 
          ld (mode),a
-         ld hl,setbg0
+         ld hl,nohide
          call callhi
-         jp mainloop
+         jr mainloop
 
 cont4    ld a,(mode)
          dec a

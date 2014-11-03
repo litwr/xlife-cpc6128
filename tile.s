@@ -1,6 +1,9 @@
 zerocc   inibcd cellcnt,4
          ret
 
+zerogc   inibcd gencnt,6
+         ret
+
 ;*clear    .block
 ;*         jsr zerocc
 ;*         #inibcd gencnt,6
@@ -9,7 +12,7 @@ clear    proc
 ;clear all occupied tiles
          local cont2,loop,loop0,lnext
          call zerocc
-         inibcd gencnt,6
+         call zerogc
          ld iy,(startp)
 ;*loop     ldy #sum
 ;*         lda (currp),y
