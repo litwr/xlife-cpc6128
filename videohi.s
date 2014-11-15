@@ -424,8 +424,7 @@ loop1    call KM_WAIT_CHAR
          cp "0"+10
          jr nc,loop1
 
-         xor $30
-         inc a
+         sub $2f
          ld (density),a
          ret
          endp
