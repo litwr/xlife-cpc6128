@@ -606,7 +606,7 @@ loop1    call KM_WAIT_CHAR
          jr c,loop1
 
          ld b,a
-         ld a,7
+         ld a,5
          cp c
          ld a,b
          jr z,loop1
