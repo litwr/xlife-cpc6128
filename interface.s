@@ -539,6 +539,10 @@ nozoom3  call totext
 cont17d  cp "+"
          jr nz,cont17e
 
+         ld a,(zoom)
+         or a
+         ret nz
+
 zoomin   ;call crsrclr
          call split_off
          ld a,1
@@ -549,6 +553,10 @@ zoomin   ;call crsrclr
 
 cont17e  cp "-"
          jr nz,cont17g
+
+         ld a,(zoom)
+         or a
+         ret z
 
 zoomout  call split_on
          xor a

@@ -36,7 +36,7 @@ crsrpg   xor a
          ld (hl),a
          inc l
          ld (hl),a
-         pop hl         
+         pop hl
          ret
 
 clrcur   nexthlls
@@ -48,7 +48,7 @@ clrcur   nexthlls
          ld (hl),a
          inc l
          ld (hl),a
-         pop hl         
+         pop hl
          ret
 
 showscnz proc
@@ -125,7 +125,7 @@ cont5    djnz loop1
          ld c,80-16      ;b=0
          add hl,bc
          dec d
-         jp nz,loop2 
+         jp nz,loop2
 
          ld de,(~(80*8-16))+1
          add hl,de
@@ -586,29 +586,6 @@ crsrset1 proc   ;out: b - bitmask, de - curpos
          rlca
          add a,d
          ld d,a
-
-;*         ldx crsrocc
-;*cont3    stx $ff16
-;*         lda crsrbit
-;*         and #$f
-;*         bne cont2
-
-;*         lda crsrbit
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         bpl cont1
-
-;*cont2    tax
-;*         clc
-;*         lda #8
-;*         adc i1
-;*         sta i1
-;*         txa
-;*cont1    tax
-;*         rts
-;*         .bend
          ld a,(crsrbit)
          ld hl,$201          ;it is the b-input for crsrcalc
 xcont1   ld c,a
@@ -669,11 +646,10 @@ pixel11  ld a,(de)
 ;*         eor (i1),y
 ;*         sta (i1),y
 ;*         rts
-crsrset  ld a,(zoom)
+crsrset  call crsrset1
+         ld a,(zoom)
          or a
          ret nz
-
-         call crsrset1
          jp pixel11
 
 clrrectlo  proc       ;in: x8poscp, y8poscp
