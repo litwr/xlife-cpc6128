@@ -327,9 +327,8 @@ cont8    xor a
 
 calccells1 proc         ;out: hl;   use: a,bc,hl,iy
          local cont1,loop2
-         ld hl,(tilecnt)
-         ld a,l
-         or h
+         ld a,(startp+1)
+         or a
          ret z
 
          ld hl,readlow

@@ -402,9 +402,8 @@ cont5
 
 calccells proc
          local loop2,loop4
-         ld hl,(tilecnt)
-         ld a,l
-         or h
+         ld a,(startp+1)
+         or a
          ret z
 
          call zerocc

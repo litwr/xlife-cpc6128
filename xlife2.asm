@@ -23,9 +23,8 @@ mainloop proc                  ;check $100 page boundary after any edit!
          cp 3
          ret z           ;to AMSDOS
 
-         ld hl,(tilecnt)
-         ld a,l
-         or h
+         ld a,(startp+1)
+         or a
          jr nz,cont4
 
          ld (mode),a
@@ -915,9 +914,8 @@ del1st   ld hl,(i1)
 
 ;*         jmp loop
 ;*         .bend
-         ld hl,(tilecnt)
-         ld a,h
-         or l
+         ld a,(startp+1)
+         or a
          ret z
 
          jp loop

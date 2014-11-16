@@ -2,9 +2,8 @@ showscn0 ld a,(zoom)
          or a
          ret nz
 
-         ld hl,(tilecnt)
-         ld a,h
-         or l
+         ld a,(startp+1)
+         or a
          ret z
 
          ld hl,xcont2

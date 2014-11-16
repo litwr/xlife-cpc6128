@@ -296,9 +296,8 @@ showscn  call infoout
          or a
          jp nz,showscnz
 
-         ld hl,(tilecnt)
-         ld a,h
-         or l
+         ld a,(startp+1)
+         or a
          jp z,crsrset
 
 xcont2   ld a,(pseudoc)

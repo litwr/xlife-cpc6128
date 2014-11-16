@@ -129,9 +129,8 @@ l1       dec l
 
 bloop    proc
          local bl7,bl8
-         ld hl,(tilecnt)
-         ld a,l
-         or h
+         ld a,(startp+1)
+         or a
          jp nz,bl7
 
          call incgen

@@ -81,12 +81,8 @@ cont6    cp "o"
          or a
          ret nz
 
-         ld hl,tilecnt
-         or (hl)
-         jr nz,l8
-
-         inc hl
-         or (hl)
+         ld a,(startp+1)
+         or a
          jr nz,l8
 
          call incgen
@@ -114,9 +110,8 @@ help0    call totext
 cont8    cp "C"
          jr nz,cont10
 
-         ld hl,(tilecnt)
-         ld a,h
-         or l
+         ld a,(startp+1)
+         or a
          jr nz,yesclear
 
          call zerogc
