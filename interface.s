@@ -409,6 +409,7 @@ cont17   cp 32          ;space
          and d
          jr z,lsp1
 
+         ld hl,cellcnt+4
          call inctsum
 lsp2     ld hl,setiy
          call calllo

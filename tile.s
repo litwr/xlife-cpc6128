@@ -401,7 +401,7 @@ cont5
          endp
 
 calccells proc
-         local loop2,loop4
+         local loop2,loop4,cont1
          ld a,(startp+1)
          or a
          ret z
@@ -410,22 +410,21 @@ calccells proc
          ld iy,(startp)
 loop2    push iy
          pop ix
-         ld (ix+sum),0
          ld c,8
-loop4    ld a,(iy)
-         add a,low(tab3)
-         ld l,a
-         ld a,high(tab3)
-         adc a,0
-         ld h,a
+         ld (ix+sum),c
+loop4    ld l,(iy)
+         ld h,high(tab3)
          ld a,(hl)
-         ld e,a
-         ld a,(ix+sum)
-         add a,e
-         ld (ix+sum),a
-         ld a,e
+         ld hl,cellcnt+4
+         add a,(hl)
+         ld (hl),a
+         sub 10
+         jr c,cont1
+
+         ld (hl),a
+         dec hl
          call inctsum
-         inc iy
+cont1    inc iy
          dec c
          jr nz,loop4
 
@@ -441,7 +440,6 @@ loop4    ld a,(iy)
 
 inctsum  proc
          local loop
-         ld hl,cellcnt+4
          ld b,5
 loop     inc (hl)
          ld a,(hl)
