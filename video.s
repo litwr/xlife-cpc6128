@@ -614,32 +614,6 @@ cont2    inc de
          jr cont3
          endp
 
-;*pixel11  lda vistab,x
-;*         asl
-;*         ora vistab,x
-;*         ora (i1),y
-;*         sta (i1),y
-;*         rts
-pixel11  ld a,(de)
-         or b
-         ld (de),a
-         ret
-;pixel11  proc
-;         local l1,l2
-;         ld a,$aa
-;         and b
-;         ld a,(de)
-;         jr z,l1
-;
-;         and $55
-;l2       or b
-;         ld (de),a
-;         ret
-;
-;l1       and $aa
-;         jr l2
-;         endp
-
 ;*crsrset0 jsr crsrset1
 ;*         lda vistab,x
 ;*         asl
@@ -650,7 +624,11 @@ crsrset  call crsrset1
          ld a,(zoom)
          or a
          ret nz
-         jp pixel11
+
+pixel11  ld a,(de)  ;must be after crsrset
+         or b
+         ld (de),a
+         ret
 
 clrrectlo  proc       ;in: x8poscp, y8poscp
          local lltpc,lrtpc,lx,lxpc11,lxpc01,m7,m8
