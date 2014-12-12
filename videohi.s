@@ -9,7 +9,7 @@ showscn0 ld a,(zoom)
          ld hl,xcont2
          jp calllo
 
-crsrcalc proc   ;in: de, b
+crsrcalc proc   ;in: de, b; sets: xcrsr, ycrsr, crsrx, crsry; outputs: xy; adjusts viewport in the zoom in mode 
          local loop1,loopx,cont0,cont1,cont3,cont4,cont5,cont6,l1,l2,l3,l4,l7
 ;*cont5    lda i1+1    ;start of coorditates calculation
 ;*         sec
@@ -285,16 +285,14 @@ cont1    ld iy,viewport
          ld c,l
          ld b,h
 
-;*         ldy #down
+;*         ldy #dr
 ;*         jsr nextcell
 ;*         dey
 ;*         jsr nextcell
-;*         lda #4
-;*         sta i2
-;*loopx    ldy #right
+;*         ldy #right
 ;*         jsr nextcell
-;*         dec i2
-;*         bne loopx
+;*         dey
+;*         jsr nextcell
          ld a,down
          ld hl,nextcell
          call calllo
@@ -506,7 +504,7 @@ pgcur    xor a
          call calllo
          ld a,1
          ld (crsrpgmk),a
-         ld iy,(crsrtile)
+         ld iy,(crsrtile)   ;do not remove!
          ret
 
 cont2    ld hl,vidmacpx
