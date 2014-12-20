@@ -219,57 +219,42 @@ l3       ld a,h
          or a
          ret z
 
-;*         ldy #up
-;*         ldx #7
-;*         lda vptilecy
-;*         bmi cont3
          ld c,up
-         ld b,7
          ld a,(vptilecy)
+         push af
+         add a,8
+         ld b,a
+         pop af
          or a
          jp m,cont3
 
-;*         ldy #down
-;*         cmp #24
-;*         bcc cont4
          ld c,down
+         sub 8
+         ld b,a
+         ld a,(vptilecy)
          cp 24
          jr c,cont4
 
-;*         ldx #16
-;*cont3    stx vptilecy
-;*         bne cont1
-         ld b,16
 cont3    ld a,b
          ld (vptilecy),a
          jr cont1
 
-;*cont4    ldy #left
-;*         lda vptilecx
-;*         bmi cont5
 cont4    ld c,left
          ld a,(vptilecx)
+         push af
+         add a,8
+         ld b,a
+         pop af
          or a
          jp m,cont5
 
-;*         ldy #right
-;*         cmp #40
-;*         bcc cont2
          ld c,right
+         sub 8
+         ld b,a
+         ld a,(vptilecx)
          cp 40
          jr c,cont0
 
-;*         ldx #32
-;*cont5    stx vptilecx
-;*cont1    lda (viewport),y
-;*         tax
-;*         iny
-;*         lda (viewport),y
-;*         sta viewport+1
-;*         sta adjcell+1
-;*         stx viewport
-;*         stx adjcell
-         ld b,32
 cont5    ld a,b
          ld (vptilecx),a
 cont1    ld iy,viewport
