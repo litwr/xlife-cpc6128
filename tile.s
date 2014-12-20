@@ -275,24 +275,10 @@ loop1    ld a,(i1)
          ld a,(bc)
          or (hl)
          ld (hl),a
-;*         tax
-;*         lda tab3,x
-         push hl
-         ld h,high(tab3)
-         ld l,a
-         ld a,(hl)
-         pop hl
-;*         ldy #sum
-;*         adc (adjcell),y
-;*         sta (adjcell),y
-         add a,(iy+sum)
-         ld (iy+sum),a
-;*         rts
          dec ixl
          jr nz,loop1
 
          ret
-;*         .bend
          endp
 
 ;*random   .block
@@ -327,9 +313,9 @@ random   proc
 ;*loop1    jsr rndbyte
 ;*         dec t3
 ;*         bne loop1
-cont3    xor a
+cont3    ld a,8
          ld (iy+sum),a
-         ld b,8
+         ld b,a
 loop1    push bc
          call rndbyte    ;use ixl
          pop bc
