@@ -5,4 +5,5 @@ v2
 +it is possible to start from B:
 +2-3 times speed up to tentative pattern manipulations
 +less memory consumption
++fixed errors
 

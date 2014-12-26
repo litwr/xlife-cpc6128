@@ -472,16 +472,10 @@ putpixel proc   ;in: x0,y0,xdir,ydir,xchgdir
 ;*         jsr xchgxy
          call xchgxy
 
-;*         ldx #8
 ;*         lda crsrbit
-;*loop1    dex
-;*         lsr
-;*         bcc loop1
-         ld b,8
+;*         jsr calcx
          ld a,(crsrbit)
-loop1    dec b
-         rrca
-         jr nc,loop1
+         call calcx
 
 ;*         stx m1+1
 ;*         lda crsrx
