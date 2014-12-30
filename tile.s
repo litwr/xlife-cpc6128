@@ -466,7 +466,7 @@ loop     dec (hl)
          endp
 
 putpixel proc   ;in: x0,y0,xdir,ydir,xchgdir
-         local loop1,loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8,cont9
+         local loop2,loop3,cont1,cont2,cont3,cont4,cont5,cont7,cont8,cont9
          local cup,cdown,cleft,cright
 ;x8pos  - ixl; x8bit - ixh; y8pos - d; y8byte - e; adjcell - bc
 ;*         jsr xchgxy

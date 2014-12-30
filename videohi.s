@@ -1689,14 +1689,9 @@ ycut     equ localbase+8
          ld (y8byte),a
          ld a,(crsrbit)
          ld (x8bit),a
-;*         ldx #8
-;*loop1    dex
-;*         lsr
-;*         bcc loop1
-         ld b,8
-loop1    dec b
-         rrca
-         jr nc,loop1
+;*         jsr calcx
+;*         lda #0
+         call calcx
 
 ;*         stx m1+1
 ;*         sta xcut        ;0 -> xcut
