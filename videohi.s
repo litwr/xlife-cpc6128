@@ -1526,7 +1526,6 @@ showrect proc
          ld (xchgdir),a
 ;*         jsr tograph0
 ;*         jsr showscn0
-         xor a
          call tograph0
          call showscn0
          call xyout
