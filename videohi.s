@@ -1,8 +1,4 @@
-showscn0 ld a,(zoom)
-         or a
-         ret nz
-
-         ld a,(startp+1)
+showscn0 ld a,(startp+1)
          or a
          ret z
 

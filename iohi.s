@@ -339,7 +339,7 @@ readchar proc
          ;call CAS_IN_CLOSE
          pop bc
          jp ioerror
-                  
+
 ok       ret
          endp
 
