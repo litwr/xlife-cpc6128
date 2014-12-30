@@ -1664,7 +1664,7 @@ finish0  push af
 drawrect proc
          local x8pos,x8poscp,x8bit,y8pos,y8poscp,y8byte,rectulx,rectuly,xcut,ycut,localbase
          local cont1,cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont10,cont11,cont12
-         local loop1,loop10,loop11,xmove,ymove,loopdn,loopup,looprt,looplt,nextrt,nextlt,drrect1
+         local loop10,loop11,xmove,ymove,loopdn,loopup,looprt,looplt,nextrt,nextlt,drrect1
 ;adjcell - iy
 ;**calls: pixel11
 localbase equ $fff0        ;link to clrrect!
