@@ -1,7 +1,7 @@
 Xlife for Amstrad CPC 6128 v2
 ported to 8-bit universe by litwr
 
-(c) 2014 This program is under GNU GPL
+(c) 2014,15 This program is under GNU GPL
 
 The 1st version of the original xlife
 for Unix was developed at CMU at the

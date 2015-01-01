@@ -823,14 +823,13 @@ nextlt   ld a,left
 clrect1  ld e,(iy+video)
          ld d,(iy+video+1) 
          ld a,(y8byte)
+         ld (m8+2),a
          ld b,a
          rlca
          rlca
          rlca
          add a,d
          ld d,a
-         ld a,b
-         ld (m8+2),a
 m8       ld c,(iy)
          ld hl,x8bit
          ret
