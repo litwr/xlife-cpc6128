@@ -43,6 +43,70 @@ loop      ld a,(hl)
 ;*         .bend
          endp
 
+;*ramdisk  .block
+ramdisk  proc
+         local loop
+;*         jsr JPRIMM
+         call printn
+;*         .byte 147,30
+;*         .text "enter file#"
+;*         .byte $d,28,"0",144
+         db 12,"ENTER FILE# OR HIT ",15,3,"ESC",$d,$a,"0",15,1
+;*         .text " glider"
+;*         .byte $d,28,"1",144
+         db " GLIDER GUN",$d,$a,15,3,"1",15,1
+;*         .text " small fish"
+;*         .byte $d,28,"2",144
+         db " SMALL FISH",$d,$a,15,3,"2",15,1
+;*         .text " heavyweight spaceship"
+;*         .byte $d,28,"3",144
+         db " HEAVYWEIGHT SPACESHIP",$d,$a,15,3,"3",15,1
+;*         .text " r-pentomino"
+;*         .byte $d,28,"4",144
+         db " R-PENTOMINO",$d,$a,15,3,"4",15,1
+;*         .text " bunnies"
+;*         .byte $d,28,"5",144
+         db " BUNNIES",$d,$a,15,3,"5",15,1
+;*         .text " lidka"
+;*         .byte $d,28,"6",144
+         db " LIDKA",$d,$a,15,3,"6",15,1
+;*         .text " toad"
+;*         .byte $d,28,"7",144
+         db " BIG GLIDER",$d,$a,15,3,"7",15,1
+;*         .text " bi-gun"
+;*         .byte $d,28,"8",144
+         db " BI-GUN",$d,$a,15,3,"8",15,1
+;*         .text " acorn"
+;*         .byte $d,28,"9",144
+         db " ACORN",$d,$a,15,3,"9",15,1
+;*         .null " switch engine puffer"
+         db " SWITCH ENGINE PUFFER$"
+
+;*loop     jsr getkey
+;*         cmp #27
+;*         bne cont
+loop     call KM_WAIT_CHAR
+         cp $fc       ;esc
+
+;*         rts
+         ret z
+
+;*cont     cmp #$30
+;*         bcc loop
+         cp $30
+         jr c,loop
+
+;*         cmp #$3a
+;*         bcs loop
+         cp $3a
+         jr nc,loop
+
+;*         eor #$30
+         xor $30
+;*         .bend
+         endp
+
+
 ;*loadram  .block   ;in: A
 loadram  proc       ;use: a,hl,ix*,iy*,b*
 ;*         asl
@@ -151,71 +215,6 @@ loop     ld a,(hl)
          cp 4             ;1024
          ccf
          ret
-;*         .bend
-         endp
-
-;*ramdisk  .block
-ramdisk  proc
-         local loop
-;*         jsr JPRIMM
-         call printn
-;*         .byte 147,30
-;*         .text "enter file#"
-;*         .byte $d,28,"0",144
-         db 12,"ENTER FILE# OR HIT ",15,3,"ESC",$d,$a,"0",15,1
-;*         .text " glider"
-;*         .byte $d,28,"1",144
-         db " GLIDER GUN",$d,$a,15,3,"1",15,1
-;*         .text " small fish"
-;*         .byte $d,28,"2",144
-         db " SMALL FISH",$d,$a,15,3,"2",15,1
-;*         .text " heavyweight spaceship"
-;*         .byte $d,28,"3",144
-         db " HEAVYWEIGHT SPACESHIP",$d,$a,15,3,"3",15,1
-;*         .text " r-pentomino"
-;*         .byte $d,28,"4",144
-         db " R-PENTOMINO",$d,$a,15,3,"4",15,1
-;*         .text " bunnies"
-;*         .byte $d,28,"5",144
-         db " BUNNIES",$d,$a,15,3,"5",15,1
-;*         .text " lidka"
-;*         .byte $d,28,"6",144
-         db " LIDKA",$d,$a,15,3,"6",15,1
-;*         .text " toad"
-;*         .byte $d,28,"7",144
-         db " BIG GLIDER",$d,$a,15,3,"7",15,1
-;*         .text " bi-gun"
-;*         .byte $d,28,"8",144
-         db " BI-GUN",$d,$a,15,3,"8",15,1
-;*         .text " acorn"
-;*         .byte $d,28,"9",144
-         db " ACORN",$d,$a,15,3,"9",15,1
-;*         .null " switch engine puffer"
-         db " SWITCH ENGINE PUFFER$"
-
-;*loop     jsr getkey
-;*         cmp #27
-;*         bne cont
-loop     call KM_WAIT_CHAR
-         cp $fc       ;esc
-
-;*         rts
-         ret z
-
-;*cont     cmp #$30
-;*         bcc loop
-         cp $30
-         jr c,loop
-
-;*         cmp #$3a
-;*         bcs loop
-         cp $3a
-         jr nc,loop
-
-;*         eor #$30
-;*         jmp loadram
-         xor $30
-         jp loadram
 ;*         .bend
          endp
 

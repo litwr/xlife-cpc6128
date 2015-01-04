@@ -834,7 +834,6 @@ cont2a   dec de
          jr cont4a
          endp
 
-
 inputdec proc
 ;gets up to 2 digits and prints them
 ;out: ZF=1 - empty input 

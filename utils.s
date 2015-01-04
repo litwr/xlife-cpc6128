@@ -291,10 +291,10 @@ cont8    xor a
          ld a,h
          cp 24
          jp nz,loop0
-         
+
 ;*         sty cury
 ;*         jmp loop0
-         
+
 ;*cont1    lda ymax
 ;*         sbc ymin
 ;*         adc #0
@@ -388,4 +388,3 @@ cont1    ld iyl,c
 ;*         and adjcell2+1
 ;*         rts
 ;*         .bend
-
