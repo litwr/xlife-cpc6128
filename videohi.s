@@ -683,7 +683,7 @@ loop1    call KM_WAIT_CHAR
 exit     call TXT_REMOVE_CURSOR   ;cursor off
          xor a
          ret
-         
+
 cont7    cp "*"
          jr nz,cont11
 
@@ -1179,7 +1179,7 @@ setviewport proc
 ;*         sta viewport+1
 ;*         bne cont2
          ld hl,(viewport)      ;up
-         ld de,tilesize*20
+         ld de,tilesize*hormax
          add hl,de
          ld (viewport),hl
          jr cont2
@@ -1207,16 +1207,9 @@ cont1    ld a,(ycrsr)
          cp 4
          jr c,cont2
 
-;*cont4    inc vptilecy
-;*         lda viewport          ;down
-;*         sbc #<tilesize*20     ;CY=1
-;*         sta viewport
-;*         lda viewport+1
-;*         sbc #>tilesize*20
-;*         sta viewport+1
 cont4    inc (ix+1)
          ld hl,(viewport)      ;down
-         ld de,(~(tilesize*20))+1
+         ld de,(~(tilesize*hormax))+1
          add hl,de
          ld (viewport),hl
 

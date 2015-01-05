@@ -271,7 +271,7 @@ cont6    pop iy
 cont7    call inccurrp
          ld a,(curx)
          inc a
-         cp 20
+         cp hormax
          jr z,cont8
 
 ;*         stx curx
@@ -289,7 +289,7 @@ cont8    xor a
          ld (curx),a
          inc h
          ld a,h
-         cp 24
+         cp vermax
          jp nz,loop0
 
 ;*         sty cury

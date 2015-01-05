@@ -246,7 +246,7 @@ l2       push af
          ld a,c
          rrca
          jr nc,l4
-         
+
          push hl
          ld a,20
          call TXT_SET_COLUMN
@@ -605,7 +605,7 @@ loop1    ld a,(hl)
 
          inc hl
          djnz loop1
-        
+
 ;*         lda #0
 ;*         sta curx
 ;*         sta cury
@@ -644,7 +644,7 @@ loop4    inc l
          call inccurrp
          inc b
          ld a,b
-         cp 20
+         cp hormax
          jr nz,loop0
 
 ;*         ldx #0
@@ -657,7 +657,7 @@ loop4    inc l
          ld b,0
          inc c
          ld a,c
-         cp 24
+         cp vermax
          jr nz,loop0
          jr eof
 
