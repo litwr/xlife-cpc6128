@@ -4,7 +4,7 @@ dispat2  proc
          local cont17b,cont17c,cont17d,cont17e,cont17f,cont17g,cont17h,cont17i
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
-         local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,finish,zoomin,zoomout
+         local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,zoomin,zoomout
          local nozoom,exitload,nozoom3,ltopo,yesclear
 
          cp "g"
@@ -105,7 +105,7 @@ cont7    cp "?"
 
 help0    call totext
          call help
-         jp finish
+         jp difinish
 
 cont8    cp "C"
          jr nz,cont10
@@ -150,20 +150,21 @@ cont12   cp "%"
 
          call totext
          call indens
-         jr finish
+         jr difinish
 
 cont14   cp "B"
          jr nz,cont15
 
          call totext
          call insteps
-         jr z,finish
+         jr z,difinish
 
          call steps2bin
          ld hl,decint
          call calllo
-         jr c,finish
+         jr c,difinish
 
+         call inmode
          call setbench
          call KL_TIME_PLEASE      ;get timer
          ld (stringbuf),hl
@@ -171,20 +172,22 @@ cont14   cp "B"
          ld hl,bloop
          call calllo
          call KL_TIME_PLEASE      ;get timer
-         call calcspd
+         push hl
+         push de
          call exitbench
+         pop de
+         pop hl
+         call calcspd
          ld hl,calccells
          call calllo
-         ;xor a
-         ;ld (mode),a
-         jr finish
+         jr difinish
 
 cont15   cp "R"
          jr nz,cont16
 
          call totext
          call inborn
-         jr z,finish
+         jr z,difinish
 
          ld ix,born
          call setrconst
@@ -192,7 +195,7 @@ cont15   cp "R"
          ld ix,live
          call setrconst
          call fillrt
-finish   call tograph
+difinish   call tograph
          call SCR_CLEAR
          call initxt
          ld hl,showscn
@@ -502,7 +505,7 @@ nozoom   call totext
 cont17w  call loadpat
 exitload ld hl,calccells
          call calllo
-         call finish
+         call difinish
          pop af
          jr nz,zoomin 
 
@@ -550,7 +553,7 @@ zoomin   ;call crsrclr
          ld (zoom),a
          call SCR_CLEAR
          call setviewport
-         jp finish
+         jp difinish
 
 cont17e  cp "-"
          jr nz,cont17g
@@ -562,7 +565,7 @@ cont17e  cp "-"
 zoomout  call split_on
          xor a
          ld (zoom),a
-         jp finish
+         jp difinish
 
 cont17g  cp "V"
          jr nz,cont17h
@@ -580,8 +583,7 @@ cont17g  cp "V"
        
          ld a,1
          call SCR_SET_MODE
-;*         jmp finish
-         jp finish
+         jp difinish
 
 cont17h  cp "v"
          jr nz,cont17i
@@ -592,7 +594,7 @@ cont17h  cp "v"
 ;*         jmp finish
          call totext
          call infov
-         jp finish
+         jp difinish
 
 cont17i  cp "Z"
          jr nz,cont17j
@@ -600,7 +602,7 @@ cont17i  cp "Z"
          call totext
          call chgcolors
 l2       call setcolor
-         jp finish
+         jp difinish
 
 cont17j  cp "X"
          jr nz,cont18
@@ -628,12 +630,12 @@ cont18   cp "S"
          pop hl
          pop de
          pop bc
-         jp z,finish
+         jp z,difinish
 
 ;*         jsr savepat
          call savepat
 ;*exitsave jmp finish
-         jp finish
+         jp difinish
 
 ;*cont20   clc
 ;*         rts
@@ -677,14 +679,17 @@ cont       ld (crsrtile),hl
            ret           
            endp
 
-setbench call SCR_CLEAR
+setbench jp p,difinish
+
+         call SCR_CLEAR
          ld a,(mode)
          ld (temp+1),a
          ld a,2
          ld (mode),a
          ret
 
-exitbench ld a,(temp+1)
+exitbench call totext 
+         ld a,(temp+1)
          ld (mode),a
          ret
 

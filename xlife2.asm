@@ -8,7 +8,7 @@
 
          org $4000
          include "cpchi.asm"
-EOP      dw $
+EOP      db 0
 
          org $49
 start    ld hl,initprg

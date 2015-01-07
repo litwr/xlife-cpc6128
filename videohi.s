@@ -407,6 +407,27 @@ loop1    call KM_WAIT_CHAR
          ret
          endp
 
+inmode   proc
+         local loop1
+
+         call printn
+         db $d,$a,$d,$a,15,2,"SELECT BENCHMARK MODE",$d,$a
+         db 15,3," 0",15,2," - CALCULATIONS",$d,$a
+         db 15,3," 1",15,2," - VIDEO",$d,$a
+         db 15,3," 2",15,2," - BOTH",15,1,"$"
+
+loop1    call KM_WAIT_CHAR
+         cp "0"
+         jr c,loop1
+
+         cp "3"
+         jr nc,loop1
+
+         sub "1"
+         ld (svfnlen),a
+         ret
+         endp
+
 totext   ld a,(zoom)
          or a
          call z,split_off
@@ -563,7 +584,7 @@ endif
 insteps  proc
          local loop1,loop3,cont1,cont2,cont4
          call printn
-         db 12,"NUMBER OF GENERATIONS: $"
+         db 12,"NUMBER OF GENERATIONS: ",15,1,"$"
          call TXT_PLACE_CURSOR
 loop3    ld de,stringbuf
          ld c,0

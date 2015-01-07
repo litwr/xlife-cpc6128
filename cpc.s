@@ -128,18 +128,36 @@ l1       dec l
          endp
 
 bloop    proc
-         local bl7,bl8
+         local bl1,bl2,bl7,bl8
+
          ld a,(startp+1)
          or a
          jp nz,bl7
 
-         call incgen
+         ld a,(svfnlen)
+         or a
+         call nz,incgen
          jp bl8
 
-bl7      call generate
+bl7      ld a,(svfnlen)
+         or a
+         jp p,bl1
+         
+         call generate
          call cleanup
 bl8      call decint
          jp nc,bloop
          ret
+
+bl1      jp z,bl2
+
+         call zerocc
+         call generate
+         call showscn
+         call cleanup
+         jp bl8
+
+bl2      call showscn
+         jp bl8
          endp
 
