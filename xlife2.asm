@@ -608,7 +608,7 @@ l2       ld a,(iy+2)
          ld a,count3+3
          pop bc
          call fixcnt1x
-         
+
 ;*l3       ldy #3
 ;*         lda (currp),y
 ;*         beq l4
@@ -699,7 +699,7 @@ l6       ld a,(iy+6)
 lnext    ld a,(iy+next+1)
          or a
          jr z,stage2
-         
+
          ld b,(iy+next)
          ld iyh,a
          ld iyl,b
@@ -815,7 +815,7 @@ cleanup0 proc
          ld iy,(startp)
 ;*         #zero16 adjcell   ;mark 1st
          ld ix,0
-         
+
 ;*loop     ldy #sum
 ;*         lda (currp),y
 ;*         beq delel

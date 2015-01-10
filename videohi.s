@@ -1406,9 +1406,9 @@ loop12   sla (ix)
          endp
 
 setdirmsk proc
-         local devtxt,loop1,loop2,loop3,loop5,cont1,cont2,cont3,cont4,cont6,cont8
+         local loop1,loop2,loop3,loop5,cont1,cont2,cont3,cont4,cont6,cont8
          call printn
-devtxt   db 12,15,2,"SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *)",$d,$a,15,1,"$"
+         db 12,15,2,"SET DIRECTORY MASK (",15,3,"ENTER",15,2," = *)",$d,$a,15,1,"$"
          call TXT_PLACE_CURSOR   ;cursor on
 loop3    ld de,stringbuf
          ld c,0

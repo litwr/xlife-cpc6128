@@ -12,12 +12,13 @@
 
  \x!  Place random cells on the area of the universe on the screen.
  \x%  Set a percentage density for a randomly filled area.  Default is 42%.
- \x+  Zoom the view in.  This mode is up to 25% faster.
+ \x+  Zoom the view in.  This mode is faster for the big patterns and  slower  for
+    the small ones.
  \x-  Zoom the view out.
- \x.  Place cursor to the center  of  universe.
+ \x.  Place cursor to the center of universe.
  \x?  Help for xlife.
- \xB  Benchmark. Enter number  of  generations and get time.   This  is  also  the
-    fastest  mode of the evolution.
+ \xB  Benchmark. Enter number of generations and get time.  This also  provides  a
+    way for the fastest evolution.
  \xC  Clear the universe.
  \xE  Toggle pseudocolor display mode.  In this mode, the new cells are  shown  in
     the extra color.  It is slightly slower.

@@ -7,19 +7,19 @@ sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
 #it is later compressed by BPC
 iDSK $D -r notepad4.bas
 iDSK $D -i notepad4.bas -t 0 && rm notepad4.bas
+fi
 
 sed 's/$/\r/' cat-cpc.bas >+start.bas
 iDSK $D -r +start.bas
 iDSK $D -i +start.bas -t 0 && rm +start.bas
 
-sed 's/$/\r/' cr-src.txt >cr.txt
-iDSK $D -r cr.txt
-iDSK $D -i cr.txt -t 0 && rm cr.txt
-
 awk -f xlife.man.awk xlife.man.txt >manpage.txt
 iDSK $D -r manpage.txt
 iDSK $D -i manpage.txt -t 0 && rm manpage.txt
-fi
+
+sed 's/$/\r/' cr-src.txt >cr.txt
+iDSK $D -r cr.txt
+iDSK $D -i cr.txt -t 0 && rm cr.txt
 
 iDSK $D -r xlife1.bin
 iDSK $D -r xlife2.bin
