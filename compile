@@ -2,13 +2,12 @@
 #D=xlife1-1.dsk
 D=cpm+1.dsk
 
-if false; then
-sed 's/$/\r/' notepad-cpc.bas >notepad4.bas
+sed 's/$/\r/' notepad-cpc.bas >np4src.bas
 #it is later compressed by BPC
-iDSK $D -r notepad4.bas
-iDSK $D -i notepad4.bas -t 0 && rm notepad4.bas
-fi
-
+iDSK $D -r np4src.bas
+iDSK $D -r np4.bas
+iDSK $D -i np4src.bas -t 0 && rm np4src.bas
+exit
 sed 's/$/\r/' cat-cpc.bas >+start.bas
 iDSK $D -r +start.bas
 iDSK $D -i +start.bas -t 0 && rm +start.bas

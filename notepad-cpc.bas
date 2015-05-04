@@ -1,7 +1,7 @@
- 1 rem *** koi8-r encoding - it is only for litwr's cross-development environment
- 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.4
+ 1 rem *** 8-bit encoding, not ISO-8859
+ 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.5
  4 rem *** converted from Commodore plus/4
- 6 rem *** by litwr, 2014, (C) GNU GPL, thanks to SyX
+ 6 rem *** by litwr, 2014-15, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
  8 defint a-z:cl=119:shm=unt(himem):cs1=shm-cl+1:MEMORY cs1-1
  9 cs2=cs1+28:cs3=cs2+28:cs4=cs3+44
@@ -34,7 +34,7 @@
 116 PRINT "      ƒ        ŒŒ  ƒƒƒƒ  ŒŒƒ  Œƒƒ            ƒƒƒƒƒ"
 118 PRINT "     ƒƒ  ƒƒ   ƒƒƒƒ     ƒƒƒ    ƒƒƒƒƒ         ƒƒƒƒƒ   ƒƒƒƒƒ              ƒƒ " 
 150 locate#0,62,11:print "Amstrad CPC Edition";
-154 locate#0,49,12:print "v1r4, by litwr, (c) 2014 gnu gpl"
+154 locate#0,46,12:print "v1r5, by litwr, (c) 2014-15 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
 160 for i=0 to cl-1:read c$:poke cs1+i,val("&"+c$):next i
 170 for i=1 to 50:call &bd19:next i
@@ -67,7 +67,6 @@
 
 2270 i=cy
 2280 if i<lc and i-ty<24 then gosub 2510:if right$(a$(i),1)<>cc$ then i=i+1:goto 2280
-2290 goto 2310
 
 2300 rem show coors
 2310 c$=str$(cx+1):d$=str$(cy+1):mid$(c$,1,1)="x":mid$(d$,1,1)="y"
@@ -128,7 +127,7 @@
 3170 if l+l2<255 then c$=d$+c$:return
 3180 if l2>254 then gosub 3190:goto 3160
 
-3190 a$(lc)=d$+left$(c$,mc-l):c$=right$(c$,len(c$)-mc+l):goto 7100
+3190 a$(lc)=d$+left$(c$,mc-l):c$=mid$(c$,mc-l+1):goto 7100
 
 3200 rem save
 3210 cls#1:cls:s$="":print"disk "un$,f$
@@ -224,14 +223,14 @@
 
 4700 rem backspace
 4710 if cx=0 then 5400
-4720 cx=cx-1:a$(cy)=left$(a$(cy),cx)+right$(a$(cy),len(a$(cy))-cx-1)
+4720 cx=cx-1:a$(cy)=left$(a$(cy),cx)+mid$(a$(cy),cx+2)
 4730 d$=right$(a$(cy),1)
 4740 if d$<>cc$ and d$<>cf$ then gosub 5100 else i=cy:gosub 2510
 4750 goto 2310
 
 4800 rem shift+backspace
 4810 c$=" "
-4820 a$(cy)=left$(a$(cy),cx)+c$+right$(a$(cy),len(a$(cy))-cx)
+4820 a$(cy)=left$(a$(cy),cx)+c$+mid$(a$(cy),cx+1)
 4830 if len(a$(cy))>mc then 5500
 4840 i=cy:goto 2510
 
@@ -297,14 +296,14 @@
 
 7160 if len(c$)<mc then a$(lc)=c$:return else gosub 7200:goto 7160
 
-7200 a$(lc)=left$(c$,mc):c$=right$(c$,len(c$)-mc):goto 7100
+7200 a$(lc)=left$(c$,mc):c$=mid$(c$,mc+1):goto 7100
 
 7300 if right$(a$(cy),1)=cf$ then 7600
 
 7400 gosub 7500
 7410 if cy+2>ml then 7450 else c$=a$(cy):a$(cy)=left$(c$,cx)+cc$
 7415 if cy+3>ml then 7450
-7420 a$(cy+1)=right$(c$,len(c$)-cx):cx=0:c$=right$(a$(cy+1),1)
+7420 a$(cy+1)=mid$(c$,cx+1):cx=0:c$=right$(a$(cy+1),1)
 7440 if c$<>cc$ and c$<>cf$ then gosub 4200:goto 5100
 7450 cx=0:goto 4200
 
@@ -319,7 +318,7 @@
 
 8000 rem esc
 8010 c$=inkey$:if c$="" goto 8010
-8020 i=asc(c$)
+8020 c$=lower$(c$):i=asc(c$)
 8030 if i=100 then 8200
 8040 if i=105 then 8300
 8050 if i=106 then 8400
@@ -330,7 +329,7 @@
 8100 if i=119 then 8900
 8110 if i=97 then 9000
 8120 if i=99 then 9100
-8130 if i=101 then 9200
+8130 if i=111 then 9200
 8140 return
 
 8200 rem esc+d
@@ -355,7 +354,7 @@
 
 8600 rem esc+p
 8610 c$=a$(cy):if cx=len(c$)-1 then 8200
-8620 a$(cy)=right$(c$,len(c$)-cx-1):cx=0:c$=right$(c$,1)
+8620 a$(cy)=mid$(c$,cx+2):cx=0:c$=right$(c$,1)
 8630 if c$=cf$ or c$=cc$ then i=cy:gosub 2510:goto 2310
 8640 goto 5100
 

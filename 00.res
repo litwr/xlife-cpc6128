@@ -7,4 +7,5 @@ v2
 +less memory consumption
 +more benchmark modes
 +fixed errors
++updated Notepad+4
 
