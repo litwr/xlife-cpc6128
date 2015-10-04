@@ -2,7 +2,7 @@ dispat2  proc
          local cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont10,cont11,cont12
          local cont14,cont15,cont16,cont16b,cont16c,cont16x,cont17,cont17a
          local cont17b,cont17c,cont17d,cont17e,cont17f,cont17g,cont17h,cont17i
-         local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont43,cont44
+         local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont42w,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,zoomin,zoomout
          local nozoom,exitload,nozoom3,ltopo,yesclear
@@ -267,7 +267,7 @@ cxleft   ld b,1
 ;*         lda (crsrtile),y
 ;*         cmp #>plainbox
 ;*         bne cm4
-;*   
+;*
 ;*         cpx #<plainbox
 ;*         bne cm4
 
@@ -286,29 +286,43 @@ cxleft   ld b,1
 cont40   cp $f4       ;shifted cursor up
          jr nz,cont41
 
-         ld a,(vptilecy)
+         ld d,a
+         ld ix,(vptilecx)
+         ld a,ixh
          sub 8
          ld (vptilecy),a
          ld c,up
-cont42   push bc     ;preserve c!
+cont42   call shift
+         jr z,cont42w
+
+         push hl
          call crsrclr
-         pop bc
-         call shift
+         pop hl
+         ld (crsrtile),hl
          jp crsrupd
+
+cont42w  ld a,d
+         sub 4
+         ld (vptilecx),ix
+         jp cont16
 
 cont41   cp $f5       ;shifted cursor down
          jr nz,cont43
 
-         ld a,(vptilecy)
+         ld d,a
+         ld ix,(vptilecx)
+         ld a,ixh
          add a,8
-         ld (vptilecy),a  
+         ld (vptilecy),a
          ld c,down
          jr cont42
 
 cont43   cp $f6       ;shifted cursor left
          jr nz,cont44
 
-         ld a,(vptilecx)
+         ld d,a
+         ld ix,(vptilecx)
+         ld a,ixl
          sub 8
          ld (vptilecx),a
          ld c,left
@@ -317,7 +331,9 @@ cont43   cp $f6       ;shifted cursor left
 cont44   cp $f7       ;shifted cursor right
          jr nz,cont16b
 
-         ld a,(vptilecx)
+         ld d,a
+         ld ix,(vptilecx)
+         ld a,ixl
          add a,8
          ld (vptilecx),a
          ld c,right
@@ -344,7 +360,7 @@ cxup     ld b,7
          ld a,up
 contcur3 add a,iyl
          ld iyl,a
-         ld a,0 
+         ld a,0
          adc a,iyh
          ld iyh,a
          ld hl,readhl
@@ -355,15 +371,12 @@ contcur3 add a,iyl
 
          ld a,high(plainbox)
          cp h
-         jr nz,cm4v
-
-         ld a,(crsrbyte)
-         jr contcur2
+         jp z,crsrupd
 
 cm4v     ld (crsrtile),hl
 cm5v     ld a,b
          jr contcur2
-         
+
 cont16c  cp $f1         ;cursor down
          jr nz,cont17
 
@@ -580,7 +593,7 @@ cont17g  cp "V"
 ;*         jsr curoff
 ;*         jsr showcomm
          call showcomm
-       
+
          ld a,1
          call SCR_SET_MODE
          jp difinish
@@ -651,7 +664,7 @@ cont18   cp "S"
 ;*         dey
 ;*         cmp #>plainbox
 ;*         bne cm4x
-;*   
+;*
 ;*         cpx #<plainbox
 ;*         beq cont20
 
@@ -661,7 +674,6 @@ cont18   cp "S"
 ;*         rts
 ;*         .bend
 shift      proc     ;in: c - direction
-           local cont
            ld iy,(crsrtile)
            ld b,0
            add iy,bc
@@ -669,14 +681,11 @@ shift      proc     ;in: c - direction
            call calllo
            ld a,l
            cp low(plainbox)
-           jr nz,cont
+           ret nz
 
            ld a,h
            cp high(plainbox)
-           ret z
-
-cont       ld (crsrtile),hl
-           ret           
+           ret
            endp
 
 setbench jp p,difinish

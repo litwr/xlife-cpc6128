@@ -565,7 +565,7 @@ lr7      ld a,(iy+7)
 ;*rexit    jsr chkaddt
 rexit    pop bc
          call chkaddt
-         
+
 ;*         ldy #1
 ;*         lda (currp),y
 ;*         beq l2
