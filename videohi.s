@@ -574,12 +574,17 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 endif
+
+delchr   proc
+         call TXT_REMOVE_CURSOR
+         call printn
+         db 8,32,8,"$"
+         ret
+         endp
 
 insteps  proc
          local loop1,loop3,cont1,cont2,cont4
@@ -635,9 +640,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 
@@ -766,9 +769,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
 
 menu2    call setdirmsk
@@ -849,9 +850,7 @@ cont2a   dec de
          dec c
          jp m,loop3a
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4a
          endp
 
@@ -920,9 +919,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 
@@ -1021,9 +1018,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 
@@ -1493,9 +1488,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 

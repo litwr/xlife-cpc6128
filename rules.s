@@ -609,9 +609,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 
@@ -669,9 +667,7 @@ cont2    dec de
          dec c
          jp m,loop3
 
-         call TXT_REMOVE_CURSOR
-         call printn
-         db 8,32,8,"$"
+         call delchr
          jr cont4
          endp
 
