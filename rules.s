@@ -385,7 +385,7 @@ loop2   sla a
 ;*        lda #"8"
 ;*        jsr showr1
 ;*        beq cont3
-        ld a,8
+        ld a,"8"
         call showr1
         ret z
 
