@@ -5,7 +5,7 @@ dispat2  proc
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont42w,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,zoomin,zoomout
-         local nozoom,exitload,nozoom3,ltopo,yesclear
+         local exitload,ltopo,yesclear
 
          cp "g"
          jr nz,cont3
@@ -491,66 +491,35 @@ cont17f  cp "H"           ;home
 cont17a  cp "l"
          jr nz,cont17b
 
-;*         lda zoom
-;*         pha
-;*         beq nozoom1
          ld a,(zoom)
          or a
          push af
-         jr z,nozoom
-
-;*         jsr zoomout
-;*nozoom   jsr totext
-;*         jsr loadmenu
-;*         beq exitload
-         call zoomout
-nozoom   call totext
+         call nz,zoomout
+         call totext
          call loadmenu
          jr z,exitload
 
-;*cont17w  jsr loadpat
-;*exitload jsr tograph
-;*         jsr showrules
-;*         jsr calccells
-;*         jsr showscn
-;*         pla
-;*         bne zoomin
 cont17w  call loadpat
-exitload ld hl,calccells
+         ld hl,calccells
          call calllo
-         call difinish
+exitload call difinish
          pop af
-         jr nz,zoomin 
+         jr nz,zoomin
 
-;*         rts
          ret
 
 cont17b  cp "L"
          jr nz,cont17d
 
-;*         lda fnlen
-;*         bne cont17v
          ld a,(fnlen)
          or a
          ret z
 
-;*exit     rts
-
-;*cont17v  lda zoom
-;*         pha
-;*         beq nozoom3
          ld a,(zoom)
          or a
          push af
-         jr z,nozoom3
-
-;*         jsr zoomout
-;*nozoom3  jsr totext
-;*         lda #147
-;*         jsr $ffd2
-;*         jmp cont17w
-         call zoomout
-nozoom3  call totext
+         call nz,zoomout
+         call totext
          jr cont17w
 
 cont17d  cp "+"

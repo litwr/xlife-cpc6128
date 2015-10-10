@@ -9,3 +9,5 @@ v2
 +fixed errors
 +updated Notepad+4
 
+v2a
+fixed showrules

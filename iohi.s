@@ -449,7 +449,7 @@ eof      jp CAS_IN_CLOSE
 ;*
 ;*         jsr BASIN
 ;*         sta ($b8),y
-;*         
+;*
 ;*         jsr READSS
 ;*         bne checkst
 ;*
