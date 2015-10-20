@@ -93,7 +93,7 @@ l8       call zerocc
          call calllo
          ld hl,showscn
          call calllo
-         ld hl,cleanup 
+         ld hl,cleanup
          jp calllo
 
 cont7    cp "?"
@@ -221,7 +221,7 @@ cxright  ld b,$80
          ld a,right
 contcur1 add a,iyl
          ld iyl,a
-         ld a,0 
+         ld a,0
          adc a,iyh
          ld iyh,a
          ld hl,readhl
@@ -666,7 +666,7 @@ setbench jp p,difinish
          ld (mode),a
          ret
 
-exitbench call totext 
+exitbench call totext
          ld a,(temp+1)
          ld (mode),a
          ret

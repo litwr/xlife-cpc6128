@@ -142,7 +142,7 @@ bloop    proc
 bl7      ld a,(svfnlen)
          or a
          jp p,bl1
-         
+
          call generate
          call cleanup
 bl8      call decint

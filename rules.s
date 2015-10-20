@@ -154,7 +154,7 @@ l1       ld a,(born)
          ld a,(born+1)
          and iyh
          jr nz,l2
- 
+
 ;*l3       .bend
 ;*         rts
          ret

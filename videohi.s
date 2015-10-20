@@ -5,7 +5,7 @@ showscn0 ld a,(startp+1)
          ld hl,xcont2
          jp calllo
 
-crsrcalc proc   ;in: de, b; sets: xcrsr, ycrsr, crsrx, crsry; outputs: xy; adjusts viewport in the zoom in mode 
+crsrcalc proc   ;in: de, b; sets: xcrsr, ycrsr, crsrx, crsry; outputs: xy; adjusts viewport in the zoom in mode
          local loop1,loopx,cont0,cont1,cont3,cont4,cont5,cont6,l1,l2,l3,l4,l7
 ;*cont5    lda i1+1    ;start of coorditates calculation
 ;*         sec
@@ -525,7 +525,7 @@ cont2    ld hl,vidmacpx
 if 0
 inputhex proc
 ;gets 2 hex digits and prints them
-;out: ZF=1 - empty input 
+;out: ZF=1 - empty input
 ;in: h - hicur, l - lowcur
          local loop1,loop3,cont2,cont7
          call TXT_SET_CURSOR
@@ -856,7 +856,7 @@ cont2a   dec de
 
 inputdec proc
 ;gets up to 2 digits and prints them
-;out: ZF=1 - empty input 
+;out: ZF=1 - empty input
 ;in: h - hicur, l - lowcur
 ;changes: a,bc,de,hl
 ;returns: BCD in HL, length in C
@@ -1177,7 +1177,7 @@ setviewport proc
          ld a,l
          or h
          jr nz,cont1
- 
+
 ;*         lda $fe7
 ;*         cmp #$38
 ;*         bcs cont1
@@ -1436,7 +1436,7 @@ loop1    call KM_WAIT_CHAR
 
          cp "a"
          jr c,cont8
- 
+
          cp "z"+1
          jr nc,cont8
 
@@ -1851,7 +1851,7 @@ cont6    ld a,(ycut)
 ;*         bcs cont8
 cont1    sub c
          jr nc,cont8
- 
+
 ;*         eor #$ff
 ;*         adc #1
          xor $ff
@@ -1927,7 +1927,7 @@ loop10   call pixel11      ;used: de,b
         ld a,(hl)
         cp 8
         jr nz,loop10
- 
+
 ;*         ldy #down
 ;*         jsr nextcell
 ;*         lda #0
@@ -2055,7 +2055,7 @@ looplt   call drrect1
 ;*         sbc #8
 ;*         sta i1
 ;*         bcs loop15
-;* 
+;*
 ;*nextlt   ldy #left
 ;*         jsr nextcell
 ;*         lda #1
@@ -2276,7 +2276,7 @@ printdec proc   ;in:a   out: zf set if one digit
 loop1    inc l
          sub 100
          jr nc,loop1
-         
+
          add a,100
          ld h,a
          ld a,l
@@ -2287,7 +2287,7 @@ cont3    ld l,$ff
 loop2    inc l
          sub 10
          jr nc,loop2
-         
+
          add a,10
          ld h,a
          ld a,l
@@ -2319,7 +2319,7 @@ infov    proc
          ld a,(fnlen)
          or a
          jr z,cont1
-         
+
 ;*         jsr $ff4f
 ;*         .null "last loaded filename: "
          call printn

@@ -218,7 +218,7 @@ loop1    rlc d              ;pseudocolor
          ld a,d
          rrca
          jr c,cont12
-     
+
          nexthll 6     ;new cell char
          nexthld 6,8
          nexthll 6
@@ -399,7 +399,7 @@ infoout  proc    ;must be before showtinfo
 
 ;*         eor #$30
 ;*         sta tcscr+1
-;*exit     rts 
+;*exit     rts
 ;*         .bend
 showtinfo  proc          ;must be after infoout
            local cont1,cont2
@@ -821,7 +821,7 @@ nextlt   ld a,left
          jr looplt
 
 clrect1  ld e,(iy+video)
-         ld d,(iy+video+1) 
+         ld d,(iy+video+1)
          ld a,(y8byte)
          ld (m8+2),a
          ld b,a
@@ -842,7 +842,7 @@ clrect2  rrca
 
          ld a,$c0   ;11
          jp pe,lx
-         
+
          ld a,(hl)
          and c
          ld a,$40   ;01
@@ -862,7 +862,7 @@ clrect2pc rrca
          ;ld a,0
          jr z,lx
          jp pe,lxpc11
-         
+
          ld a,(hl)
          and c
          jr z,lxpc01

@@ -131,7 +131,7 @@ loadram  proc       ;use: a,hl,ix*,iy*,b*
          ld a,(hl)
 ;*         sta x0       ;geometry
          ld (x0),a
-;*         iny 
+;*         iny
 ;*         lda ($14),y
          inc hl
          ld a,(hl)
@@ -190,7 +190,7 @@ loop     ld a,(hl)
          inc hl
          ld a,c
          or b
-         jr nz,loop 
+         jr nz,loop
 ;*         inc currp+1
 ;*l1       lda $b9
 ;*         eor #8

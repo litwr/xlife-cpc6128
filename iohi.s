@@ -141,7 +141,7 @@ l10      ld a,(hl)
          jr l10
 
 l9       call printn
-         db $d,$a,"$" 
+         db $d,$a,"$"
          ret
 
 l7       inc iy

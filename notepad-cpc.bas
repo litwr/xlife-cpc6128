@@ -30,9 +30,9 @@
 100 cls
 110 locate#0,23,23:print "Press Ctrl + H to get help":locate#0,10,6
 112 PRINT "     Œ                                                 ŒŒ       Œ "
-114 PRINT "       ŒƒƒŒ ƒƒƒƒ   ŒƒƒŒ  ƒƒŒ   ƒƒƒŒ  Œƒƒ  ŒŒŒŒ  ŒŒƒƒ "  
+114 PRINT "       ŒƒƒŒ ƒƒƒƒ   ŒƒƒŒ  ƒƒŒ   ƒƒƒŒ  Œƒƒ  ŒŒŒŒ  ŒŒƒƒ "
 116 PRINT "      ƒ        ŒŒ  ƒƒƒƒ  ŒŒƒ  Œƒƒ            ƒƒƒƒƒ"
-118 PRINT "     ƒƒ  ƒƒ   ƒƒƒƒ     ƒƒƒ    ƒƒƒƒƒ         ƒƒƒƒƒ   ƒƒƒƒƒ              ƒƒ " 
+118 PRINT "     ƒƒ  ƒƒ   ƒƒƒƒ     ƒƒƒ    ƒƒƒƒƒ         ƒƒƒƒƒ   ƒƒƒƒƒ              ƒƒ "
 150 locate#0,62,11:print "Amstrad CPC Edition";
 154 locate#0,46,12:print "v1r5, by litwr, (c) 2014-15 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
@@ -79,7 +79,7 @@
 2500 rem show line #i
 2510 locate#0,1,i-ty+1:print chr$(18)a$(i);:return
 
-2600 locate#0,cx+1,cy-ty+1:cursor 1 
+2600 locate#0,cx+1,cy-ty+1:cursor 1
 2604 c$=inkey$:if c$="" then 2604
 2608 i=asc(c$):fo=0:cursor 0
 2610 if i=243 then 4000
@@ -144,7 +144,7 @@
 3290 print chr$(13)i;:if s$=cc$ then print#9:goto 3310
 3300 print#9,s$;
 3310 next
-3320 on error goto 0 
+3320 on error goto 0
 3330 closeout
 3340 goto 3100
 
@@ -288,7 +288,7 @@
 6110 if ty>cy then ty=cy
 6120 return
 
-7000 rem input and optionally split line 
+7000 rem input and optionally split line
 7010 if len(c$)<mc then a$(lc)=c$+cc$ else gosub 7200:goto 7010
 
 7100 if lc<ml then lc=lc+1 else print chr$(24)"file too big, a line skipped"chr$(24);:a$(lc-1)=cf$

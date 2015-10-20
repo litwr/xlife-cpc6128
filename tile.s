@@ -75,11 +75,11 @@ cont2    call showscn
 ;*         lda tab21,x
 ;*         iny
 ;*         adc (currp),y
-;*         sta (currp),y  
+;*         sta (currp),y
 ;*         lda tab22,x
 ;*         iny
 ;*         adc (currp),y
-;*         sta (currp),y 
+;*         sta (currp),y
 ;*         lda tab23,x
 ;*         iny
 ;*         adc (currp),y
@@ -760,7 +760,7 @@ cdown    ld a,down
 
 ;*cup      ldy #up       ;y=/=0
 ;*         jsr nextcell
-;*         inc y8pos  
+;*         inc y8pos
 ;*         jmp loop2
 cup      ld a,up
          call nextcell

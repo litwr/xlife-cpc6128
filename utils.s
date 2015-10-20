@@ -87,7 +87,7 @@ loop0    xor a
 loop2    rlca
          inc l
          jr nc,loop2
-         
+
 ;*         sty t1
 ;*         lda curx
 ;*         asl
@@ -129,7 +129,7 @@ loop3    rrca
          add a,l
          cp b
          jr c,cont3
-         
+
 ;*         sta xmax
 ;*cont3    ldy #0
 ;*loop4    lda (currp),y

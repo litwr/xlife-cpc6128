@@ -365,7 +365,7 @@ ll3
          ld (t1),a
          ispyr4 (ix+count2+3)
          ispyr4 (ix+count3+3)
-         ispyr4 (ix+count4+3) 
+         ispyr4 (ix+count4+3)
 ;*ll4      ldy #4
 ll4
 ;*         lda (currp),y
@@ -858,7 +858,7 @@ delel    ld hl,(tilecnt)
          ld (hl),a
          dec hl
          endm
-         
+
 ;*         ldy #next
 ;*         lda (currp),y
 ;*         sta i1
@@ -949,10 +949,10 @@ split_on0 ld bc,&bc07				;; select CRTC register 7
          out (c),c
          inc b
          ld a,29
-         out (c),a 
+         out (c),a
          ld hl,ticker_event_block
          ld b,%11000001				;; near address, express asynchronous event
-         ld c,&80					;; rom select 
+         ld c,&80					;; rom select
          ld de,ticker_function
          jp KL_NEW_FAST_TICKER
 
