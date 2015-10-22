@@ -10,4 +10,5 @@ v2
 +updated Notepad+4
 
 v2a
-fixed showrules
++fixed showrules
++fixed S-command

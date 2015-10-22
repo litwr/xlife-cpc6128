@@ -5,7 +5,7 @@ dispat2  proc
          local cont17j,cont17q,cont17t,cont17w,cont18,cont40,cont41,cont42,cont42w,cont43,cont44
          local cxdown,cxright,cxleft,cxup,cm4,cm5,contcur1,contcur2,contcur3
          local lsp1,lsp2,l2,l4,l5,l8,l11,l77,cm4v,cm5v,zoomin,zoomout
-         local exitload,ltopo,yesclear
+         local nozoom,exitload,nozoom3,ltopo,yesclear
 
          cp "g"
          jr nz,cont3
@@ -494,15 +494,17 @@ cont17a  cp "l"
          ld a,(zoom)
          or a
          push af
-         call nz,zoomout
-         call totext
+         jr z,nozoom
+
+         call zoomout
+nozoom   call totext
          call loadmenu
          jr z,exitload
 
 cont17w  call loadpat
-         ld hl,calccells
+exitload ld hl,calccells
          call calllo
-exitload call difinish
+         call difinish
          pop af
          jr nz,zoomin
 
@@ -518,8 +520,10 @@ cont17b  cp "L"
          ld a,(zoom)
          or a
          push af
-         call nz,zoomout
-         call totext
+         jr z,nozoom3
+
+         call zoomout
+nozoom3  call totext
          jr cont17w
 
 cont17d  cp "+"

@@ -325,39 +325,31 @@ cont8    xor a
          ret
          endp
 
-calccells1 proc         ;out: hl;   use: a,bc,hl,iy
-         local cont1,loop2
-         ld a,(startp+1)
-         or a
-         ret z
-
+calccells1 proc   ;OUT: HL;  USED: A,BC,DE
+         local ll,ls
+         ;ld hl,calccells
+         ;call calllo
          ld hl,readlow
          ld (jsrfar+1),hl
          ld hl,0
-         ld iy,(startp)
-loop2    ld a,sum
-         call calllo1
-         add a,l
-         ld l,a
-         ld a,0
-         adc a,h
-         ld h,a
-         ld a,next
-         call calllo1
-         ld c,a
-         ld a,next+1
-         call calllo1
-         ld b,a
-         or a     ;c?
-         jr nz,cont1
+         ld bc,cellcnt
+         ld de,10000
+         call ls
+         ld de,1000
+         call ls
+         ld de,100
+         call ls
+         ld e,10
+         call ls
+         ld e,1
+ls       ld a,(bc)
+         inc bc
+         or a
+ll       ret z
 
-         ld a,c
+         add hl,de
          dec a
-         ret z
-
-cont1    ld iyl,c
-         ld iyh,b
-         jr loop2
+         jr ll
          endp
 
 ;*adddensity
