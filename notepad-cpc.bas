@@ -1,5 +1,5 @@
  1 rem *** 8-bit encoding, not ISO-8859
- 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.5
+ 2 rem *** notepad+4 cpc edition, the text file editor, v1 rev.6
  4 rem *** converted from Commodore plus/4
  6 rem *** by litwr, 2014-15, (C) GNU GPL, thanks to SyX
  7 rem *** the initial banner was made by Text Resizer by MIRKOSOFT
@@ -34,7 +34,7 @@
 116 PRINT "      ƒ        ŒŒ  ƒƒƒƒ  ŒŒƒ  Œƒƒ            ƒƒƒƒƒ"
 118 PRINT "     ƒƒ  ƒƒ   ƒƒƒƒ     ƒƒƒ    ƒƒƒƒƒ         ƒƒƒƒƒ   ƒƒƒƒƒ              ƒƒ "
 150 locate#0,62,11:print "Amstrad CPC Edition";
-154 locate#0,46,12:print "v1r5, by litwr, (c) 2014-15 gnu gpl"
+154 locate#0,46,12:print "v1r6, by litwr, (c) 2014-15 gnu gpl"
 156 locate#0,68,14:print "Thanks to SyX"
 160 for i=0 to cl-1:read c$:poke cs1+i,val("&"+c$):next i
 170 for i=1 to 50:call &bd19:next i
@@ -152,10 +152,10 @@
 3360 c$=inkey$:if c$="" then 3360 else goto 3100
 
 3400 rem change drive letter
-3410 cls:cls#1
+3410 cls#1
 3415 u=u+1:if u>1 then u=0
 3420 un$=chr$(u+65)+":":if u=0 then |a else |b
-3430 goto 2205
+3430 goto 2250
 
 3500 rem directory & load
 3510 cls#1:cls:dm$="":print"disk "un$:print"enter directory mask (*.* by default)":input dm$:if dm$="" then dm$="*.*"
@@ -403,7 +403,7 @@
 9600 rem page down
 9610 cx=0:l=ty+24:if l>=lc then l=lc-24
 9620 if l<0 then l=0
-9630 cy=cy+l-ty:if cy>=lc then cy=lc-1
+9630 cy=cy+24:if cy>=lc then cy=lc-1
 9640 goto 9420
 
 9700 rem new
@@ -422,7 +422,7 @@
 
 9900 rem repeat find
 9910 if fs$="" then return
-9920 cls#1:print chr$(12)"seek "fs$:l=len(fs$):goto 9830
+9920 cls#1:print chr$(12)"searching "fs$:l=len(fs$):goto 9830
 
 10000 for j=cy to lc-1
 10010 s$=upper$(a$(j)):print chr$(13) j+1;

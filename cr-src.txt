@@ -1,4 +1,4 @@
-Xlife for Amstrad CPC 6128 v2
+Xlife for Amstrad CPC 6128 v3
 ported to 8-bit universe by litwr
 
 (c) 2014,15 GNU GPL

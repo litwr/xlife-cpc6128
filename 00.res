@@ -9,6 +9,6 @@ v2
 +fixed errors
 +updated Notepad+4
 
-v2a
+v3
 +fixed showrules
 +fixed S-command
