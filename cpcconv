@@ -11,6 +11,6 @@ else
    dd if=$2 of=$2.t1 bs=1 skip=26
    tr [:lower:][:upper:] [:upper:][:lower:] <$2.t1 >$2.t2
    sed 's/\r\+$/\r/' <$2.t2 >$2.t3
-   sed 's/\r/&\n/g' <$2.t3 >${2%%[sS]00}txt
+   ./txt2cpm $2.t3 ${2%%[sS]00}txt
 fi
 rm *.t[123]

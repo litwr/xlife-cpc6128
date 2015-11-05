@@ -17,7 +17,7 @@
  \x-  Zoom the view out.
  \x.  Place cursor to the center of universe.
  \x?  Help for xlife.
- \xB  Benchmark. Enter number of generations and get time.  This also  provides  a
+ \xB  Benchmark.  Enter number of generations and get time.  This also provides  a
     way for the fastest evolution.
  \xC  Clear the universe.
  \xE  Toggle pseudocolor display mode.  In this mode, the new cells are  shown  in

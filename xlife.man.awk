@@ -30,4 +30,6 @@ BEGIN {
    }
    print b e r
 }
-
+END {
+   printf "%c", 26
+}
