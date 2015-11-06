@@ -3,6 +3,7 @@ savecf   proc
 
          ld b,live-cfn
          ld hl,cfn
+         call erasefile
          ld de,$7800
          call CAS_OUT_OPEN
          jr nc,ioerror
@@ -32,6 +33,26 @@ ioerror  ;ld b,a          ;in: a
          ;ld a,b
          ;printhex
          jp KM_WAIT_CHAR
+
+erasefile proc
+         local params,param
+         ld (param+1),hl
+         ld a,b
+         ld (param),a
+         push bc
+         push hl
+         ld hl,$40
+         ld ix,params
+         ld a,1
+         call $23
+         pop hl
+         pop bc
+         ret
+         
+params   dw param
+param    db 0
+         dw 0
+         endp
 
 loadcf   proc
          local loop
@@ -552,6 +573,7 @@ sizex     equ t1     ;connected to curx at boxsz
          ld a,(svfnlen)
          ld b,a
          ld hl,svfn
+         call erasefile
          ld de,$7800
          call CAS_OUT_OPEN
          pop hl

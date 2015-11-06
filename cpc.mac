@@ -14,6 +14,7 @@ SCR_SET_MODE equ $bc0e
 KM_WAIT_CHAR equ $bb06
 KM_READ_CHAR equ $bb09
 KL_INIT_BACK equ $bcce
+KL_FIND_COMMAND equ $bcd4
 KL_NEW_FAST_TICKER equ $bce0
 KL_ADD_FAST_TICKER equ $bce3
 KL_DEL_FAST_TICKER equ $bce6

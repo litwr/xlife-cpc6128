@@ -12,3 +12,4 @@ v2
 v3
 +fixed showrules
 +fixed S-command
++xlife doesn't create BAK-files

@@ -24,6 +24,12 @@ prg        push hl
            ld hl,(icurdev)
            ld (hl),a
 
+           ld hl,eracmd
+           call KL_FIND_COMMAND
+           ld (start),hl
+           ld a,c
+           ld (start+2),a
+
            ld a,4
            call KL_BANK_SWITCH   ;get ext 16K
 
@@ -55,6 +61,8 @@ error2     call printn
 error1     call KM_WAIT_CHAR
            pop hl
            ret
+
+eracmd     db "ER","A"+$80
 
 start1
            incbin "cpchi.bin"
