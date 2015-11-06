@@ -48,7 +48,7 @@ erasefile proc
          pop hl
          pop bc
          ret
-         
+
 params   dw param
 param    db 0
          dw 0
@@ -76,7 +76,7 @@ copyr    ld b,6
          ld hl,copyleft
 
 showtxt  proc
-         local loop,next
+         local loop,loop2,next
          ld de,$7800
          call CAS_IN_OPEN
          jr nc,ioerror
@@ -88,6 +88,10 @@ loop     call CAS_IN_CHAR
          jp KM_WAIT_CHAR
 
 next     call TXT_OUTPUT
+loop2    call KM_READ_CHAR
+         jr nc,loop
+
+         call KM_WAIT_CHAR
          jr loop
          endp
 

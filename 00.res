@@ -12,4 +12,5 @@ v2
 v3
 +fixed showrules
 +fixed S-command
-+xlife doesn't create BAK-files
++added to stop/continue text output by any key press
++xlife doesn't create BAK-files now

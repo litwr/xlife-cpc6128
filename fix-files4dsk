@@ -1,11 +1,16 @@
 #fix text files extracted from dsk-image
-#for i in *.TXT
-#do
-#   mse -t - -o $1 $1 <<END
-#   0d0 >
-#   endfile > 0d26
-#END
-#done
+P=$1
+if [ _$P_ = __ ]; then P=*.TXT; fi
+if [ ${P%8L} = $P ]; then
+   for i in $P
+   do
+      mse -t - -o $1 $1 <<END
+      0d0 >
+      0d26 > endfile
+      endfile > 0d26
+END
+done
+fi
 
 #fix 8L-files
 gcc -x c - <<END
@@ -20,9 +25,13 @@ main(){
    for (k = 0; k < i; k++) putchar(getchar());
 }
 END
-for i in *.8L
-do
-   ./a.out <$i >/tmp/$i
-   mv /tmp/$i $i
-done
+P=$1
+if [ _$P_ = __ ]; then P=*.8L; fi
+if [ ${P%8L} != $P ]; then
+   for i in *.8L
+   do
+      ./a.out <$i >/tmp/$i
+      mv /tmp/$i $i
+   done
+fi
 rm a.out

@@ -3,7 +3,7 @@ image utility iDSK.
 
 The script `compile' makes all files required for Xlife-8-CPC package and puts
 them to a disk image file.  It uses Pasmo, iDSK and several utilities (bash,
-grep, sed, awk, gcc).
+grep, awk, gcc).
 
 It is required to write a name of the disk image into beginning of this script.
 

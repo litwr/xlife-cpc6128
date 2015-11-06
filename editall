@@ -1,2 +1,3 @@
-gedit cpchi.asm cpc.s io*.s tile.s xlife?.asm utils.s rules.s video*.s interface.s ramdisk.s *.mac excl.grep&
+kate 2>/dev/null&
+#cpchi.asm cpc.s io*.s tile.s xlife?.asm utils.s rules.s video*.s interface.s ramdisk.s *.mac excl.grep
 exit
