@@ -22,11 +22,11 @@ iDSK $B -i +start.bas -t 0 && rm +start.bas
 
 awk -f xlife.man.awk xlife.man.txt >manpage.txt
 #iDSK $D -r manpage.txt
-iDSK $D -i manpage.txt -t 0 && rm manpage.txt
+iDSK $D -i manpage.txt -t 0 #&& rm manpage.txt
 
 ./txt2cpm cr-src.txt cr.txt
 #iDSK $D -r cr.txt
-iDSK $D -i cr.txt -t 0 && rm cr.txt
+iDSK $D -i cr.txt -t 0  # && rm cr.txt
 
 #iDSK $D -r xlife1.bin
 #iDSK $D -r xlife2.bin

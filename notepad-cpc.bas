@@ -44,7 +44,7 @@
 1000 call cs3:efs=peek(&c7d1):l2=peek(&c7d2):c$=space$(l2):if l2=0 then return
 1020 call cs4,@c$:if l2=255 then 3160 else return
 
-2000 cls#1:print chr$(12)tab(25)"Notepad +4 CPC Edition commands list":print
+2000 cls#1:print chr$(12)tab(26)"Notepad +4 CPC Edition commands":print
 2005 print tab(30)chr$(24)"With the CONTROL key"chr$(24)
 2010 print "H - help"tab(20)"N - new"tab(40)"L/S - load/save"tab(60)"U/D - page up/down"
 2020 print "B/E - to begin/end"tab(20)"F - find forward"tab(40)"R - repeat find"tab(60)"C - cat & load"

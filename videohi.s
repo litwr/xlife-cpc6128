@@ -356,24 +356,24 @@ help     call printn
          db 15,3,".",15,2,"/",15,3,"H",15,2," center/home cursor",$d,$a
          db 15,3,"?",15,2," show this help",$d,$a
          db 15,3,"B",15,2," benchmark",$d,$a
-         db 15,3,"C",15,2," clear screen",$d,$a
-         db 15,3,"E",15,2," toggle pseudocolor mode",$d,$a
-         db 15,3,"g",15,2," toggle run/stop mode",$d,$a
-         db 15,3,"h",15,2," toggle hide mode - to 40% faster",$d,$a
-         db 15,3,"l",15,2," load and transform file",$d,$a
-         db 15,3,"L",15,2," reload pattern",$d,$a
+         db 15,3,"C",15,2," clear the screen",$d,$a
+         db 15,3,"E",15,2," toggle the pseudocolor mode",$d,$a
+         db 15,3,"g",15,2," toggle the run/stop mode",$d,$a
+         db 15,3,"h",15,2," toggle the hiding (fastest) mode",$d,$a
+         db 15,3,"l",15,2," load and transform a pattern",$d,$a
+         db 15,3,"L",15,2," reload a pattern",$d,$a
          db 15,3,"o",15,2," one step",$d,$a
          db 15,3,"Q",15,2," quit",$d,$a
          db 15,3,"R",15,2," set the rules",$d,$a
          db 15,3,"S",15,2," save",$d,$a
          db 15,3,"T",15,2," toggle plain/torus topology",$d,$a
          db 15,3,"v",15,2," show some info",$d,$a
-         db 15,3,"V",15,2," show comments to the pattern",$d,$a
-         db 15,3,"X",15,2,"/",15,3,"Z",15,2," reload/set&save palette",$d,$a
+         db 15,3,"V",15,2," show comments to a pattern",$d,$a
+         db 15,3,"X",15,2,"/",15,3,"Z",15,2," reload/set&save a palette",$d,$a
          db $d,$a
-         db 15,1,"Use ",15,3,"cursor keys",15,1," to set the position and "
+         db 15,1,"Use ",15,3,"cursor keys",15,1," to set a position and a "
          db 15,3,"space key",15,1," to toggle the current cell.",$d,$a
-         db "Use ",15,3,"shift",15,1," to speed up the movement$"
+         db "Use a ",15,3,"shift",15,1," to speed up the movement$"
          jp KM_WAIT_CHAR
 
 indens   proc
@@ -1027,7 +1027,7 @@ chgcolors proc
          ld ix,borderpc
          call printn
          db 12,15,2,"PRESS ",15,3,"ENTER",15,2," TO USE DEFAULT COLOR OR INPUT "
-         db "DECIMAL NUMBER OF GREY SCALE COLOR (0-26).",$d,$a,15,1,"THE PLAIN BORDER ($"
+         db "A DECIMAL NUMBER OF GREY SCALE COLOR (0-26).",$d,$a,15,1,"THE PLAIN BORDER ($"
          ld hl,$1804
          call chgclrs1
          call inputdec
@@ -1045,8 +1045,8 @@ cont1    inc ix
          call chgclrs2
 cont2    inc ix
          call printn
-         db $d,$a,"THE CURSOR OVER EMPTY CELL ($"
-         ld hl,$2206
+         db $d,$a,"THE CURSOR OVER AN EMPTY CELL ($"
+         ld hl,$2506
          call chgclrs1
          call inputdec
          jr z,cont3
@@ -1054,8 +1054,8 @@ cont2    inc ix
          call chgclrs2
 cont3    inc ix
          call printn
-         db $d,$a,"THE CURSOR OVER LIVE CELL ($"
-         ld hl,$2107
+         db $d,$a,"THE CURSOR OVER A LIVE CELL ($"
+         ld hl,$2307
          call chgclrs1
          call inputdec
          jr z,cont9
@@ -1063,8 +1063,8 @@ cont3    inc ix
          call chgclrs2
 cont9    inc ix
          call printn
-         db $d,$a,"THE CURSOR OVER NEW CELL ($"
-         ld hl,$2008
+         db $d,$a,"THE CURSOR OVER A NEW CELL ($"
+         ld hl,$2208
          call chgclrs1
          call inputdec
          jr z,cont4
@@ -1117,8 +1117,8 @@ cont8    inc ix
          call chgclrs2
 cont12   inc ix
          call printn
-         db $d,$a,"THE FRAME OVER LIVE CELL ($"
-         ld hl,$200e
+         db $d,$a,"THE FRAME OVER A LIVE CELL ($"
+         ld hl,$220e
          call chgclrs1
          call inputdec
          jr z,cont14
@@ -1126,8 +1126,8 @@ cont12   inc ix
          call chgclrs2
 cont14   inc ix
          call printn
-         db $d,$a,"THE FRAME OVER NEW CELL ($"
-         ld hl,$1f0f
+         db $d,$a,"THE FRAME OVER A NEW CELL ($"
+         ld hl,$210f
          call chgclrs1
          call inputdec
          jr z,cont10
