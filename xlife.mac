@@ -33,6 +33,7 @@ count6   equ 50
 count7   equ 54
 video    equ 58
 sum      equ 60
+reserve  equ 61
 tile     macro
          db 0  ;l0
          db 0  ;l1
@@ -56,19 +57,13 @@ tile     macro
          endm
          dw 0  ;video;+58
          db 0  ;sum  ;+60
+         db 0
          endm
-tilesize equ 61
+tilesize equ 62
 
-;*cellsum  .macro
 cellsum  macro
          local cont2, l1
-;*         adc cellcnt+4   ;CY=0
-;*         cmp #$3a
-;*         bcs l1
 
-;*         sta cellcnt+4
-;*         bcc cont2
-;*
          ld hl,cellcnt+4
          add a,(hl)
          cp $a
@@ -77,39 +72,20 @@ cellsum  macro
          ld (hl),a
          jr cont2
 
-;*l1       sbc #$a
 l1       sub $a
-;*         sta cellcnt+4
          ld (hl),a
-;*         ldy #$30
          ld c,0
          dec hl
-;*         #incbcd cellcnt+3
-;*         sty cellcnt+3
          incbcd hl
          dec hl
-;*         #incbcd cellcnt+2
-;*         sty cellcnt+2
          incbcd hl
          dec hl
-;*         #incbcd cellcnt+1
-;*         sty cellcnt+1
          incbcd hl
          dec hl
-;*         #incbcd cellcnt
-;*         sty cellcnt
          incbcd hl
-;*cont2
 cont2
-;*         .endm
          endm
 
-;*incbcd   .segment
-;*         inc \1
-;*         lda \1
-;*         cmp #$3A
-;*         bne cont2
-;*         .endm
 incbcd   macro n
          inc (n)
          ld a,(n)
@@ -128,13 +104,6 @@ incbcd2  macro
          ld (hl),b
          endm
 
-;*inibcd   .macro
-;*         lda #$30
-;*         ldx #\2
-;*loop0    sta \1,x
-;*         dex
-;*         bpl loop0
-;*         .endm
 inibcd   macro addr,n
          local loop
          xor a
@@ -145,49 +114,27 @@ loop     ld (hl),a
          djnz loop
          endm
 
-;*setcount .macro
-setcount macro n
-         ld a,(iy+n)
-;*         tax
-;*         and #$c0
-;*         sta (currp),y
+setcount macro
+         ld a,(de)
          ld b,a
          and $c0
          ld (hl),a
-
-;*         txa
-;*         and #$30
-;*         lsr
-;*         iny
-;*         sta (currp),y
          ld a,b
          and $30
          rrca
-         inc hl
+         inc l
          ld (hl),a
-
-;*         txa
-;*         and #$c
-;*         asl
-;*         iny
-;*         sta (currp),y
          ld a,b
          and $c
          rlca
          inc hl
          ld (hl),a
-
-;*         txa
-;*         and #$3
-;*         iny
-;*         sta (currp),y
          ld a,b
          and 3
-         inc hl
+         inc l
          ld (hl),a
          endm
 
-;*genmac   .macro
 genmac   macro n
          local cont2
          ld e,(hl)
@@ -195,7 +142,7 @@ genmac   macro n
          and $c0
          ld c,a
 
-         inc hl
+         inc l
          ld e,(hl)
          ld a,(de)
          and $30
@@ -209,7 +156,7 @@ genmac   macro n
          or c
          ld c,a
 
-         inc hl
+         inc l
          ld e,(hl)
          ld a,(de)
          and 3

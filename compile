@@ -43,3 +43,6 @@ pasmo6 --amsdos --listing xlife1.lst xlife1.asm xlife1.bin && \
 iDSK $D -i xlife1.bin -t 1 && \
 iDSK $D -i xlife2.bin -c 49 -t 1 && \
 rm initiles.s tab12.s gentab.s printn.inc a.out
+
+iDSK $D -i xlife.d1/B126X108.TXT -t 1
+iDSK $D -i xlife.d1/B126X108.8L -t 0
