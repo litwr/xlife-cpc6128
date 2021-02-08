@@ -187,12 +187,11 @@ loop3    ld e,l
          jp loop3
 
 cont10   ld iy,(startp)
-loop     ld a,(iy+sum)
-         or a
-         jp z, lnext
+loop     xor a
+         cp (iy+sum)
+         jp z,lnext
 
-         ld a,(iy)
-         or a
+         or (iy)
          jr z,ldown
 
          ld e,a
@@ -252,9 +251,7 @@ lleft    ld c,(iy+left)
          ispyr4 (hl)
          pop bc
          call chkadd
-
-ll1
-         ld a,(iy+1)
+ll1      ld a,(iy+1)
          and a
          jp p,ll2
 
