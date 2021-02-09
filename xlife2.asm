@@ -161,7 +161,7 @@ loop3    ld e,l
          inc hl
          setcount
          inc e
-         inc l
+         inc hl
          setcount
          inc de
          inc hl
@@ -181,7 +181,7 @@ loop3    ld e,l
          or a
          jr z,cont10
 
-         dec hl
+         dec l
          ld l,(hl)
          ld h,a
          jp loop3
