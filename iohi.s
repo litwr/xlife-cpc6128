@@ -464,44 +464,6 @@ loop5    call readchar
 eof      jp CAS_IN_CLOSE
          endp
 
-;*readtent .block
-;*         ldy #0
-;*         sty $b8
-;*         lda #8
-;*         sta $b9
-;*loop     jsr READSS
-;*         bne checkst
-;*
-;*         jsr BASIN
-;*         sta ($b8),y
-;*
-;*         jsr READSS
-;*         bne checkst
-;*
-;*         lda $b9
-;*         pha
-;*         eor #4
-;*         sta $b9
-;*         jsr BASIN
-;*         sta ($b8),y
-;*         pla
-;*         sta $b9
-;*         inc $b8
-;*         bne l1
-;*
-;*         inc $b9
-;*l1       cmp #>(960;*(8*256))
-;*         bne loop
-;*
-;*         lda $b8
-;*         cmp #<960
-;*         bne loop
-;*
-;*checkst  lda $b9
-;*         eor #8
-;*         sta $b9
-;*         rts
-;*         .bend
 readtent proc                    ;in: iy - total cells to read
          local loop,exit         ;out: iy
          ld hl,EOP
@@ -537,41 +499,14 @@ exit     ld (memb8),de
          ret
          endp
 
-;*savepat  .block
 savepat  proc         ;readlow -> (jsrfar+1) after boxsz
          local sizex,loop0,loop1,loop2,loop3,loop4,cont1,cont4,error,eof
 
-;*sizex    = adjcell2
-;*sizey    = adjcell2+1
-;*xmin     = i1
-;*ymin     = i1+1
-;*curx     = adjcell
-;*cury     = adjcell+1
          ;xmin - d, ymin - e
          ;xmax - b, ymax - c
 sizex     equ t1     ;connected to curx at boxsz
          ;cury - sizey - h
 
-;*         lda #8
-;*         jsr io2
-;*         ldy svfnlen
-;*         lda #","
-;*         sta svfn,y
-;*         sta svfn+2,y
-;*         lda #"u"
-;*         sta svfn+1,y
-;*         lda #"w"
-;*         sta svfn+3,y
-;*         tya
-;*         clc
-;*         adc #4
-;*         ldx #<svfn
-;*         ldy #>svfn
-;*         jsr $ffbd    ;setnam
-;*         jsr $ffc0    ;open file
-;*         ldx #8
-;*         jsr $ffc9    ;open channel for write
-;*         bcs error
          push de
          push hl
          ld a,(svfnlen)
@@ -597,32 +532,14 @@ sizex     equ t1     ;connected to curx at boxsz
          call CAS_OUT_CHAR
          jr nc,error
 
-;*         jsr $ffb7    ;read st
-;*         bne error
-
-;*         lda sizex
-;*         jsr $ffd2
-;*         jsr $ffb7    ;read st
-;*         bne error
-
          ld a,(sizex)
          call CAS_OUT_CHAR
          jr nc,error
 
-;*         lda sizey
-;*         jsr $ffd2
-;*         ldy #0
-;*loop1    jsr $ffb7    ;read st
-;*         bne error
          ld a,h
          call CAS_OUT_CHAR
          jr nc,error
 
-;*         lda live,y
-;*         jsr $ffd2
-;*         iny
-;*         cpy #4
-;*         bne loop1
          ld b,4
          ld hl,live
 loop1    ld a,(hl)
@@ -632,21 +549,7 @@ loop1    ld a,(hl)
          inc hl
          djnz loop1
 
-;*         lda #0
-;*         sta curx
-;*         sta cury
-;*         lda #<tiles ;=0
-;*         sta currp
-;*         lda #>tiles
-;*         sta currp+1
          ld iy,tiles
-;*loop0    ldy #0
-;*loop2    sei
-;*         sta $ff3f
-;*         lda (currp),y
-;*         sta $ff3e
-;*         cli
-;*         bne cont1
          ld bc,0
 loop0    ld l,0
 loop2    ld a,l
@@ -654,32 +557,17 @@ loop2    ld a,l
          or a
          jr nz,cont1
 
-;*loop4    iny
-;*         cpy #8
-;*         bne loop2
 loop4    inc l
          ld a,l
          cp 8
          jr nz,loop2
 
-;*         jsr inccurrp
-;*         inc curx
-;*         ldx curx
-;*         cpx #20
-;*         bne loop0
          call inccurrp
          inc b
          ld a,b
          cp hormax
          jr nz,loop0
 
-;*         ldx #0
-;*         stx curx
-;*         inc cury
-;*         ldy cury
-;*         cpy #24
-;*         bne loop0
-;*         beq eof
          ld b,0
          inc c
          ld a,c
@@ -687,9 +575,6 @@ loop4    inc l
          jr nz,loop0
          jr eof
 
-;*error    jsr $ffcc
-;*         jsr showds
-;*eof      jmp endio
 error    ;ld b,a          ;in: a
          ld a,(errst)
          or a
@@ -701,12 +586,6 @@ error    ;ld b,a          ;in: a
          ;printhex
 eof      jp CAS_OUT_CLOSE
 
-;*cont1    ldx #$ff
-;*loop3    inx
-;*         asl
-;*         bcs cont4
-;*         beq loop4
-;*         bcc loop3
 cont1    ld h,$ff
 loop3    inc h
          sla a
@@ -714,22 +593,7 @@ loop3    inc h
          jr z,loop4
          jr loop3
 
-;*cont4    sta i2
-;*         stx t1
-;*         jsr $ffb7    ;read st
-;*         bne error
 cont4    ld (sizex),a
-
-;*         lda curx
-;*         asl
-;*         asl
-;*         asl
-;*         adc t1
-;*         sec
-;*         sbc xmin
-;*         jsr $ffd2
-;*         jsr $ffb7    ;read st
-;*         bne error
          ld a,b
          rlca
          rlca
@@ -739,17 +603,6 @@ cont4    ld (sizex),a
          call CAS_OUT_CHAR
          jr nc,error
 
-;*         sty t1
-;*         lda cury
-;*         asl
-;*         asl
-;*         asl
-;*         adc t1
-;*         sec
-;*         sbc ymin
-;*         jsr $ffd2
-;*         lda i2
-;*         jmp loop3
          ld a,c
          rlca
          rlca
@@ -760,32 +613,13 @@ cont4    ld (sizex),a
          jr nc,error
          ld a,(sizex)
          jr loop3
-;*         .bend
          endp
 
-;*showcomm .block
 showcomm proc
-;*         ldx fnlen
-;*         bne cont2
-
-;*exit1    rts
          ld a,(fnlen)
          or a
          ret z
 
-;*cont2    lda fn-1,x
-;*         cmp #"*"
-;*         beq exit1
-
-;*         lda #"#"
-;*         cpx #16
-;*         beq cont1
-
-;*         inx
-;*cont1    sta fn-1,x
-;*         txa
-;*         ldx #<fn
-;*         ldy #>fn
          ld b,a
          inc b
          ld hl,fn
@@ -808,6 +642,5 @@ showcomm proc
          inc hl
          ld (hl),"L"
          ret
-;*         .bend
          endp
 

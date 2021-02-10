@@ -71,7 +71,6 @@ ctab     db 0,8,$16,$24,$32,$40,$48,$56,$64,$72,$80,$88,$96 ;no page cross
 bittab   db 1,2,4,8,16,32,64,128   ;no page cross
 viewport db 0,0
 startp   db 1,0
-i1       db 0,0
 tilecnt  db 0,0
 cellcnt  db 0,0,0,0,0
 gencnt   db 0,0,0,0,0,0,0
