@@ -90,7 +90,7 @@ fixcnt1x add a,c       ;in: a, bc, e
          ld (bc),a
          ret
 
-chkaddt    ld a,(t1)
+chkaddt    ld a,0
            or a
            ret z
 

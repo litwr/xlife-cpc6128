@@ -236,11 +236,11 @@ lleft    ld c,(iy+left)
          ld ixl,c
          ld ixh,b   ;ix=adjcell
          xor a
-         ld (t1),a
+         ld (chkaddt+1),a
          or (iy)
          jp p,ll1
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count0+3)
          ispyr4 (ix+count1+3)
          ld l,(iy+ul)
@@ -255,7 +255,7 @@ ll1      ld a,(iy+1)
          and a
          jp p,ll2
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count0+3)
          ispyr4 (ix+count1+3)
          ispyr4 (ix+count2+3)
@@ -263,7 +263,7 @@ ll2      ld a,(iy+2)
          and a
          jp p,ll3
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count1+3)
          ispyr4 (ix+count2+3)
          ispyr4 (ix+count3+3)
@@ -271,7 +271,7 @@ ll3      ld a,(iy+3)
          and a
          jp p,ll4
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count2+3)
          ispyr4 (ix+count3+3)
          ispyr4 (ix+count4+3)
@@ -279,7 +279,7 @@ ll4      ld a,(iy+4)
          and a
          jp p,ll5
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count3+3)
          ispyr4 (ix+count4+3)
          ispyr4 (ix+count5+3)
@@ -287,7 +287,7 @@ ll5      ld a,(iy+5)
          and a
          jp p,ll6
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count4+3)
          ispyr4 (ix+count5+3)
          ispyr4 (ix+count6+3)
@@ -295,7 +295,7 @@ ll6      ld a,(iy+6)
          and a
          jp p,ll7
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count5+3)
          ispyr4 (ix+count6+3)
          ispyr4 (ix+count7+3)
@@ -303,7 +303,7 @@ ll7      ld a,(iy+7)
          and a
          jp p,lexit
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr4 (ix+count6+3)
          ispyr4 (ix+count7+3)
          ld l,(iy+dl)
@@ -323,12 +323,12 @@ lexit    pop bc
          ld ixh,b     ;ix=adjcell
 
          xor a
-         ld (t1),a
+         ld (chkaddt+1),a
          ld a,(iy)
          rrca
          jr nc,lr1
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count0)
          ispyr8 (ix+count1)
          ld l,(iy+ur)
@@ -343,7 +343,7 @@ lr1      ld a,(iy+1)
          rrca
          jr nc,lr2
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count0)
          ispyr8 (ix+count1)
          ispyr8 (ix+count2)
@@ -351,7 +351,7 @@ lr2      ld a,(iy+2)
          rrca
          jr nc,lr3
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count1)
          ispyr8 (ix+count2)
          ispyr8 (ix+count3)
@@ -359,7 +359,7 @@ lr3      ld a,(iy+3)
          rrca
          jr nc,lr4
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count2)
          ispyr8 (ix+count3)
          ispyr8 (ix+count4)
@@ -367,7 +367,7 @@ lr4      ld a,(iy+4)
          rrca
          jr nc,lr5
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count3)
          ispyr8 (ix+count4)
          ispyr8 (ix+count5)
@@ -375,7 +375,7 @@ lr5      ld a,(iy+5)
          rrca
          jr nc,lr6
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count4)
          ispyr8 (ix+count5)
          ispyr8 (ix+count6)
@@ -383,7 +383,7 @@ lr6      ld a,(iy+6)
          rrca
          jr nc,lr7
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count5)
          ispyr8 (ix+count6)
          ispyr8 (ix+count7)
@@ -391,7 +391,7 @@ lr7      ld a,(iy+7)
          rrca
          jr nc,rexit
 
-         ld (t1),a
+         ld (chkaddt+1),a
          ispyr8 (ix+count6)
          ispyr8 (ix+count7)
          ld l,(iy+dr)
