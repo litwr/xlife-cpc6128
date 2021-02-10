@@ -571,14 +571,14 @@ incgen   proc
          ret
          endp
 
-cleanup  ld a,(clncnt)
+cleanup  ld a,0
          inc a
-         ld (clncnt),a
+         ld (cleanup+1),a
          and $f
          ret nz
 
 cleanup0 proc
-         local loop
+         local loop,m1
          ld iy,(startp)
          ld ix,0
 
@@ -606,28 +606,27 @@ delel    ld hl,(tilecnt)
          ld c,iyl
          ld b,iyh
          add hl,bc
-         rept 32
+         rept 16
+         ld (hl),a
+         dec l
          ld (hl),a
          dec hl
          endm
 
          ld c,(iy+next)
          ld b,(iy+next+1)
-         ld (i1),bc
+         ld (m1+1),bc
 
-         ;xor a   ;ac=0 here
-         ;ld (iy+next),a
-         ;ld (iy+next+1),a
+         ld (hl),a  ;(next)<-0
+         dec l
          ld (hl),a
-         dec hl
-         ld (hl),a
-         ld iy,(i1)
+         ld iy,(m1+1)
 
          ld a,ixh
          or ixl
          jr z,del1st
 
-         ld hl,(i1)
+m1       ld hl,0
          ld (ix+next),l
          ld (ix+next+1),h
          ld a,h
@@ -635,7 +634,7 @@ delel    ld hl,(tilecnt)
          jp nz,loop
          ret
 
-del1st   ld hl,(i1)
+del1st   ld hl,(m1+1)
          ld (startp),hl
          ld a,(startp+1)
          or a

@@ -1,6 +1,5 @@
 mode     equ digifont+7     ;0-stop, 1-run, 2-hide, 3-exit
 pseudoc  equ digifont+15
-clncnt   equ digifont+23
 xdir     equ digifont+31   ;linear transformation
 ydir     equ digifont+39
 x0       equ digifont+47
