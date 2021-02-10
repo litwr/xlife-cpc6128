@@ -245,11 +245,11 @@ lleft    ld c,(iy+left)
          ispyr4 (ix+count1+3)
          ld l,(iy+ul)
          ld h,(iy+ul+1)
-         push hl
+         ld b,h
+         ld c,l
          ld de,count7+3
          add hl,de
          ispyr4 (hl)
-         pop bc
          call chkadd
 ll1      ld a,(iy+1)
          and a
@@ -308,11 +308,11 @@ ll7      ld a,(iy+7)
          ispyr4 (ix+count7+3)
          ld l,(iy+dl)
          ld h,(iy+dl+1)
-         push hl
+         ld b,h
+         ld c,l
          ld de,count0+3
          add hl,de
          ispyr4 (hl)
-         pop bc
          call chkadd
 lexit    pop bc
          call chkaddt
@@ -333,11 +333,11 @@ lexit    pop bc
          ispyr8 (ix+count1)
          ld l,(iy+ur)
          ld h,(iy+ur+1)
-         push hl
+         ld b,h
+         ld c,l
          ld de,count7
          add hl,de
          ispyr8 (hl)
-         pop bc
          call chkadd
 lr1      ld a,(iy+1)
          rrca
@@ -396,11 +396,11 @@ lr7      ld a,(iy+7)
          ispyr8 (ix+count7)
          ld l,(iy+dr)
          ld h,(iy+dr+1)
-         push hl
+         ld b,h
+         ld c,l
          ld de,count0
          add hl,de
          ispyr8 (hl)
-         pop bc
          call chkadd
 rexit    pop bc
          call chkaddt
