@@ -507,7 +507,6 @@ l6       ld a,(iy+6)
          ld a,count7+3
          pop bc
          call fixcnt1x
-
 lnext    ld a,(iy+next+1)
          or a
          jr z,stage2

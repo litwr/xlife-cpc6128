@@ -47,7 +47,7 @@ fixcnt2  add a,c       ;in: a, bc, e
          add a,(hl)
          ld (bc),a
          inc h
-         inc bc
+         inc c
          ld a,(bc)
          add a,(hl)
          ld (bc),a
@@ -57,7 +57,7 @@ fixcnt2  add a,c       ;in: a, bc, e
          add a,(hl)
          ld (bc),a
          inc h
-         inc bc
+         inc c
          ld a,(bc)
          add a,(hl)
          ld (bc),a
@@ -74,7 +74,7 @@ fixcnt1x add a,c       ;in: a, bc, e
          add a,(hl)
          ld (bc),a
          dec h
-         dec bc
+         dec c
          ld a,(bc)
          add a,(hl)
          ld (bc),a
@@ -84,7 +84,7 @@ fixcnt1x add a,c       ;in: a, bc, e
          add a,(hl)
          ld (bc),a
          dec h
-         dec bc
+         dec c
          ld a,(bc)
          add a,(hl)
          ld (bc),a
@@ -97,13 +97,13 @@ chkaddt    ld a,0
 chkadd     ld hl,next   ;in: bc - adjcell or adjcell2
            add hl,bc    ;used: a, hl, de
            ld a,(hl)
-           inc hl
+           inc l
            or (hl)
            ret nz
 
 addnode  ld de,(startp)
          ld (hl),d
-         dec hl
+         dec l
          ld (hl),e
          ld (startp),bc
          ld hl,(tilecnt)
