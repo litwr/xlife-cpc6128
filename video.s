@@ -1,6 +1,3 @@
-;*tographx jsr tograph0
-;*         jmp restbl
-
 calcx    proc        ;$80 -> 0, $40 -> 1, ...
          local cl2
          ld b,$ff
@@ -13,7 +10,7 @@ cl2      inc b
          endp
 
 crsrpg   xor a
-         ld (i1),a
+         ld (fi1+1),a
          push hl
          ld a,h
          sub 8
@@ -53,16 +50,16 @@ clrcur   nexthlls
 
 showscnz proc
          local loop1,loop2,loop3,loop4,cont1,cont2,cont4,cont5,cont6
-;use: i1:2, temp:1
+;use: temp:1
 ;ylimit - iyh, xlimit - iyl
          ld ix,(viewport)
          xor a
-         ld (i1),a
+         ld (fi1+1),a
          ld a,(crsrbyte)
          ld b,a
          ld a,8
          sub b
-         ld (i1+1),a
+         ld (fi2+1),a
          ld a,(crsrbit)
          call calcx
          ld a,8
@@ -84,7 +81,7 @@ loop4    ld a,(crsrtile)
          jr nz,cont4
 
          ld a,1
-         ld (i1),a
+         ld (fi1+1),a
 cont4    ld d,8
 loop2    ld e,(ix)
          ld b,8
@@ -108,11 +105,11 @@ cont2    ld a,h
          sub 40
          ld h,a
 cont6    inc hl
-         ld a,(i1)
+fi1      ld a,0
          dec a
          jr nz,cont5
 
-         ld a,(i1+1)
+fi2      ld a,0
          cp d
          jr nz,cont5
 
@@ -160,7 +157,7 @@ cont1    xor a
 showscnzp proc
          local m1,loop1,loop2,loop3,loop4
          local cont1,cont2,cont2a,cont4,cont5,cont6,cont8,cont12
-;use: i1:2, temp:1
+;use: temp:1
 ;ylimit - iyh, xlimit - iyl
 loop3    ld iyl,5
 loop4    ld a,(crsrtile)
@@ -172,7 +169,7 @@ loop4    ld a,(crsrtile)
          jr nz,cont4
 
          ld a,1
-         ld (i1),a
+         ld (fi1+1),a
 cont4    xor a
          ld (m1+2),a
          ld c,8
@@ -237,11 +234,11 @@ cont2a   ld a,h
          sub 40
          ld h,a
 cont6    inc hl
-         ld a,(i1)
+         ld a,(fi1+1)
          dec a
          jr nz,cont5
 
-         ld a,(i1+1)
+         ld a,(fi2+1)
          cp c
          jr nz,cont5
 
@@ -362,45 +359,6 @@ infoout  proc    ;must be before showtinfo
          call digiout
          endp
 
-;*showtinfo
-;*         .block
-;*         lda tilecnt
-;*         sta t1
-;*         lda tilecnt+1
-;*         lsr
-;*         ror t1
-;*         lsr
-;*         ror t1
-;*         ldx t1
-;*         cpx #120
-;*         bne cont1
-
-;*         ldx #$31
-;*         stx tcscr
-;*         dex
-;*         stx tcscr+1
-;*         stx tcscr+2
-;*         rts
-
-;*cont1    lda #$20
-;*         sta tcscr
-;*         sta tcscr+1
-;*         lda ttab,x
-;*         tax
-;*         and #$f
-;*         eor #$30
-;*         sta tcscr+2
-;*         txa
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         beq exit
-
-;*         eor #$30
-;*         sta tcscr+1
-;*exit     rts
-;*         .bend
 showtinfo  proc          ;must be after infoout
            local cont1,cont2
            ld hl,(tilecnt)
@@ -563,18 +521,6 @@ xchgxy   proc
          ret
          endp
 
-;*crsrset1 .block
-;*         ldy #video
-;*         lda (crsrtile),y
-;*         sta i1
-;*         iny
-;*         lda (crsrtile),y
-;*         sta i1+1
-;*         ldx crsrc
-;*         ldy crsrbyte
-;*         lda (crsrtile),y
-;*         and crsrbit
-;*         bne cont3
 crsrset1 proc   ;out: b - bitmask, de - curpos
          local cont2,cont3
          ld ix,(crsrtile)
@@ -614,12 +560,6 @@ cont2    inc de
          jr cont3
          endp
 
-;*crsrset0 jsr crsrset1
-;*         lda vistab,x
-;*         asl
-;*         eor (i1),y
-;*         sta (i1),y
-;*         rts
 crsrset  call crsrset1
          ld a,(zoom)
          or a
@@ -649,74 +589,39 @@ mask     equ localbase+5
          or a
          jr nz,loopup
 
-;*loopdn   jsr xclrect
-;*         beq exit
 loopdn   call xclrect
          ret z
 
-;*         inc y8byte
-;*         lda y8byte
-;*         cmp #8
-;*         bne loopdn
          ld hl,y8byte
          inc (hl)
          ld a,(hl)
          cp 8
          jr nz,loopdn
 
-;*         ldy #down
-;*         jsr nextcell
-;*         lda #0
-;*         sta y8byte
-;*         bpl loopdn
          ld a,down
          call vnextcelllo
          xor a
          ld (y8byte),a
          jr loopdn
 
-;*loopup   jsr xclrect
-;*         beq exit
 loopup   call xclrect
          ret z
 
-;*         dec y8byte
-;*         bpl loopup
          ld a,(y8byte)
          dec a
          ld (y8byte),a
          jp p,loopup
 
-;*         ldy #up
-;*         jsr nextcell
-;*         lda #7
-;*         sta y8byte
-;*         bpl loopup
          ld a,up
          call vnextcelllo
          ld a,7
          ld (y8byte),a
          jr loopup
 
-;*xclrect  lda adjcell
-;*         pha
-;*         lda adjcell+1
-;*         pha
-;*         jsr xmove
-;*         pla
-;*         sta adjcell+1
-;*         pla
-;*         sta adjcell
 xclrect  push iy
          call xmove
          pop iy
 
-;*         lda x8poscp
-;*         sta x8pos
-;*         lda crsrbit
-;*         sta x8bit
-;*         dec y8pos      ;sets ZF
-;*exit     rts
          ld a,(x8poscp)
          ld (x8pos),a
          ld a,(crsrbit)
@@ -725,8 +630,6 @@ xclrect  push iy
          dec (hl)       ;sets ZF
          ret
 
-;*xmove    lda xdir
-;*         bne looplt
 xmove    ld a,(xdir)
          or a
          jr nz,looplt
@@ -765,11 +668,6 @@ looprtpc call clrect2pc
          inc e
          jr looprtpc
 
-;*nextrt   ldy #right
-;*         jsr nextcell
-;*         lda #$80
-;*         sta x8bit
-;*         bne looprt
 nextrt   ld a,right
          call vnextcelllo
          jr looprt
@@ -811,11 +709,6 @@ loopltpc call clrect2pc
          dec e
          jr loopltpc
 
-;*nextlt   ldy #left
-;*         jsr nextcell
-;*         lda #1
-;*         sta x8bit
-;*         bne looplt
 nextlt   ld a,left
          call vnextcelllo
          jr looplt

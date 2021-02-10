@@ -7,31 +7,6 @@ showscn0 ld a,(startp+1)
 
 crsrcalc proc   ;in: de, b; sets: xcrsr, ycrsr, crsrx, crsry; outputs: xy; adjusts viewport in the zoom in mode
          local loop1,loopx,cont0,cont1,cont3,cont4,cont5,cont6,l1,l2,l3,l4,l7
-;*cont5    lda i1+1    ;start of coorditates calculation
-;*         sec
-;*         sbc #$20
-;*         sta i1+1
-;*         lsr i1+1
-;*         ror i1
-;*         lsr i1+1
-;*         ror i1
-;*         lsr i1+1
-;*         ror i1
-;*         ldy #0
-;*cont7    sec
-;*         lda i1
-;*         sbc #$28
-;*         tax
-;*         lda i1+1
-;*         sbc #0
-;*         bmi cont6
-
-;*         sta i1+1
-;*         stx i1
-;*         iny
-;*         bne cont7
-
-;*cont6    sty crsry
          ld a,d
          and 7
          ld c,a
@@ -77,11 +52,6 @@ cont6    rlca
          ;ld (crsry),a
          ld a,c
          ld (crsry),a
-;*         lda ctab,y
-;*         sed
-;*         clc
-;*         adc crsrbyte
-;*         sta t1
          ld hl,ctab
          ld b,a
          add a,l
@@ -90,39 +60,19 @@ cont6    rlca
          add a,d
          daa
          ld c,a
-;*         ldx #$30
-;*         bcs l2
          ld h,0
          jr c,l2
 
-;*         cpy #$d
-;*         bcc l1
          ld a,b
          cp $d
          jr c,l1
 
-;*l2       inx
 l2       inc h
-
-;*l1       stx ycrsr
 l1       ld a,h
          ld (ycrsr),a
-
-;*         lda t1
-;*         and #$f
-;*         eor #$30
-;*         sta ycrsr+2
          ld a,c
          and $f
          ld (ycrsr+2),a
-
-;*         lda t1
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         eor #$30
-;*         sta ycrsr+1
          ld a,c
          and $f0
          rrca
@@ -130,15 +80,6 @@ l1       ld a,h
          rrca
          rrca
          ld (ycrsr+1),a
-;*         ldx #8
-;*         lda crsrbit
-;*cont8    dex
-;*         lsr
-;*         bcc cont8
-
-;*         lda i1
-;*         sta crsrx
-;*         lsr
          ld a,(crsrx)
          and 7
          ld c,a
@@ -148,14 +89,6 @@ l1       ld a,h
          rrca
          ld d,a
          srl a
-
-;*         tay
-;*         txa
-;*         clc
-;*         adc ctab,y
-;*         sta t1
-;*         ldx #$30
-;*         bcs l4
          ld b,a
          ld hl,ctab
          add a,l
@@ -164,40 +97,19 @@ l1       ld a,h
          add a,c
          daa
          ld c,a
-;*         ldx #$30
-;*         bcs l4
          ld h,0
          jr c,l4
 
-;*         cpy #$d
-;*         bcc l3
          ld a,b
          cp $d
          jr c,l3
 
-;*l4       inx
 l4       inc h
-
-;*l3       stx xcrsr
 l3       ld a,h
          ld (xcrsr),a
-
-;*         lda t1
-;*         and #$f
-;*         eor #$30
-;*         sta xcrsr+2
          ld a,c
          and $f
          ld (xcrsr+2),a
-
-;*         lda t1
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         eor #$30
-;*         sta xcrsr+1
-;*         cld
          ld a,c
          and $f0
          rrca
@@ -208,9 +120,6 @@ l3       ld a,h
          ld a,b
          ld (crsrx),a
          call xyout
-
-;*         lda zoom
-;*         beq exit
          ld a,(zoom)
          or a
          ret z
@@ -265,15 +174,6 @@ cont1    ld iy,viewport
          ld (viewport),hl
          ld c,l
          ld b,h
-
-;*         ldy #dr
-;*         jsr nextcell
-;*         dey
-;*         jsr nextcell
-;*         ldy #right
-;*         jsr nextcell
-;*         dey
-;*         jsr nextcell
          ld a,down
          ld hl,nextcell
          call calllo
@@ -286,18 +186,6 @@ loopx    ld a,right
          call calllo
          dec d
          jr nz,loopx
-
-;*         lda viewport
-;*         clc
-;*         adc #<44*tilesize
-;*         tax
-;*         lda viewport+1
-;*         adc #>44*tilesize
-;*         cmp adjcell+1
-;*         bne l7
-
-;*         cpx adjcell
-;*         beq cont0
 
          ld hl,(viewport)
          ld de,44*tilesize
@@ -313,23 +201,6 @@ loopx    ld a,right
 l7       call setviewport
 cont0    ld hl,showscnz
          jp calllo
-;*cont2    lda #0
-;*         sta t1
-;*         lda vptilecy
-;*         asl
-;*         asl
-;*         adc vptilecy
-;*         asl
-;*         asl
-;*         rol t1
-;*         asl
-;*         rol t1
-;*         adc vptilecx
-;*         sta $ff0d
-;*         lda t1
-;*         adc #0
-;*         sta $ff0c
-;*exit     rts
          endp
 
 nohide   call setbg0  ;must be before xyout
@@ -468,13 +339,6 @@ crsrclr  proc
          or a
          jr nz,pgcur
 
-;*         ldy #video
-;*         lda (currp),y
-;*         sta i1
-;*         iny
-;*         lda (currp),y
-;*         sta i1+1
-;*         #assign16 currp,crsrtile
          ld iy,(crsrtile)
          ld hl,readde
          call calllo
@@ -484,19 +348,10 @@ crsrclr  proc
          rlca
          add a,d
          ld d,a
-;*         ldy crsrbyte
-;*         lda crsrbit
-;*         and #$f0
-;*         beq cont1
-
-;*         lda pseudoc
-;*         bne cont2
          ld a,(pseudoc)
          or a
          jr nz,cont2
 
-;*         #vidmac1
-;*exit     rts
          ld hl,vidmacx
          jp calllo
 
@@ -511,15 +366,6 @@ pgcur    xor a
 
 cont2    ld hl,vidmacpx
          jp calllo
-
-;*cont1    lda #8
-;*         eor i1
-;*         sta i1
-;*         lda pseudoc
-;*         bne cont3
-
-;*         #vidmac2
-;*         rts
          endp
 
 if 0
@@ -776,17 +622,6 @@ menu2    call setdirmsk
          ld a,b
          cp $fc    ;esc
          jr z,repeat
-
-         ;call printn
-         ;db 12,15,2,"USE ",15,3
-;*         .text "run/stop"
-;*         .byte 30
-;*         .text " and "
-;*         .byte 28
-;*         .text "cbm key"
-;*         .byte 30
-;*         .text " as usual"
-;*         .byte $d,0
 
          call showdir
          call printn
@@ -1157,68 +992,38 @@ loop     call KM_WAIT_CHAR
 
 setviewport proc
          local cont1,cont2,cont3,cont4,cont5,cont6,cont7,cont8,cont10,loop12
-;*         #assign16 viewport,crsrtile
          ld hl,(crsrtile)
          ld (viewport),hl
          ld ix,vptilecx
-;*         ldx #2
-;*         stx vptilecx
-;*         dex
-;*         stx vptilecy
          ld a,2
          ld (vptilecx),a
          dec a
          ld (vptilecy),a
-;*         lda $fe5
-;*         ora $fe6
-;*         eor #$30
-;*         bne cont1
          ld hl,(ycrsr)
          ld a,l
          or h
          jr nz,cont1
 
-;*         lda $fe7
-;*         cmp #$38
-;*         bcs cont1
          ld a,(ycrsr+2)
          cp 8
          jr nc,cont1
 
-;*         dec vptilecy
          dec (ix+1)
-;*         lda viewport          ;up
-;*         adc #<tilesize*20     ;CY=0
-;*         sta viewport
-;*         lda viewport+1
-;*         adc #>tilesize*20
-;*         sta viewport+1
-;*         bne cont2
          ld hl,(viewport)      ;up
          ld de,tilesize*hormax
          add hl,de
          ld (viewport),hl
          jr cont2
 
-;*cont1    lda $fe5
-;*         cmp #$31
-;*         bne cont2
 cont1    ld a,(ycrsr)
          dec a
          jr nz,cont2
 
-;*         lda $fe6
-;*         cmp #$38
-;*         bcc cont2
-;*         bne cont4
          ld a,(ycrsr+1)
          cp 8
          jr c,cont2
          jr nz,cont4
 
-;*         lda $fe7
-;*         cmp #$34
-;*         bcc cont2
          ld a,(ycrsr+2)
          cp 4
          jr c,cont2
@@ -1229,158 +1034,81 @@ cont4    inc (ix+1)
          add hl,de
          ld (viewport),hl
 
-;*cont2    lda $fe0
-;*         ora $fe1
-;*         eor #$30
-;*         bne cont3
 cont2    ld hl,(xcrsr)
          ld a,l
          or h
          jr nz,cont3
 
-;*         lda $fe2
-;*         cmp #$38
-;*         bcs cont3
          ld a,(xcrsr+2)
          cp 8
          jr nc,cont3
 
-;*         dec vptilecx
-;*         dec vptilecx
          dec (ix)
          dec (ix)
-;*         lda viewport          ;left2
-;*         adc #<tilesize*2      ;CY=0
-;*         sta viewport
-;*         lda viewport+1
-;*         adc #>tilesize*2
-;*         sta viewport+1
-;*         bne cont5
          ld hl,(viewport)      ;left2
          ld de,tilesize*2
          add hl,de
          ld (viewport),hl
          jr cont5
 
-;*cont3    lda $fe0
-;*         eor #$30
-;*         bne cont6
 cont3    ld a,(xcrsr)
          or a
          jr nz,cont6
 
-;*         lda $fe1
-;*         cmp #$31
-;*         bcc cont7
-;*         bne cont6
          ld a,(xcrsr+1)
          cp 1
          jr c,cont7
          jr nz,cont6
 
-;*         lda $fe2
-;*         cmp #$36
-;*         bcs cont6
          ld a,(xcrsr+2)
          cp 6
          jr nc,cont6
 
-;*cont7    dec vptilecx
 cont7    dec (ix)
-;*         lda viewport          ;left1
-;*         adc #<tilesize        ;CY=0
-;*         sta viewport
-;*         lda viewport+1
-;*         adc #>tilesize
-;*         sta viewport+1
-;*         bne cont5
          ld hl,(viewport)      ;left1
          ld de,tilesize
          add hl,de
          ld (viewport),hl
          jr cont5
 
-;*cont6    lda $fe0
-;*         cmp #$31
-;*         bne cont8
 cont6    ld a,(xcrsr)
          dec a
          jr nz,cont8
 
-;*         lda $fe1
-;*         cmp #$35
-;*         bne cont8
          ld a,(xcrsr+1)
          cp 5
          jr nz,cont8
 
-;*         lda $fe2
-;*         cmp #$32
-;*         bcc cont8
          ld a,(xcrsr+2)
          cp 2
          jr c,cont8
 
-;*         inc vptilecx
-;*         inc vptilecx
          inc (ix)
          inc (ix)
-;*         lda viewport          ;right2
-;*         sbc #<tilesize*2      ;CY=1
-;*         sta viewport
-;*         lda viewport+1
-;*         sbc #>tilesize*2
-;*         sta viewport+1
-;*         bne cont5
          ld hl,(viewport)      ;right2
          ld de,(~(tilesize*2))+1
          add hl,de
          ld (viewport),hl
          jr cont5
 
-;*cont8    lda $fe0
-;*         cmp #$31
-;*         bne cont5
 cont8    ld a,(xcrsr)
          dec a
          jr nz,cont5
 
-;*         lda $fe1
-;*         cmp #$34
-;*         bcc cont5
-;*         bne cont10
          ld a,(xcrsr+1)
          cp 4
          jr c,cont5
          jr nz,cont10
 
-;*         lda $fe2
-;*         cmp #$34
-;*         bcc cont5
          ld a,(xcrsr+2)
          cp 4
          jr c,cont5
 
-;*cont10   inc vptilecx
 cont10   inc (ix)
-;*         lda viewport          ;right1
-;*         sbc #<tilesize        ;CY=1
-;*         sta viewport
-;*         lda viewport+1
-;*         sbc #>tilesize
-;*         sta viewport+1
          ld hl,(viewport)      ;right1
          ld de,(~tilesize)+1
          add hl,de
          ld (viewport),hl
-
-;*cont5    ldy #ul
-;*         lda (viewport),y
-;*         tax
-;*         iny
-;*         lda (viewport),y
-;*         sta viewport+1
-;*         stx viewport
 cont5    ld iy,(viewport)
          ld hl,fixvp
          call calllo
@@ -1495,108 +1223,56 @@ cont2    dec de
 showrect proc
          local loop0,loop1,finish,finish0,lselect,cont1,cont2
          call SCR_CLEAR
-;*         clc
-;*         ldy #0
-;*         ldx #24
-;*         jsr $fff0        ;set position for the text
-        ld hl,$119
-        call TXT_SET_CURSOR
-;*         jsr $ff4f
-;*         .byte 30
-;*         .text "move, "
-;*         .byte 28,"r",30
-;*         .text "otate, "
-;*         .byte 28,"f",30
-;*         .text "lip, "
-;*         .byte 28
-;*         .text "enter"
-;*         .byte 30
-;*         .text ", "
-;*         .byte 28
-;*         .text "esc"
-;*         .byte 144,0
+         ld hl,$119
+         call TXT_SET_CURSOR
          call printn
          db 15,2,"MOVE, ",15,3,"R",15,2,"OTATE, ",15,3,"F",15,2,"LIP, ",15,3
          db "ENTER",15,2,", ",15,3,"ESC",15,1,"  X   Y$"
-;*         lda #0
-;*         sta xdir
-;*         sta ydir
-;*         sta xchgdir
          xor a
          ld (xdir),a
          ld (ydir),a
          ld (xchgdir),a
-;*         jsr tograph0
-;*         jsr showscn0
          call tograph0
          call showscn0
          call xyout
-;*loop0    jsr drawrect
-;*         jsr crsrset0
 loop0    call drawrect
          call showtent
          ld hl,crsrset
          call calllo
-;*loop1    jsr getkey
 loop1    call KM_WAIT_CHAR
-
-;*         cmp #$9d   ;cursor left
-;*         beq lselect
          cp $f2
          jr z,lselect
 
          cp $f6       ;shifted cursor left
          jr z,lselect
 
-;*         cmp #$1d   ;cursor right
-;*         beq lselect
          cp $f3
          jr z,lselect
 
          cp $f7       ;shifted cursor right
          jr z,lselect
 
-;*         cmp #$91   ;cursor up
-;*         beq lselect
          cp $f0
          jr z,lselect
 
          cp $f4       ;shifted cursor up
          jr z,lselect
 
-;*         cmp #$11   ;cursor down
-;*         beq lselect
          cp $f1
          jr z,lselect
 
          cp $f5       ;shifted cursor down
          jr z,lselect
 
-;*         cmp #"."   ;to center
-;*         beq lselect
          cp "."
          jr z,lselect
 
-;*         cmp #19    ;to home
-;*         beq lselect
          cp "H"
          jr z,lselect
 
-;*         cmp #"R"-"A"+$41
-;*         bne cont1
          cp "r"
          jr nz,cont1
 
-;*         jsr clrrect
-;*         lda xchgdir
-;*         eor #1
-;*         sta xchgdir
-;*         ldx xdir
-;*         lda ydir
-;*         eor #1
-;*         sta xdir
-;*         stx ydir
-;*         bpl loop0
          call clrrect
          ld a,(xchgdir)
          xor 1
@@ -1610,56 +1286,30 @@ loop1    call KM_WAIT_CHAR
          ld (ydir),a
          jr loop0
 
-;*cont1    cmp #"F"-"A"+$41
-;*         bne cont2
 cont1    cp "f"
          jr nz,cont2
 
-;*         jsr clrrect
-;*         lda xdir
-;*         eor #1
-;*         sta xdir
-;*         bpl loop0
          call clrrect
          ld a,(xdir)
          xor 1
          ld (xdir),a
          jr loop0
 
-;*cont2    cmp #$d
-;*         beq finish
 cont2    cp $d
          jr z,finish
 
-;*         cmp #$1b
-;*         beq finish0
-;*         bne loop1
          cp $fc   ;escape
          jr z,finish0
          jr loop1
 
-;*lselect  pha
-;*         jsr clrrect
-;*         pla
-;*         jsr dispat0
-;*         jmp loop0
 lselect  push af
          call clrrect
          pop af
          call dispat2
          jr loop0
 
-;*finish   clc
 finish   scf
 
-;*finish0  php
-;*         jsr clrrect
-;*         jsr restbl
-;*         jsr totext
-;*         lda #147
-;*         jsr $ffd2
-;*         plp
-;*         rts
 finish0  push af
          call clrrect
          ;call totext    ;makes CLRSCN
@@ -1685,35 +1335,15 @@ rectuly  equ localbase+6
 xcut     equ localbase+7
 ycut     equ localbase+8
 
-;*         jsr xchgxy
          call xchgxy
-;*         lda crsrbyte
-;*         sta y8byte
-;*         lda crsrbit
-;*         sta x8bit
          ld a,(crsrbyte)
          ld (y8byte),a
          ld a,(crsrbit)
          ld (x8bit),a
-;*         jsr calcx
-;*         lda #0
          call calcx
-
-;*         stx m1+1
-;*         sta xcut        ;0 -> xcut
-;*         sta ycut
          xor a
          ld (xcut),a
          ld (ycut),a
-;*         lda crsrx
-;*         lsr
-;*         asl
-;*         asl
-;*         asl
-;*m1       adc #0
-;*         sta rectulx
-;*         ldx xdir
-;*         beq cont4
          ld a,(crsrx)
          rlca
          rlca
@@ -1726,23 +1356,14 @@ ycut     equ localbase+8
          ld a,(x0)
          jr z,cont4
 
-;*         sec
-;*         sbc x0
-;*         bcs cont2
          ld b,a
          ld a,c
          sub b
          jr nc,cont2
 
-;*         eor #$ff
-;*         beq cont10
          xor $ff
          jr z,cont10
 
-;*         inc xcut
-;*cont10   lda rectulx
-;*         adc #1
-;*         bcc cont7
          ld a,(xcut)
          inc a
          ld (xcut),a
@@ -1750,43 +1371,22 @@ cont10   ld a,c
          inc a
          jr cont7
 
-;*cont4    adc x0
-;*         bcs cont5
 cont4    add a,c
          jr c,cont5
 
-;*         cmp #161
-;*         bcc cont2
          cp 161
          jr c,cont2
 
-;*cont5    lda #160
-;*         inc xcut
 cont5    ld a,(xcut)
          inc a
          ld (xcut),a
          ld a,160
 
-;*cont2    sec
-;*         sbc rectulx
-;*         bcs cont7
 cont2    sub c
          jr nc,cont7
 
-;*         eor #$ff
-;*         adc #1
          xor $ff
          inc a
-;*cont7    sta x8pos
-;*         sta x8poscp
-;*         lda crsry
-;*         asl
-;*         asl
-;*         asl
-;*         adc crsrbyte
-;*         sta rectuly
-;*         ldx ydir
-;*         beq cont3
 cont7    ld (x8pos),a
          ld (x8poscp),a
          ld a,(crsrbyte)
@@ -1802,67 +1402,40 @@ cont7    ld (x8pos),a
          or a
          jr z,cont3
 
-;*         sec
-;*         sbc y0
-;*         bcs cont1
          ld a,(y0)
          ld b,a
          ld a,c
          sub b
          jr nc,cont1
 
-;*         eor #$ff
-;*         beq cont12
          xor $ff
          jr z,cont12
 
-;*         inc ycut
          ld a,(ycut)
          inc a
          ld (ycut),a
 
-;*cont12   lda rectuly
-;*         adc #1
-;*         bcc cont8
 cont12   ld a,c
          inc a
          jr cont8
 
-;*cont3    adc y0
-;*         bcs cont6
 cont3    ld a,(y0)
          add a,c
          jr c,cont6
 
-;*         cmp #193
-;*         bcc cont1
          cp 193
          jr c,cont1
 
-;*cont6    lda #192
-;*         inc ycut
 cont6    ld a,(ycut)
          inc a
          ld (ycut),a
          ld a,192
 
-;*cont1    sec
-;*         sbc rectuly
-;*         bcs cont8
 cont1    sub c
          jr nc,cont8
 
-;*         eor #$ff
-;*         adc #1
          xor $ff
          inc a
-
-;*cont8    sta y8pos
-;*         sta y8poscp
-;*         #assign16 adjcell,crsrtile
-;*         jsr ymove
-;*         lda ycut
-;*         bne cont11
 cont8    ld (y8pos),a
          ld (y8poscp),a
          ld iy,(crsrtile)
@@ -1871,20 +1444,7 @@ cont8    ld (y8pos),a
          or a
          jr nz,cont11
 
-;*         jsr xmove
          call xmove
-;*cont11   lda x8poscp
-;*         sta x8pos
-;*         lda y8poscp
-;*         sta y8pos
-;*         lda crsrbyte
-;*         sta y8byte
-;*         lda crsrbit
-;*         sta x8bit
-;*         #assign16 adjcell,crsrtile
-;*         jsr xmove
-;*         lda xcut
-;*         bne exit
 cont11   ld a,(x8poscp)
          ld (x8pos),a
          ld a,(y8poscp)
@@ -1899,26 +1459,16 @@ cont11   ld a,(x8poscp)
          or a
          ret nz
 
-;*ymove    lda ydir
-;*         bne loopup
 ymove    ld a,(ydir)
          or a
          jr nz,loopup
 
-;*loopdn   jsr drrect1
-;*loop10   jsr pixel11
-;*         iny
-;*         dec y8pos
-;*         beq exit
 loopdn   call drrect1
 loop10   call pixel11      ;used: de,b
          ld hl,y8pos
          dec (hl)
          ret z
 
-;*         sty y8byte
-;*         cpy #8
-;*         bne loop10
         ld a,8
         add a,d
         ld d,a
@@ -1928,30 +1478,18 @@ loop10   call pixel11      ;used: de,b
         cp 8
         jr nz,loop10
 
-;*         ldy #down
-;*         jsr nextcell
-;*         lda #0
-;*         sta y8byte
-;*         bpl loopdn
          ld a,down
          call vnextcell
          xor a
          ld (y8byte),a
          jr loopdn
 
-;*loopup   jsr drrect1
 loopup   call drrect1
-;*loop11   jsr pixel11
-;*         dec y8pos
-;*         beq exit
 loop11   call pixel11
          ld hl,y8pos
          dec (hl)
          ret z
 
-;*         dey
-;*         sty y8byte
-;*         bpl loop11
          ld a,d
          sub 8
          ld d,a
@@ -1959,141 +1497,53 @@ loop11   call pixel11
          dec (hl)
          jp p,loop11
 
-;*         ldy #up
-;*         jsr nextcell
-;*         lda #7
-;*         sta y8byte
-;*         bpl loopup
          ld a,up
          call vnextcell
          ld a,7
          ld (y8byte),a
          jr loopup
 
-;*exit     rts
-
-;*xmove    lda xdir
-;*         bne looplt
 xmove    ld a,(xdir)
          or a
          jr nz,looplt
 
-;*looprt   jsr drrect1
 looprt   call drrect1
-;*loop12   jsr pixel11
-;*         dec x8pos
-;*         beq exit
          call pixel11
          ld hl,x8pos
          dec (hl)
          ret z
 
-;*         lda x8bit
-;*         lsr
-;*         bcs nextrt
          ld a,(x8bit)
          rrca
          jr c,nextrt
 
-;*         sta x8bit
-;*         txa
-;*         lsr
-;*         tax
-;*         lda x8bit
-;*         cmp #8
-;*         bne loop12
          ld (x8bit),a
          jr looprt
 
-;*         lda #8
-;*         tax
-;*         eor i1
-;*         sta i1
-;*         bne loop12
-
-;*nextrt   ldy #right
-;*         jsr nextcell
-;*         lda #$80
-;*         sta x8bit
-;*         bne looprt
 nextrt   ld a,right
          call vnextcell
          ld a,$80
          ld (x8bit),a
          jr looprt
 
-;*looplt   jsr drrect1
-;*loop15   jsr pixel11
-;*         dec x8pos
-;*         beq exit
 looplt   call drrect1
-         ;call crsrsetc
          call pixel11
          ld hl,x8pos
          dec (hl)
          ret z
 
-;*         lda x8bit
-;*         asl
-;*         bcs nextlt
          ld a,(x8bit)
          rlca
          jr c,nextlt
 
-;*         sta x8bit
-;*         txa
-;*         asl
-;*         tax
-;*         lda x8bit
-;*         cmp #16
-;*         bne loop15
          ld (x8bit),a
          jr looplt
 
-;*         ldx #1
-;*         lda i1
-;*         sbc #8
-;*         sta i1
-;*         bcs loop15
-;*
-;*nextlt   ldy #left
-;*         jsr nextcell
-;*         lda #1
-;*         sta x8bit
-;*         bne looplt
 nextlt   ld a,left
          call vnextcell
          ld a,1
          ld (x8bit),a
          jr looplt
-
-;*drrect1  ldy #video
-;*         lda (adjcell),y
-;*         tax
-;*         iny
-;*         lda (adjcell),y
-;*         sta i1+1
-;*         stx i1
-;*         ldy y8byte
-;*         lda x8bit
-;*         and #$f
-;*         bne cont14
-
-;*         lda x8bit
-;*         lsr
-;*         lsr
-;*         lsr
-;*         lsr
-;*         bpl cont15
-
-;*cont14   tax
-;*         lda #8
-;*         eor i1
-;*         sta i1
-;*         txa
-
-;*cont15   tax
-;*         rts
 
 drrect1  ld hl,readde
          call calllo
@@ -2127,17 +1577,6 @@ y8pos    equ t1
 y8poscp  equ localbase+3    ;link to drawrect!
 y8byte   equ localbase+4
 
-;*         jsr xchgxy
-;*         lda y8poscp
-;*         sta y8pos
-;*         lda crsrbyte
-;*         sta y8byte
-;*         lda crsrbit
-;*         sta x8bit
-;*         jsr calcx
-;*         and #3
-;*         ldx xdir
-;*         beq cl3
          call xchgxy
          ld a,(y8poscp)
          ld (y8pos),a
@@ -2151,12 +1590,6 @@ y8byte   equ localbase+4
          ld a,b
          jr z,cl3
 
-;*         sbc #4
-;*         eor #$ff
-;*cl3      clc
-;*         adc x8poscp
-;*         sta x8pos
-;*         sta x8poscp
          sub 8
          cpl
 cl3      ld b,a
@@ -2165,25 +1598,13 @@ cl3      ld b,a
          ld (x8pos),a
          ld (x8poscp),a
 
-;*         #assign16 adjcell,crsrtile
-;*         lda ydir
-;*         bne loopup
          ld iy,(crsrtile)
          ld hl,clrrectlo
          jp calllo
          endp
 
-;*showtent .block
 showtent proc        ;used: a,bc,de,hl,iy*,ix*
          local loop,l1,l3,exit
-;*         lda x0
-;*         pha
-;*         lda y0
-;*         pha
-;*         lda #0
-;*         sta $14
-;*         sta $15
-;*         sta ppmode
          ld a,(x0)
          ld b,a
          ld a,(y0)
@@ -2194,32 +1615,14 @@ showtent proc        ;used: a,bc,de,hl,iy*,ix*
          ld l,a       ;$14
          ld (ppmode),a
 
-;*loop     lda $15
-;*         cmp $b9
-;*         bne l1
 loop     ld a,(memb9)
          cp h
          jr nz,l1
 
-;*         ldx $14
-;*         cpx $b8
-;*         beq exit
          ld a,(memb8)
          cp l
          jr z,exit
 
-;*l1       eor #8
-;*         sta $15
-;*         ldx #0
-;*         lda ($14,x)
-;*         sta x0
-;*         lda $15
-;*         eor #4
-;*         sta $15
-;*         lda ($14,x)
-;*         sta y0
-;*         ora x0
-;*         beq l3
 l1       ld de,EOP
          push hl
          add hl,de
@@ -2234,26 +1637,12 @@ l1       ld de,EOP
          or b
          jr z,l3
 
-;*         jsr putpixel
-;*l3       lda $15
-;*         eor #$c
-;*         sta $15
-;*         inc $14
-;*         bne loop
          ld hl,putpixel
          call calllo
 l3       pop hl
          inc hl
-
-;*         inc $15
-;*         bne loop
          jr loop
 
-;*exit     pla
-;*         sta y0
-;*         pla
-;*         sta x0
-;*         inc ppmode
 exit     pop bc
          ld a,c
          ld (y0),a
@@ -2261,8 +1650,6 @@ exit     pop bc
          ld (x0),a
          ld a,1
          ld (ppmode),a
-;*         rts
-;*         .bend
          ret
          endp
 
@@ -2305,31 +1692,18 @@ cont1    cp 10
          jr cont3
          endp
 
-;*infov    .block
 infov    proc
          local cont1,cont2,loop1
          local sizex
 
-;*         jsr $ff4f
-;*         .byte 147,144,0
          call SCR_CLEAR
-
-;*         lda fnlen
-;*         beq cont1
          ld a,(fnlen)
          or a
          jr z,cont1
 
-;*         jsr $ff4f
-;*         .null "last loaded filename: "
          call printn
          db  "Last loaded filename: $"
-;*         ldy #0
-;*loop1    lda fn,y
-;*         jsr $ffd2
-;*         iny
-;*         cpy fnlen
-;*         bne loop1
+
          ld hl,fn
 loop1    ld a,(hl)
          call TXT_OUTPUT
@@ -2338,98 +1712,47 @@ loop1    ld a,(hl)
          cp (hl)
          jr nz,loop1
 
-;*cont1    sei
-;*         sta $ff3f
-;*         jsr boxsz
-;*         sta $ff3e
-;*         cli
-;*         beq cont2
 cont1    call boxsz
          jr z,cont2
 
-;*xmin     = i1
-;*ymin     = i1+1
-;*xmax     = adjcell
-;*ymax     = adjcell+1
-;*sizex    = adjcell2
-;*sizey    = adjcell2+1
          ;xmin - d, ymin - e
          ;xmax - b, ymax - c
 sizex     equ t1     ;connected to curx at boxsz and savepat
          ;cury - sizey - h
 
-;*         jsr $ff4f
-;*         .byte $d
-;*         .null "active pattern size: "
          call printn
          db $d,$a,"Active pattern size: $"
 
-;*         lda #0
-;*         ldx sizex
-;*         jsr $a45f      ;int -> str
-;*         lda #"x"
-;*         jsr $ffd2
-;*         lda #0
          ld a,(sizex)
          call printdec
          ld a,"x"
          call TXT_OUTPUT
 
-;*         ldx sizey
-;*         jsr $a45f      ;int -> str
          ld a,h
          call printdec
-;*         jsr $ff4f
-;*         .byte $d
-;*         .null "box life bounds: "
          call printn
          db $d,$a,"Box life bounds: $"
 
-;*         lda #0
-;*         ldx xmin
-;*         jsr $a45f      ;int -> str
-;*         jsr $ff4f
-;*         .null "<=x<="
          ld a,d
          call printdec
          call printn
          db "<=X<=$"
 
-;*         lda #0
-;*         ldx xmax
-;*         jsr $a45f      ;int -> str
-;*         lda #" "
-;*         jsr $ffd2
          ld a,b
          call printdec
          ld a," "
          call TXT_OUTPUT
-
-;*         lda #0
-;*         ldx ymin
-;*         jsr $a45f      ;int -> str
-;*         jsr $ff4f
-;*         .null "<=y<="
          ld a,e
          call printdec
          call printn
          db "<=Y<=$"
 
-;*         lda #0
-;*         ldx ymax
-;*         jsr $a45f      ;int -> str
          ld a,c
          call printdec
 
-;*cont2    jsr $ff4f
-;*         .byte $d
-;*         .null "rules: "
 cont2    call printn
          db $d,$a,"Rules: $"
-;*         jsr showrules2
          call showrules2
-;*         jmp getkey
-;*         .bend
          jp KM_WAIT_CHAR
          endp
 

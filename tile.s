@@ -115,7 +115,7 @@ inctiles ld de,tilesize
          add iy,de
          ret
 
-rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
+rndbyte  proc      ;in: iy, b; use: a, hl, bc
          local loop1
          ld a,8
          sub b
@@ -128,12 +128,12 @@ rndbyte  proc      ;in: iy, b; use: a, hl, bc, i1
          ld h,a
          ld a,(density)
          ld ixl,a
-loop1    ld a,(i1)
+loop1    ld a,0
          rrca
          ld c,a
          ld a,r
          xor c
-         ld (i1),a
+         ld (loop1+1),a
          and 7
          ld bc,bittab
          add a,c
@@ -155,7 +155,7 @@ random   proc
          ld (t1),a
          ld a,right
          ld ixh,a
-         ld de,$100e  ;d - vermax - i1, e - hormax - i2
+         ld de,$100e  ;d - vermax, e - hormax
 cont3    ld a,8
          ld (iy+sum),a
          ld b,a
