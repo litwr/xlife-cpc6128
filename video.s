@@ -310,19 +310,19 @@ loop     ld iyh,a
          ld e,(iy+video)
          ld d,(iy+video+1)
          vidmac
-         vidmaca
+         vidmaca l
          vidmac
-         vidmaca
+         vidmaca hl
          vidmac
-         vidmaca
+         vidmaca l
          vidmac
-         vidmaca
+         vidmaca hl
          vidmac
-         vidmaca
+         vidmaca l
          vidmac
-         vidmaca
+         vidmaca hl
          vidmac
-         vidmaca
+         vidmaca l
          vidmac
          ld h,(iy+next+1)
          xor a

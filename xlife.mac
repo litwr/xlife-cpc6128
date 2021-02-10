@@ -286,8 +286,8 @@ vidmac   macro       ;in: hl, de, c=$c0; changed: b
          ld (de),a
          endm
 
-vidmaca  macro
-         inc hl
+vidmaca  macro n
+         inc n
          vidmacpa
          endm
 
