@@ -80,7 +80,6 @@ fnlen    db 0
 fn       db 0,0,0,0,0,0,0,0,0,0,0,0
 svfnlen  db 0
 svfn     db 0,0,0,0,0,0,0,0,0,0,0,0
-temp     db 0,0
 crsrtile db low(tiles),high(tiles)
 crsrbit  db $80    ;x bit position
 crsrbyte db 0      ;y%8 - must be after crsrbit!

@@ -135,10 +135,8 @@ l77      ld hl,showscn
 cont11   cp "!"
          jr nz,cont12
 
-;*         jsr random
          ld hl,random
          call calllo
-;*         jmp showscn
          jr l77
 
 cont12   cp "%"
@@ -257,31 +255,6 @@ cont16x  cp $f2        ;cursor left
 cxleft   ld b,1
          ld a,left
          jr contcur1
-;*cxleft   lda #1
-;*cm6      ldx #0
-;*cm1      sta t1
-;*         stx i2
-;*         lda (crsrtile),y
-;*         tax
-;*         iny
-;*         lda (crsrtile),y
-;*         cmp #>plainbox
-;*         bne cm4
-;*
-;*         cpx #<plainbox
-;*         bne cm4
-
-;*         ldx i2
-;*         lda crsrbit,x
-;*         sta t1
-;*         bcs cm5
-
-;*cm4      sta crsrtile+1
-;*         stx crsrtile
-;*cm5      lda t1
-;*         ldx i2
-;*         sta crsrbit,x
-;*         jmp crsrset
 
 cont40   cp $f4       ;shifted cursor up
          jr nz,cont41
@@ -353,9 +326,6 @@ cont16b  cp $f0      ;cursor up
 contcur2 ld (crsrbyte),a
          jp crsrupd
 
-;*cxup     lda #7
-;*cm3      ldx #1
-;*         bpl cm1
 cxup     ld b,7
          ld a,up
 contcur3 add a,iyl
@@ -397,19 +367,9 @@ cxdown   ld b,0
 cont17   cp 32          ;space
          jr nz,cont17c
 
-;*         #assign16 adjcell,crsrtile
-;*         jsr chkadd
          ld bc,(crsrtile)
          ld hl,chkadd
          call calllo
-
-;*         ldy crsrbyte
-;*         lda (crsrtile),y
-;*         eor crsrbit
-;*         sta (crsrtile),y
-;*         ldy #sum
-;*         and crsrbit
-;*         beq lsp1
          ld a,(crsrbyte)
          add a,c
          ld iyl,a
@@ -437,9 +397,6 @@ lsp2     ld hl,setiy
 
          ld hl,showscnz
          call nz,calllo
-
-;*lsp3     jsr infoout
-;*         jmp crsrset
          call infoout
          ld hl,crsrset
          jp calllo
@@ -450,14 +407,6 @@ lsp1     call dectsum
 cont17c  cp "."
          jr nz,cont17f
 
-;*         jsr crsrclr
-;*         lda #<tiles+(tilesize*249)
-;*         sta crsrtile
-;*         lda #>tiles+(tilesize*249)
-;*         sta crsrtile+1
-;*         lda #1
-;*         sta crsrbyte
-;*cont17t  sta crsrbit
          call crsrclr
          ld hl,tiles+(tilesize*249)
          ld (crsrtile),hl
@@ -472,7 +421,6 @@ cont17t  ld (crsrbit),a
          call setviewport
          ld hl,showscnz
          call calllo
-;*cont17u  jmp crsrset
 crsrupd  ld hl,crsrset
          call calllo
          jp crsrcalc
@@ -556,17 +504,11 @@ zoomout  call split_on
 cont17g  cp "V"
          jr nz,cont17h
 
-;*         jsr totext
-;*         jsr $ff4f
-;*         .byte 144,147,0
          call totext
          call printn
          db 4,2,15,1,"$"   ;80 columns
 
-;*         jsr curoff
-;*         jsr showcomm
          call showcomm
-
          ld a,1
          call SCR_SET_MODE
          jp difinish
@@ -574,10 +516,6 @@ cont17g  cp "V"
 cont17h  cp "v"
          jr nz,cont17i
 
-;*         jsr totext
-;*         jsr curoff
-;*         jsr infov
-;*         jmp finish
          call totext
          call infov
          jp difinish
@@ -600,52 +538,23 @@ cont17j  cp "X"
 cont18   cp "S"
          ret nz
 
-;*         jsr boxsz
-;*         beq cont20
          call boxsz
          ret z
 
          push bc
          push de
          push hl
-;*         jsr totext
          call totext
-;*         jsr getsvfn
          call getsvfn
-;*         beq exitsave
          pop hl
          pop de
          pop bc
          jp z,difinish
 
-;*         jsr savepat
          call savepat
-;*exitsave jmp finish
          jp difinish
-
-;*cont20   clc
-;*         rts
          endp
 
-;*shift    lda $543   ;shift st
-;*         beq cont20
-
-;*         lda (crsrtile),y
-;*         tax
-;*         iny
-;*         lda (crsrtile),y
-;*         dey
-;*         cmp #>plainbox
-;*         bne cm4x
-;*
-;*         cpx #<plainbox
-;*         beq cont20
-
-;*cm4x     sta crsrtile+1
-;*         stx crsrtile
-;*         sec
-;*         rts
-;*         .bend
 shift      proc     ;in: c - direction
            ld iy,(crsrtile)
            ld b,0
@@ -665,13 +574,13 @@ setbench jp p,difinish
 
          call SCR_CLEAR
          ld a,(mode)
-         ld (temp+1),a
+         ld (m9+1),a
          ld a,2
          ld (mode),a
          ret
 
 exitbench call totext
-         ld a,(temp+1)
+m9       ld a,0
          ld (mode),a
          ret
 

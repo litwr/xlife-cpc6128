@@ -50,7 +50,6 @@ clrcur   nexthlls
 
 showscnz proc
          local loop1,loop2,loop3,loop4,cont1,cont2,cont4,cont5,cont6
-;use: temp:1
 ;ylimit - iyh, xlimit - iyl
          ld ix,(viewport)
          xor a
@@ -64,7 +63,7 @@ showscnz proc
          call calcx
          ld a,8
          sub b
-         ld (temp),a
+         ld (m10+1),a
          ld hl,$c800
          ld iyh,3
          ld a,(pseudoc)
@@ -113,7 +112,7 @@ fi2      ld a,0
          cp d
          jr nz,cont5
 
-         ld a,(temp)
+m10      ld a,0
          cp b
          call z,crsrpg
 cont5    djnz loop1
@@ -157,7 +156,6 @@ cont1    xor a
 showscnzp proc
          local m1,loop1,loop2,loop3,loop4
          local cont1,cont2,cont2a,cont4,cont5,cont6,cont8,cont12
-;use: temp:1
 ;ylimit - iyh, xlimit - iyl
 loop3    ld iyl,5
 loop4    ld a,(crsrtile)
@@ -242,7 +240,7 @@ cont6    inc hl
          cp c
          jr nz,cont5
 
-         ld a,(temp)
+         ld a,(m10+1)
          cp b
          call z,crsrpg
 cont5    djnz loop1
