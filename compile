@@ -13,7 +13,7 @@ iDSK $B -n
 #iDSK $B -r np4src.bas
 #iDSK $D -r np4.bas
 iDSK $B -i np4src.bas -t 0 && rm np4src.bas
-iDSK $B -i ut/BPC.bas -t 1
+iDSK $B -i ut/BPC.bas -t 0
 
 ./txt2cpm cat-cpc.bas +start.bas
 #iDSK $D -r +start.bas
@@ -44,5 +44,5 @@ iDSK $D -i xlife1.bin -t 1 && \
 iDSK $D -i xlife2.bin -c 49 -t 1 && \
 rm initiles.s tab12.s gentab.s printn.inc a.out
 
-iDSK $D -i xlife.d1/B126X108.TXT -t 1
+iDSK $D -i xlife.d1/B126X108.TXT -t 0
 iDSK $D -i xlife.d1/B126X108.8L -t 0

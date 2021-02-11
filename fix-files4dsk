@@ -1,10 +1,10 @@
 #fix text files extracted from dsk-image
 P=$1
-if [ _$P_ = __ ]; then P=*.TXT; fi
-if [ ${P%8L} = $P ]; then
+if [ _${P}_ = __ ]; then P=*.TXT; fi
+if [ "${P%8L}" = "$P" ]; then
    for i in $P
    do
-      mse -t - -o $1 $1 <<END
+      mse -t - -o $i $i <<END
       0d0 >
       0d26 > endfile
       endfile > 0d26
@@ -18,7 +18,7 @@ gcc -x c - <<END
 main(){
    int i, k;
    char b[128];
-   fread(b, 1, 128, stdin);
+   //fread(b, 1, 128, stdin);
    putchar(i = getchar());
    putchar(k = getchar());
    i = (k*256 + i + 3)*2;
