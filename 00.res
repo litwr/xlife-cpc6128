@@ -14,3 +14,17 @@ v3
 +fixed S-command
 +added to stop/continue text output by any key press
 +xlife doesn't create BAK-files now
+
+v4
++better texts (manpage and messages)
++an existing file is overriten on a save
++better text output when comments are shown
++updated Notepad+4
++minor utilities were added
++minor fixes
+
+v5
++slight speedup
++minor fixes
++code refactoring
+
