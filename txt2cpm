@@ -1,0 +1,6 @@
+if [ $# = 1 -o _$1_ = _$2_ ]; then
+   awk '{print $0"\r"}END{printf"%c",26}' $1 >/tmp/$1
+   mv /tmp/$1 $1
+else
+   awk '{print $0"\r"}END{printf"%c",26}' $1 >$2
+fi

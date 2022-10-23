@@ -1,0 +1,11 @@
+breakpoints are disabled after reset!
+memory dump window shows ASCII in the inverted order
+can't attach some CP/M disks which Arnold can
+it is possible to create situation when even hardware reset cannot restore the emulator - this situation requires only immediate exit to OS
+no support for joy fire 2
+wrong kbd picture at kbd config
+?screenshorts are always 768x576
+sometimes shows wrong addresses after d command at the debugger window
+'Permission denied' error during S at the debugger
+no clipboard paste (very useful for text, supported by winape)
+

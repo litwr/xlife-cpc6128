@@ -1,0 +1,13 @@
+`cpcconv' converts Commodore U00 and optionally S00 files to appropriate 
+Amstrad CPC 8L and TXT files.
+
+USAGE
+    cpcconv file.U00 [file.S00]
+
+
+`raw2cpc' converts a raw file produced by lifeconv to Amstrad CPC 8L format.
+
+USAGE
+    rawcpc rawfile cpcfile.8l
+
+These utilities are scripts using bash, cat, tr, sed, awk, dd.

@@ -1,0 +1,5 @@
+if [ $# != 2 ]; then
+   echo Usage:  raw2cpc raw-file cpc-file.8l
+   exit
+fi
+cat <(echo -en $(ls -l $1|awk '{printf "\\x%02x\\x%02x", (($5-6)/2)%256, int(($5-6)/512)}')) $1 >$2

@@ -1,0 +1,24 @@
+Xlife for the Amstrad CPC 6128 v5
+ported to 8-bit universe by litwr
+
+(c) 2013-21 GNU GPL
+
+The 1st version of the original xlife
+for Unix was developed in CMU at the
+1989 by Jon Bennett & Chuck Silvers
+
+It was being developed by Jon Bennett,
+Paul Callahan, Achim Flammenkamp, Eric
+S. Raymond up to 1999
+
+Its development was continued by
+Vladimir Lidovski in 2011
+
+http://freecode.com/projects/xlife
+
+This program creation was inspired by
+Luca, Mkarcz, Gaia, and Opqa. Thanks to
+makers of 'pasmo' assembler, ep128emu
+emulator, http://www.cpctech.org.uk/,
+the original 'xlife', Commodore +4,
+Amstrad CPC6128, ...

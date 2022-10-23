@@ -1,0 +1,14 @@
+Remove 26 first bytes from u00 file and change u00 extension to 8L and add 2 bytes (data length) to its beginning.  The data length is equal to file length of u00-file minus 32 and divided by 2.
+
+If u00 and s00 files have the same filename length then replace # in the s00-name with the last char from the u00-filename, in other case just remove #-char from s00 filename - TXT and 8L files must have the same filename.
+
+Remove 28 first bytes from s00-file, change s00 extension to TXT
+
+Substitute CR by CR+LF sequence in the new TXT-file
+
+The `cpcconv' utility may make the conversion easy.  For example,
+
+cpcconv cbmfile cpcfile
+
+will produce `cpcfile.8l' from `cbmfile.u00' and optionally comments at the `cpcfile.txt' from `cbmfile.s00'.
+

@@ -1,0 +1,4 @@
+for i in `iDSK $1 -l|awk '{s=substr($0,1,12);gsub(" ","",s);print s}'`
+do
+   iDSK $1 -g "$i"
+done
