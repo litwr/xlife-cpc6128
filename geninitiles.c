@@ -1,1 +1,1 @@
-/home/micro/retro/plus4/progs/src/xlife-p4/geninitiles.c
+../plus4/geninitiles.c

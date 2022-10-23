@@ -1,1 +1,1 @@
-/home/micro/retro/plus4/progs/src/xlife-p4/gentab12.c
+../plus4/gentab12.c
